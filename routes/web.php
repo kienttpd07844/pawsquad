@@ -31,6 +31,10 @@ Route::get('/',[HomeController::class,'index'])->name('home');
 Route::get('/dang-ky', [SignUpController::class, 'index'])->name('signup');
 Route::post('/dang-ky', [SignUpController::class, 'postSignup'])->name('postSignup');
 
+Route::get('/dang-nhap',[LoginController::class,'index'])->name('login');
+Route::post('/dang-nhap', [LoginController::class, 'postLogin'])->name('postLogin');
+
+
 Route::get('/gioi-thieu',[AboutController::class,'index'])->name('about');
 
 Route::get('/dich-vu/{slug}',[ServiceController::class,'index'])->name('service');
@@ -46,7 +50,6 @@ Route::get('/thuong-hieu',[BrandController::class,'index'])->name('brand');
 Route::get('/tin-tuc',[BlogController::class,'all'])->name('blog');
 Route::get('/tin-tuc/{slug}',[BlogController::class,'detail'])->name('detail.blog');
 
-Route::get('/dang-nhap',[LoginController::class,'index'])->name('login');
 Route::get('/dang-xuat',[LoginController::class,'index'])->name('logout');
 
 Route::get('/quen-mat-khau',[ForgotPasswordController::class,'index'])->name('forgotpassword');
