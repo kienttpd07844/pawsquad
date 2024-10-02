@@ -17,10 +17,14 @@ return new class extends Migration
             $table->string('slug', 255)->unique();
             $table->text('image');
             $table->text('image_list');
+            $table->text('short_description')->nullable(); //
             $table->text('description');
             $table->text('details')->nullable();
             $table->integer('old_price')->default(0);
             $table->integer('price')->default(0);
+            $table->integer('min_price')->default(0); //
+            $table->integer('max_price')->default(0); //
+            $table->integer('has_variation')->default(0); //
             $table->bigInteger('brand_id');
             $table->bigInteger('category_id');
             $table->integer('status')->default(1);
@@ -29,7 +33,7 @@ return new class extends Migration
             $table->text('meta_description')->nullable();
             $table->integer('views')->default(0);
             $table->timestamps();
-            $table->softDeletes(); 
+            $table->softDeletes();
         });
     }
 
