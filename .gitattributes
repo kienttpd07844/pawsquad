@@ -5,6 +5,9 @@
 *.html diff=html
 *.md diff=markdown
 *.php diff=php
+*.js text eol=crlf
+public/vendor/jsvalidation/js/jsvalidation.js text eol=crlf
+
 
 /.github export-ignore
 CHANGELOG.md export-ignore
