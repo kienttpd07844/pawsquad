@@ -14,6 +14,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WishlistController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,6 +41,9 @@ Route::controller(SocialController::class)->group(function ($router) {
     Route::get('/dang-nhap/{provider}', 'getProviderTargetUrl')->name('login.google');
     Route::get('{provider}/callback', 'handleProviderCallback');
 });
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dang-xuat', [LoginController::class, 'logout'])->name('logout');
+});
 
 Route::get('/gioi-thieu',[AboutController::class,'index'])->name('about');
 
@@ -55,8 +59,6 @@ Route::get('/thuong-hieu',[BrandController::class,'index'])->name('brand');
 
 Route::get('/tin-tuc',[BlogController::class,'all'])->name('blog');
 Route::get('/tin-tuc/{slug}',[BlogController::class,'detail'])->name('detail.blog');
-
-Route::get('/dang-xuat',[LoginController::class,'index'])->name('logout');
 
 Route::get('/quen-mat-khau',[ForgotPasswordController::class,'index'])->name('forgotpassword');
 

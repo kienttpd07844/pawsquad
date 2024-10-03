@@ -46,5 +46,11 @@ class LoginController extends Controller
         }
         return redirect()->route('home')->with(noti('Đăng nhập thành công', 'success'));
     }
+    public function logout()
+    {
+        Auth::logout();
+        session()->flush();
+        return redirect()->route('home')->with(noti('Đăng xuất thành công', 'success'));
+    }
 
 }
