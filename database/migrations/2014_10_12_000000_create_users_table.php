@@ -18,7 +18,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->integer('email_verified')->default('0');
             $table->text('google_token')->nullable();
-            $table->string('phone')->unique();
+            $table->string('phone')->nullable()->unique();
             $table->string('password')->nullable();
             $table->string('token')->nullable();
             $table->text('ip_address')->nullable();
