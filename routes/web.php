@@ -11,6 +11,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WishlistController;
@@ -36,6 +37,12 @@ Route::post('/dang-ky', [SignUpController::class, 'postSignup'])->name('postSign
 Route::get('/dang-nhap',[LoginController::class,'index'])->name('login');
 Route::post('/dang-nhap', [LoginController::class, 'postLogin'])->name('postLogin');
 
+Route::get('/quen-mat-khau',[ForgotPasswordController::class,'index'])->name('forgotpassword');
+Route::post('/quen-mat-khau',[ForgotPasswordController::class,'postForgotPassword'])->name('postForgotPassword');
+
+Route::get('/resetpassword', [ResetPasswordController::class, 'index'])->name('password.reset');
+Route::post('/resetpassword', [ResetPasswordController::class, 'postReset'])->name('postResetPassword');
+
 Route::controller(SocialController::class)->group(function ($router) {
     $router->pattern('provider', 'google');
     Route::get('/dang-nhap/{provider}', 'getProviderTargetUrl')->name('login.google');
@@ -59,8 +66,6 @@ Route::get('/thuong-hieu',[BrandController::class,'index'])->name('brand');
 
 Route::get('/tin-tuc',[BlogController::class,'all'])->name('blog');
 Route::get('/tin-tuc/{slug}',[BlogController::class,'detail'])->name('detail.blog');
-
-Route::get('/quen-mat-khau',[ForgotPasswordController::class,'index'])->name('forgotpassword');
 
 Route::get('/yeu-thich',[WishlistController::class,'index'])->name('wishlist');
 
