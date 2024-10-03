@@ -111,17 +111,18 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div class="alternate-signup-box">
-                                    <h6>hoặc</h6>
-                                    <div class="btn-group gap-4">
-                                        <a href="{{ route('login.google',['provider' => 'google']) }}" class="eg-btn google-btn d-flex align-items-center"><i
-                                                class="bx bxl-google"></i><span>Đăng ký bằng Google</span></a>
-                                    </div>
-                                </div>
+
                             </div>
                             @csrf
                             <button class="account-btn">Đăng ký</button>
                         </form>
+                        <div class="alternate-signup-box">
+                            <h6>hoặc</h6>
+                            <div class="btn-group gap-4">
+                                <a href="{{ route('login.google',['provider' => 'google']) }}" class="eg-btn google-btn d-flex align-items-center"><i
+                                        class="bx bxl-google"></i><span>Đăng ký bằng Google</span></a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
