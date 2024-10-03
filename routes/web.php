@@ -4,6 +4,7 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\SignUpController;
+use App\Http\Controllers\Auth\SocialController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CartController;
@@ -34,6 +35,11 @@ Route::post('/dang-ky', [SignUpController::class, 'postSignup'])->name('postSign
 Route::get('/dang-nhap',[LoginController::class,'index'])->name('login');
 Route::post('/dang-nhap', [LoginController::class, 'postLogin'])->name('postLogin');
 
+Route::controller(SocialController::class)->group(function ($router) {
+    $router->pattern('provider', 'google');
+    Route::get('/dang-nhap/{provider}', 'getProviderTargetUrl')->name('login.google');
+    Route::get('{provider}/callback', 'handleProviderCallback');
+});
 
 Route::get('/gioi-thieu',[AboutController::class,'index'])->name('about');
 
