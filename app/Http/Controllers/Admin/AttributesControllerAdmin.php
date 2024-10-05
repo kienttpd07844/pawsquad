@@ -50,12 +50,11 @@ class AttributesControllerAdmin extends Controller
     public function add()
     {
         $attributeSet = AttributeSet::select('name', 'id')->where('slug', '!=', 'defaultattributeset')->get();
-        $categories = Category::select('name', 'id', 'parent_id')->where('id', '!=', 1)->get(); // nếu lấy cha thì lấy tất cả con
         $validator = JsValidatorFacade::formRequest(
             'App\Http\Requests\Admin\AttributesRequestAdmin',
             '#form-validate'
         );
-        return view('admin.attributes.add', compact('validator', 'attributeSet', 'categories'));
+        return view('admin.attributes.add', compact('validator', 'attributeSet'));
     }
     public function postAdd(AttributesRequestAdmin $request)
     {
@@ -68,14 +67,6 @@ class AttributesControllerAdmin extends Controller
                 ]);
             }
 
-            // Kiểm tra sự tồn tại của các categories
-            if ($request->has('categories')) {
-                if (!Category::where('id', $request->categories)->exists()) {
-                    throw ValidationException::withMessages([
-                        'categories' => 'Danh mục game không hợp lệ.',
-                    ]);
-                }
-            }
             $status = $request->status == 'on' ? 1 : 0;
             $slug = generateSlug($request->name, 'attribute');
             if ($request->has('values') && is_array($request->values)) {
@@ -92,11 +83,11 @@ class AttributesControllerAdmin extends Controller
                 'name' => $request->input('name'),
                 'slug' => $slug,
                 'value' => $value,
-                'status' => $status,
-                'categories' => isset($request->categories) ? $request->categories : NULL,
+                'status' => $status
             ]);
             return redirect(route('admin.attributes.index'))->withSuccessMessage('Thêm thuộc tính thành công!');
         } catch (\Exception $e) {
+            dd($e);
             return redirect(route('admin.attributes.addAttribute'))->withErrorMessage('Đã xảy ra lỗi khi thêm thuộc tính.');
         }
     }
@@ -107,8 +98,7 @@ class AttributesControllerAdmin extends Controller
             return redirect(route('admin.attributes.index'))->withErrorMessage('Không tìm thấy thuộc tính game.');
         }
         $attributeSet = AttributeSet::select('name', 'id')->where('slug', '!=', 'defaultattributeset')->get();
-        $categories = Category::select('name', 'id', 'parent_id')->where('id', '!=', 1)->get();
-        return view('admin.attributes.edit', compact('data', 'attributeSet', 'categories'));
+        return view('admin.attributes.edit', compact('data', 'attributeSet'));
     }
 
     public function postEdit(AttributesRequestAdmin $request, $id)
@@ -125,14 +115,7 @@ class AttributesControllerAdmin extends Controller
                 ]);
             }
 
-            // Kiểm tra sự tồn tại của các categories
-            if ($request->has('categories')) {
-                if (!Category::where('id', $request->categories)->exists()) {
-                    throw ValidationException::withMessages([
-                        'categories' => 'Danh mục game không hợp lệ.',
-                    ]);
-                }
-            }
+
 
             $status = $request->status == 'on' ? 1 : 0;
             if ($request->has('values') && is_array($request->values)) {
@@ -149,7 +132,6 @@ class AttributesControllerAdmin extends Controller
                 'slug' => generateSlug($request->name, 'attribute'),
                 'value' => $value,
                 'status' => $status,
-                'categories' => isset($request->categories) ? $request->categories : NULL,
             ]);
 
 

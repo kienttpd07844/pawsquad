@@ -53,34 +53,7 @@
                                         placeholder="Tên thuộc tính" name="name" aria-label="Tên thuộc tính"
                                         value="{{ old('name', $data->name) }}" />
                                 </div>
-                                <div class="mb-6">
-                                    <label class="form-label mb-1" for="categories"> Chọn danh mục sản phẩm
-                                    </label>
-                                    <select id="categories" class="categories form-select"
-                                        data-placeholder="Chọn danh mục sản phẩm" name="categories" multiple="multiple">
-                                        <option value="">Chọn danh mục sản phẩm</option>
-                                        @forelse($categories as $row)
-                                            @if ($row->parent_id == null)
-                                                <!-- Hiển thị danh mục cha -->
-                                                <option value="{{ $row->id }}"
-                                                    {{ old('categories', $data->categories) == $row->id ? 'selected' : '' }}>
-                                                    {{ $row->name }}
-                                                </option>
 
-                                                <!-- Hiển thị danh mục con -->
-                                                @foreach ($categories->where('parent_id', $row->id) as $child)
-                                                    <option value="{{ $child->id }}"
-                                                        data-parent-id="{{ $child->parent_id }}"
-                                                        {{ old('categories') == $child->id ? 'selected' : '' }}>
-                                                        -- {{ $child->name }}
-                                                    </option>
-                                                @endforeach
-                                            @endif
-                                        @empty
-                                            <option value="" disabled>Không có danh mục sản phẩm</option>
-                                        @endforelse
-                                    </select>
-                                </div>
                                 <div class="align-items-center border-top pt-2 status">
                                     <label class="form-label mb-1 me-3" for="status"> Hiển thị
                                     </label>
@@ -156,41 +129,7 @@
         $(document).ready(function() {
 
 
-            var select2 = $('.categories');
-
-            if (select2.length) {
-                select2.each(function() {
-                    var $this = $(this);
-                    $this.wrap('<div class="position-relative"></div>').select2({
-                        dropdownParent: $this.parent(),
-                        placeholder: $this.data('placeholder'),
-                        tags: true, // Kích hoạt chế độ tag
-                        closeOnSelect: false // Không đóng khi chọn danh mục cha
-                    });
-
-                    // Bắt sự kiện thay đổi khi chọn danh mục
-                    $this.on('select2:select', function(e) {
-                        var selectedId = e.params.data.id;
-
-                        // Tìm các option con thuộc về danh mục cha được chọn
-                        var childOptions = $(this).find('option').filter(function() {
-                            return $(this).data('parent-id') == selectedId;
-                        });
-
-                        // Thêm tất cả các danh mục con vào danh sách đã chọn nếu chưa có
-                        var selectedValues = $this.val() || [];
-                        childOptions.each(function() {
-                            var optionValue = $(this).val();
-                            if (!selectedValues.includes(optionValue)) {
-                                selectedValues.push(optionValue);
-                            }
-                        });
-
-                        // Cập nhật select2 với các giá trị đã chọn
-                        $this.val(selectedValues).trigger('change');
-                    });
-                });
-            }
+            
 
             let valuesCount = 0;
             const attributes = @json(json_decode($data->value, true));
