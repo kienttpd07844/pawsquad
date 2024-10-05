@@ -3,7 +3,9 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.2/css/responsive.bootstrap5.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.bootstrap5.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         .table.table-inbox>tbody>tr>td,
         .table.table-inbox>tbody>tr>th,
@@ -1426,23 +1428,16 @@
                     <div class="col-lg-3">
                         <div class="dashboard-sidebar">
                             <div class="profile-top">
-                                <div class="profile-image position-relative">
+                                <div class="profile-image position-relative" style="width:50px;height:50px">
 
-                                    {{-- <label class="-label" for="file">
-                                        <a class="d-flex justify-content-center align-items-center m-auto "
-                                            href="{{ route('discord.avatar') }}">
-                                            <i class="fa-solid fa-rotate"></i>
-                                            <span>Đồng bộ</span>
-                                        </a>
-                                    </label> --}}
                                     <img src="{{ asset('assets/clients/images/logo/fav.png') }}"
                                         data-src="{{ asset('assets/clients/images/logo/fav.png') }}"
                                         alt="Avatar - {{ env('APP_NAME') }}" class="lazyload img-fluid">
 
                                 </div>
                                 <div class="profile-detail">
-                                    <h5>Trung Kiên</h5>
-                                    <h6>trungkien@gmail.com</h6>
+                                    <h5>{{ limitText(auth()->user()->name, 25) }}</h5>
+                                    <h6>{{ limitText(auth()->user()->email, 30) }}</h6>
                                 </div>
                             </div>
                             <div class="faq-tab">
@@ -1466,7 +1461,7 @@
                             <div class="tab-pane fade show active contact-wrap" id="info" role="tabpanel">
                                 <div class="counter-section">
                                     <div class="welcome-msg">
-                                        <h4>Xin chào, Trung Kiên</h4>
+                                        <h4>Xin chào, {{ auth()->user()->name }}</h4>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-4">
@@ -1504,33 +1499,39 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="box-account box-info mt-2 mb-3">
-                                        <div class="box-head">
-                                            <h4>Thông tin</h4>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4 col-6">
-                                                <label for="email">Email</label>
-                                                <div class="form-inner">
-                                                    <input type="text" value="trungkien@gmail.com" disabled>
+                                    <form method="post" action="{{ route('postEditAccount') }}"
+                                        class="theme-form" autocomplete="off">
+                                        <div class="box-account box-info mt-2 mb-3">
+                                            <div class="box-head">
+                                                <h4>Thông tin</h4>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12 col-12">
+                                                    <label for="email">Email</label>
+                                                    <div class="form-inner">
+                                                        <input type="text" value="{{ auth()->user()->email }}" disabled>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-6">
+                                                    <label for="name">Họ và tên</label>
+                                                    <div class="form-inner">
+                                                        <input type="text" name="name" value="{{ old('name',auth()->user()->name) }}" >
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-6">
+                                                    <label for="phone">Số điện thoại</label>
+                                                    <div class="form-inner">
+                                                        <input type="text" name="phone" value="{{ old('phone',auth()->user()->phone) }}">
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4 col-6">
-                                                <label for="phone">Số điện thoại</label>
-                                                <div class="form-inner">
-                                                    <input type="text" value="0399999999" disabled>
-                                                </div>
+                                        </div>
+                                        <div class="box-account box-info">
+                                            <div class="box-head">
+                                                <h4>Đổi mật khẩu</h4>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="box-account box-info">
-                                        <div class="box-head">
-                                            <h4>Đổi mật khẩu</h4>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <form id="changepassword" method="post" action="" class="theme-form"
-                                                    autocomplete="off">
+                                            <div class="row">
+                                                <div class="col-sm-12">
                                                     <div class="p-0 modal-body">
                                                         <div class="form-row row">
                                                             <div class="col-md-3">
@@ -1559,19 +1560,17 @@
                                                             </div>
                                                             <div class="col-md-3 d-flex align-items-center">
                                                                 @csrf
-                                                                {{-- <button type="submit" class="btn-main"
-                                                                    style="height:38px">Xác
-                                                                    nhận</button> --}}
                                                                 <div class="form-inner">
-                                                                    <button class="primary-btn3" type="submit">Xác nhận</button>
+                                                                    <button class="primary-btn3">Cập
+                                                                        nhật</button>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </form>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="orders" role="tabpanel">
@@ -1744,6 +1743,8 @@
         </div>
     </div>
 @endsection
+@section('js')
+{!! JsValidator::formRequest('App\Http\Requests\ProfileInfoFormRequest') !!}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
     integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -1836,3 +1837,5 @@
 
     });
 </script>
+
+@endsection

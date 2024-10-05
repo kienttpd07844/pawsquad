@@ -29,16 +29,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/',[HomeController::class,'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/dang-ky', [SignUpController::class, 'index'])->name('signup');
 Route::post('/dang-ky', [SignUpController::class, 'postSignup'])->name('postSignup');
 
-Route::get('/dang-nhap',[LoginController::class,'index'])->name('login');
+Route::get('/dang-nhap', [LoginController::class, 'index'])->name('login');
 Route::post('/dang-nhap', [LoginController::class, 'postLogin'])->name('postLogin');
 
-Route::get('/quen-mat-khau',[ForgotPasswordController::class,'index'])->name('forgotpassword');
-Route::post('/quen-mat-khau',[ForgotPasswordController::class,'postForgotPassword'])->name('postForgotPassword');
+Route::get('/quen-mat-khau', [ForgotPasswordController::class, 'index'])->name('forgotpassword');
+Route::post('/quen-mat-khau', [ForgotPasswordController::class, 'postForgotPassword'])->name('postForgotPassword');
 
 Route::get('/resetpassword', [ResetPasswordController::class, 'index'])->name('password.reset');
 Route::post('/resetpassword', [ResetPasswordController::class, 'postReset'])->name('postResetPassword');
@@ -50,23 +50,24 @@ Route::controller(SocialController::class)->group(function ($router) {
 });
 Route::middleware(['auth'])->group(function () {
     Route::get('/dang-xuat', [LoginController::class, 'logout'])->name('logout');
+
+    Route::get('/tai-khoan', [UserController::class, 'index'])->name('account');
+    Route::post('/tai-khoan', [UserController::class, 'postEdit'])->name('postEditAccount');
 });
 
-Route::get('/gioi-thieu',[AboutController::class,'index'])->name('about');
+Route::get('/gioi-thieu', [AboutController::class, 'index'])->name('about');
 
-Route::get('/dich-vu/{slug}',[ServiceController::class,'index'])->name('service');
+Route::get('/dich-vu/{slug}', [ServiceController::class, 'index'])->name('service');
 
-Route::get('/san-pham',[ProductController::class,'all'])->name('product');
-Route::get('/san-pham/{slug}',[ProductController::class,'list'])->name('list.product');
+Route::get('/san-pham', [ProductController::class, 'all'])->name('product');
+Route::get('/san-pham/{slug}', [ProductController::class, 'list'])->name('list.product');
 
-Route::get('/gio-hang',[CartController::class,'index'])->name('cart');
-Route::get('/thanh-toan',[CheckoutController::class,'index'])->name('checkout');
+Route::get('/gio-hang', [CartController::class, 'index'])->name('cart');
+Route::get('/thanh-toan', [CheckoutController::class, 'index'])->name('checkout');
 
-Route::get('/thuong-hieu',[BrandController::class,'index'])->name('brand');
+Route::get('/thuong-hieu', [BrandController::class, 'index'])->name('brand');
 
-Route::get('/tin-tuc',[BlogController::class,'all'])->name('blog');
-Route::get('/tin-tuc/{slug}',[BlogController::class,'detail'])->name('detail.blog');
+Route::get('/tin-tuc', [BlogController::class, 'all'])->name('blog');
+Route::get('/tin-tuc/{slug}', [BlogController::class, 'detail'])->name('detail.blog');
 
-Route::get('/yeu-thich',[WishlistController::class,'index'])->name('wishlist');
-
-Route::get('/tai-khoan',[UserController::class,'index'])->name('account');
+Route::get('/yeu-thich', [WishlistController::class, 'index'])->name('wishlist');
