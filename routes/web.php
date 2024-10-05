@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AboutController;
+use App\Http\Controllers\Admin\Attribute_SetControllerAdmin;
+use App\Http\Controllers\Admin\AttributesControllerAdmin;
 use App\Http\Controllers\Admin\HomeControllerAdmin;
 use App\Http\Controllers\Admin\UploadControllerAdmin;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -92,6 +94,29 @@ Route::middleware(['checkaccount'])->group(function () {
                     Route::get('/getimage', [UploadControllerAdmin::class, 'getimage'])->name('getOldImage');
                     Route::get('/getimage1', [UploadControllerAdmin::class, 'getimage1'])->name('getOldImage1');
                     Route::get('/get-file-info', [UploadControllerAdmin::class, 'getFile'])->name('get-file-info');
+                }
+            );
+
+            Route::middleware(['role:9,10'])->prefix('attributes-sets')->name('attributes_sets.')->group(
+                function () {
+                    Route::match(['get', 'post'], '/', [Attribute_SetControllerAdmin::class, 'index'])->name('index');
+                    Route::match(['get', 'post'], '/parent/{id?}', [Attribute_SetControllerAdmin::class, 'parent'])->name('parent')->where(['id' => '[0-9]+']);
+                    Route::get('add', [Attribute_SetControllerAdmin::class, 'add'])->name('addAttribute_Set');
+                    Route::post('add', [Attribute_SetControllerAdmin::class, 'postAdd'])->name('postAddAttribute_Set');
+                    Route::get('edit/{id?}', [Attribute_SetControllerAdmin::class, 'edit'])->name('editAttribute_Set')->where(['id' => '[0-9]+']);
+                    Route::put('edit/{id?}', [Attribute_SetControllerAdmin::class, 'postEdit'])->name('postEditAttribute_Set');
+                    Route::get('delete/{id?}', [Attribute_SetControllerAdmin::class, 'delete'])->name('deleteAttribute_Set')->where(['id' => '[0-9]+']);
+                }
+            );
+
+            Route::middleware(['role:9,10'])->prefix('attributes')->name('attributes.')->group(
+                function () {
+                    Route::match(['get', 'post'], '/', [AttributesControllerAdmin::class, 'index'])->name('index');
+                    Route::get('add', [AttributesControllerAdmin::class, 'add'])->name('addAttribute');
+                    Route::post('add', [AttributesControllerAdmin::class, 'postAdd'])->name('postAddAttribute');
+                    Route::get('edit/{id?}', [AttributesControllerAdmin::class, 'edit'])->name('editAttribute')->where(['id' => '[0-9]+']);
+                    Route::put('edit/{id?}', [AttributesControllerAdmin::class, 'postEdit'])->name('postEditAttribute');
+                    Route::get('delete/{id?}', [AttributesControllerAdmin::class, 'delete'])->name('deleteAttribute')->where(['id' => '[0-9]+']);
                 }
             );
         });
