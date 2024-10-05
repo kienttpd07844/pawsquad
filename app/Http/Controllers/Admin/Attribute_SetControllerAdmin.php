@@ -91,7 +91,6 @@ class Attribute_SetControllerAdmin extends Controller
                 'slug' => $slug,
             ]);
 
-            systemlog('[ADD] nhóm thuộc tính id: ' . $addAttributeSet->id);
             return redirect(route('admin.attributes_sets.index'))->withSuccessMessage('Thêm nhóm thuộc tính thành công!');
         } catch (\Exception $e) {
             return redirect(route('admin.attributes_sets.addAttribute_Set'))->withErrorMessage('Đã xảy ra lỗi khi thêm nhóm thuộc tính.');
@@ -128,7 +127,6 @@ class Attribute_SetControllerAdmin extends Controller
             $data->update([
                 'name' => $request->input('name'),
             ]);
-            systemlog('[EDIT] nhóm thuộc tính id: ' . $data->id);
             return redirect(route('admin.attributes_sets.index'))->withSuccessMessage('Cập nhật nhóm thuộc tính thành công!');
         } catch (\Exception $e) {
             dd($e);
@@ -147,7 +145,6 @@ class Attribute_SetControllerAdmin extends Controller
                 return redirect()->back()->withErrorMessage('Không thể xoá nhóm thuộc tính này.');
             }
             $attribute->delete();
-            systemlog('[DELETE] nhóm thuộc tính id: ' . $attribute->id);
             return redirect(route('admin.attributes_sets.index'))->withSuccessMessage('Xoá nhóm thuộc tính thành công');
         }
     }

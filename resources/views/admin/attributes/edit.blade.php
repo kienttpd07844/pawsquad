@@ -54,11 +54,11 @@
                                         value="{{ old('name', $data->name) }}" />
                                 </div>
                                 <div class="mb-6">
-                                    <label class="form-label mb-1" for="categories"> Chọn danh mục game
+                                    <label class="form-label mb-1" for="categories"> Chọn danh mục sản phẩm
                                     </label>
                                     <select id="categories" class="categories form-select"
-                                        data-placeholder="Chọn danh mục game" name="categories" multiple="multiple">
-                                        <option value="">Chọn danh mục game</option>
+                                        data-placeholder="Chọn danh mục sản phẩm" name="categories" multiple="multiple">
+                                        <option value="">Chọn danh mục sản phẩm</option>
                                         @forelse($categories as $row)
                                             @if ($row->parent_id == null)
                                                 <!-- Hiển thị danh mục cha -->
@@ -77,7 +77,7 @@
                                                 @endforeach
                                             @endif
                                         @empty
-                                            <option value="" disabled>Không có danh mục game</option>
+                                            <option value="" disabled>Không có danh mục sản phẩm</option>
                                         @endforelse
                                     </select>
                                 </div>

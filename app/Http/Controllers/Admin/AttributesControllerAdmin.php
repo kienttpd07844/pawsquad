@@ -95,7 +95,6 @@ class AttributesControllerAdmin extends Controller
                 'status' => $status,
                 'categories' => isset($request->categories) ? $request->categories : NULL,
             ]);
-            systemlog('[ADD] thuộc tính id: ' . $addAttribute->id);
             return redirect(route('admin.attributes.index'))->withSuccessMessage('Thêm thuộc tính thành công!');
         } catch (\Exception $e) {
             return redirect(route('admin.attributes.addAttribute'))->withErrorMessage('Đã xảy ra lỗi khi thêm thuộc tính.');
@@ -153,7 +152,7 @@ class AttributesControllerAdmin extends Controller
                 'categories' => isset($request->categories) ? $request->categories : NULL,
             ]);
 
-            systemlog('[EDIT] thuộc tính id: ' . $data->id);
+
             return redirect(route('admin.attributes.index'))->withSuccessMessage('Cập nhật thuộc tính thành công!');
         } catch (\Exception $e) {
             dd($e);
@@ -172,7 +171,6 @@ class AttributesControllerAdmin extends Controller
                 return redirect()->back()->withErrorMessage('Không thể xoá thuộc tính này.');
             }
             $attribute->delete();
-            systemlog('[DELETE] thuộc tính id: ' . $attribute->id);
             return redirect(route('admin.attributes.index'))->withSuccessMessage('Xoá thuộc tính thành công');
         }
     }

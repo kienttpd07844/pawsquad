@@ -3,6 +3,7 @@
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Admin\Attribute_SetControllerAdmin;
 use App\Http\Controllers\Admin\AttributesControllerAdmin;
+use App\Http\Controllers\Admin\CategoryControllerAdmin;
 use App\Http\Controllers\Admin\HomeControllerAdmin;
 use App\Http\Controllers\Admin\UploadControllerAdmin;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -117,6 +118,18 @@ Route::middleware(['checkaccount'])->group(function () {
                     Route::get('edit/{id?}', [AttributesControllerAdmin::class, 'edit'])->name('editAttribute')->where(['id' => '[0-9]+']);
                     Route::put('edit/{id?}', [AttributesControllerAdmin::class, 'postEdit'])->name('postEditAttribute');
                     Route::get('delete/{id?}', [AttributesControllerAdmin::class, 'delete'])->name('deleteAttribute')->where(['id' => '[0-9]+']);
+                }
+            );
+
+            Route::middleware(['role:10'])->prefix('category')->name('category.')->group(
+                function () {
+                    Route::match(['get', 'post'], '/', [CategoryControllerAdmin::class, 'index'])->name('index');
+                    Route::match(['get', 'post'], '/parent/{id?}', [CategoryControllerAdmin::class, 'parent'])->name('parent')->where(['id' => '[0-9]+']);
+                    Route::get('add', [CategoryControllerAdmin::class, 'add'])->name('addCategory');
+                    Route::post('add', [CategoryControllerAdmin::class, 'postAdd'])->name('postAddCategory');
+                    Route::get('edit/{id?}', [CategoryControllerAdmin::class, 'edit'])->name('editCategory')->where(['id' => '[0-9]+']);
+                    Route::put('edit/{id?}', [CategoryControllerAdmin::class, 'postEdit'])->name('postEditCategory');
+                    Route::get('delete/{id?}', [CategoryControllerAdmin::class, 'delete'])->name('deleteCategory')->where(['id' => '[0-9]+']);
                 }
             );
         });

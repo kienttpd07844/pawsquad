@@ -271,7 +271,7 @@
             content_css: [
                 "writer",
                 "{{ asset('assets/admin/css/tiny.css') }}"
-            ]
+            ],
             image_class_list: [{
                     title: 'None',
                     value: ''

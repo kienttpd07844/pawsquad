@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->integer('email_verified')->default('0');
+            $table->integer('role')->default('0');
             $table->text('google_token')->nullable();
             $table->string('phone')->nullable()->unique();
             $table->string('password')->nullable();
