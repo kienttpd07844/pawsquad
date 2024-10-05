@@ -148,7 +148,7 @@
                         </a>
                         <form class="nav__search-form w-10  dropdown-main">
                             <ul>
-                                <li><a href="{{ route('login') }}">Tài khoản </a></li>
+                                <li><a href="{{ route('account') }}">Tài khoản </a></li>
                                 <li><a href="{{ route('signup') }}">Đơn hàng đã mua</a></li>
                                 <li><a href="{{ route('signup') }}">Danh sách địa chỉ</a></li>
                                 <li><a href="{{ route('logout') }}">Đăng xuất</a></li>
