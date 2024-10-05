@@ -11,7 +11,7 @@
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title">Thuộc tính</h5>
-                <small class="text-muted">Đây là các Thuộc tính (con) trong game</small>
+                <small class="text-muted">Đây là các Thuộc tính (con) </small>
 
             </div>
             <div class="card-datatable table-responsive">

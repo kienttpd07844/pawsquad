@@ -237,7 +237,7 @@
             const startBtn = document.querySelector('#question');
             const tourSteps = [{
                     title: 'Tên danh mục',
-                    text: 'Đây có thể là thể loại game hoặc tên thể loại con. Ví dụ: Liên Quân VIP',
+                    text: 'Đây có thể là thể loại sản phẩm hoặc tên thể loại con. Ví dụ: Thức ăn chó',
                     element: '[name="name"]'
                 },
                 {

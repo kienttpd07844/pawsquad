@@ -11,7 +11,7 @@
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title">Nhóm thuộc tính</h5>
-                <small class="text-muted">Đây là các nhóm thuộc tính (cha) trong game</small>
+                <small class="text-muted">Đây là các nhóm thuộc tính (cha) </small>
 
             </div>
             <div class="card-datatable table-responsive">
