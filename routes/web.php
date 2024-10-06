@@ -3,6 +3,7 @@
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\Admin\Attribute_SetControllerAdmin;
 use App\Http\Controllers\Admin\AttributesControllerAdmin;
+use App\Http\Controllers\Admin\BrandsControllerAdmin;
 use App\Http\Controllers\Admin\CategoryControllerAdmin;
 use App\Http\Controllers\Admin\HomeControllerAdmin;
 use App\Http\Controllers\Admin\UploadControllerAdmin;
@@ -130,6 +131,18 @@ Route::middleware(['checkaccount'])->group(function () {
                     Route::get('edit/{id?}', [CategoryControllerAdmin::class, 'edit'])->name('editCategory')->where(['id' => '[0-9]+']);
                     Route::put('edit/{id?}', [CategoryControllerAdmin::class, 'postEdit'])->name('postEditCategory');
                     Route::get('delete/{id?}', [CategoryControllerAdmin::class, 'delete'])->name('deleteCategory')->where(['id' => '[0-9]+']);
+                }
+            );
+            Route::middleware(['role:10'])->prefix('brands')->name('brands.')->group(
+                function () {
+                    Route::match(['get', 'post'], '/', [BrandsControllerAdmin::class, 'index'])->name('index');
+                    Route::match(['get', 'post'], '/trashed', [BrandsControllerAdmin::class, 'trashed'])->name('trashed');
+                    Route::get('restore/{id?}', [BrandsControllerAdmin::class, 'restore'])->name('restoreBrands')->where(['id' => '[0-9]+']);
+                    Route::get('add', [BrandsControllerAdmin::class, 'add'])->name('addBrands');
+                    Route::post('add', [BrandsControllerAdmin::class, 'postAdd'])->name('postAddBrands');
+                    Route::get('edit/{id?}', [BrandsControllerAdmin::class, 'edit'])->name('editBrands')->where(['id' => '[0-9]+']);
+                    Route::put('edit/{id?}', [BrandsControllerAdmin::class, 'postEdit'])->name('postEditBrands');
+                    Route::get('delete/{id?}', [BrandsControllerAdmin::class, 'delete'])->name('deleteBrands')->where(['id' => '[0-9]+']);
                 }
             );
         });

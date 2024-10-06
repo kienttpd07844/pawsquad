@@ -4,6 +4,7 @@ use App\Models\Article;
 use App\Models\Attribute;
 use App\Models\AttributeSet;
 use App\Models\Blog;
+use App\Models\Brand;
 use App\Models\Category;
 use Artesaos\SEOTools\Facades\SEOTools;
 use Carbon\Carbon;
@@ -71,46 +72,73 @@ function format_cash($price)
 {
     return str_replace(",", ".", number_format($price)) . 'đ';
 }
-function generateSlug($string, $type)
+function generateSlug($string, $type, $id = null)
 {
     $slug = Str::lower(Str::slug($string, '-'));
     $count = 1;
+
     switch ($type) {
         case 'category':
-            while (Category::select('slug')->where('slug', $slug)->exists()) {
+            while (Category::select('slug')
+                           ->where('slug', $slug)
+                           ->where('id', '!=', $id) // Bỏ qua nếu ID hiện tại trùng
+                           ->exists()) {
                 $slug = $slug . '-' . $count;
                 $count++;
             }
             break;
         case 'attributeset':
-            while (AttributeSet::select('slug')->where('slug', $slug)->exists()) {
+            while (AttributeSet::select('slug')
+                               ->where('slug', $slug)
+                               ->where('id', '!=', $id)
+                               ->exists()) {
                 $slug = $slug . '-' . $count;
                 $count++;
             }
             break;
         case 'attribute':
-            while (Attribute::select('slug')->where('slug', $slug)->exists()) {
+            while (Attribute::select('slug')
+                            ->where('slug', $slug)
+                            ->where('id', '!=', $id)
+                            ->exists()) {
+                $slug = $slug . '-' . $count;
+                $count++;
+            }
+            break;
+        case 'brand':
+            while (Brand::select('slug')
+                         ->where('slug', $slug)
+                         ->where('id', '!=', $id)
+                         ->exists()) {
                 $slug = $slug . '-' . $count;
                 $count++;
             }
             break;
         case 'article':
-            while (Article::select('slug')->where('slug', $slug)->exists()) {
+            while (Article::select('slug')
+                           ->where('slug', $slug)
+                           ->where('id', '!=', $id)
+                           ->exists()) {
                 $slug = $slug . '-' . $count;
                 $count++;
             }
             break;
         case 'blog':
-            while (Blog::select('slug')->where('slug', $slug)->exists()) {
+            while (Blog::select('slug')
+                        ->where('slug', $slug)
+                        ->where('id', '!=', $id)
+                        ->exists()) {
                 $slug = $slug . '-' . $count;
                 $count++;
             }
             break;
         default:
-            return NULL;
+            return null;
     }
+
     return $slug;
 }
+
 function deleteImages($imagePaths)
 {
     // Kiểm tra xem biến $imagePaths có phải là một mảng hay không
@@ -136,7 +164,7 @@ function deleteImages($imagePaths)
     }
 }
 
-function systemLog($action, $additional_info = [],$type = "default")
+function systemLog($action, $additional_info = [], $type = "default")
 {
     $user_id = auth()->check() ? auth()->user()->id : NULL;
     $ip_address = request()->ip();
@@ -150,7 +178,7 @@ function systemLog($action, $additional_info = [],$type = "default")
                 'action'         => $action,             // Mô tả hành động
                 'ip_address'     => $ip_address,         // Địa chỉ IP của người dùng
                 'user_agent'     => $user_agent,         // Trình duyệt/người dùng
-                'additional_info'=> json_encode($additional_info), // Thông tin bổ sung (JSON)
+                'additional_info' => json_encode($additional_info), // Thông tin bổ sung (JSON)
                 'created_at'     => now(),               // Thời gian hành động
             ]);
             break;
@@ -162,7 +190,7 @@ function systemLog($action, $additional_info = [],$type = "default")
                 'action'         => '[LOGIN] ' . $action,
                 'ip_address'     => $ip_address,
                 'user_agent'     => $user_agent,
-                'additional_info'=> json_encode(array_merge($additional_info, ['login' => true])),
+                'additional_info' => json_encode(array_merge($additional_info, ['login' => true])),
                 'created_at'     => now(),
             ]);
             break;
@@ -174,7 +202,7 @@ function systemLog($action, $additional_info = [],$type = "default")
                 'action'         => '[ERROR] ' . $action, // Gắn nhãn error cho action
                 'ip_address'     => $ip_address,
                 'user_agent'     => $user_agent,
-                'additional_info'=> json_encode(array_merge($additional_info, ['severity' => 'high'])),
+                'additional_info' => json_encode(array_merge($additional_info, ['severity' => 'high'])),
                 'created_at'     => now(),
             ]);
             break;
@@ -186,7 +214,7 @@ function systemLog($action, $additional_info = [],$type = "default")
                 'action'         => '[UNKNOWN] ' . $action,
                 'ip_address'     => $ip_address,
                 'user_agent'     => $user_agent,
-                'additional_info'=> json_encode($additional_info),
+                'additional_info' => json_encode($additional_info),
                 'created_at'     => now(),
             ]);
             break;

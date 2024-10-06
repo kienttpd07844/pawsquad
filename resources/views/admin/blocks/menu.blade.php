@@ -39,7 +39,7 @@
             <span class="menu-header-text">Quản lý</span>
         </li>
 
-        <li class="menu-item {{ Route::is(['admin.category.*','admin.attributes_sets.*','admin.attributes.*']) ? 'active open' : '' }}">
+        <li class="menu-item {{ Route::is(['admin.brands.*','admin.category.*','admin.attributes_sets.*','admin.attributes.*']) ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons ti ti-truck"></i>
                 <div>Sản phẩm</div>
@@ -53,6 +53,11 @@
                 <li class="menu-item {{ Route::is('admin.category.*') ? 'active open' : '' }}">
                     <a href="{{ route('admin.category.index') }}" class="menu-link">
                         <div>Danh mục</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ Route::is('admin.brands.*') ? 'active open' : '' }}">
+                    <a href="{{ route('admin.brands.index') }}" class="menu-link">
+                        <div>Nhãn hàng</div>
                     </a>
                 </li>
                 <li class="menu-item {{ Route::is(['admin.attributes_sets.*','admin.attributes.*']) ? 'active open' : '' }}" style="">
