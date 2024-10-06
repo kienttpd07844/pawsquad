@@ -7,6 +7,8 @@ use App\Http\Controllers\Admin\BrandsControllerAdmin;
 use App\Http\Controllers\Admin\CategoryControllerAdmin;
 use App\Http\Controllers\Admin\HomeControllerAdmin;
 use App\Http\Controllers\Admin\UploadControllerAdmin;
+use App\Http\Controllers\Admin\VariationsControllerAdmin;
+use App\Http\Controllers\Admin\VariationValuesControllerAdmin;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\SignUpController;
@@ -127,7 +129,7 @@ Route::middleware(['checkaccount'])->group(function () {
                     Route::match(['get', 'post'], '/', [CategoryControllerAdmin::class, 'index'])->name('index');
                     Route::match(['get', 'post'], '/parent/{id?}', [CategoryControllerAdmin::class, 'parent'])->name('parent')->where(['id' => '[0-9]+']);
                     Route::match(['get', 'post'], '/trashed', [CategoryControllerAdmin::class, 'trashed'])->name('trashed');
-                    Route::get('restore/{id?}', [CategoryControllerAdmin::class, 'restore'])->name('restoreBrands')->where(['id' => '[0-9]+']);
+                    Route::get('restore/{id?}', [CategoryControllerAdmin::class, 'restore'])->name('restoreCategory')->where(['id' => '[0-9]+']);
                     Route::get('add', [CategoryControllerAdmin::class, 'add'])->name('addCategory');
                     Route::post('add', [CategoryControllerAdmin::class, 'postAdd'])->name('postAddCategory');
                     Route::get('edit/{id?}', [CategoryControllerAdmin::class, 'edit'])->name('editCategory')->where(['id' => '[0-9]+']);
@@ -145,6 +147,28 @@ Route::middleware(['checkaccount'])->group(function () {
                     Route::get('edit/{id?}', [BrandsControllerAdmin::class, 'edit'])->name('editBrands')->where(['id' => '[0-9]+']);
                     Route::put('edit/{id?}', [BrandsControllerAdmin::class, 'postEdit'])->name('postEditBrands');
                     Route::get('delete/{id?}', [BrandsControllerAdmin::class, 'delete'])->name('deleteBrands')->where(['id' => '[0-9]+']);
+                }
+            );
+            Route::middleware(['role:10'])->prefix('variations')->name('variations.')->group(
+                function () {
+                    Route::match(['get', 'post'], '/', [VariationsControllerAdmin::class, 'index'])->name('index');
+                    Route::match(['get', 'post'], '/parent/{id?}', [VariationsControllerAdmin::class, 'parent'])->name('parent')->where(['id' => '[0-9]+']);
+                    Route::match(['get', 'post'], '/trashed', [VariationsControllerAdmin::class, 'trashed'])->name('trashed');
+                    Route::get('restore/{id?}', [VariationsControllerAdmin::class, 'restore'])->name('restoreVariations')->where(['id' => '[0-9]+']);
+                    Route::get('add', [VariationsControllerAdmin::class, 'add'])->name('addVariations');
+                    Route::post('add', [VariationsControllerAdmin::class, 'postAdd'])->name('postAddVariations');
+                    Route::get('edit/{id?}', [VariationsControllerAdmin::class, 'edit'])->name('editVariations')->where(['id' => '[0-9]+']);
+                    Route::put('edit/{id?}', [VariationsControllerAdmin::class, 'postEdit'])->name('postEditVariations');
+                    Route::get('delete/{id?}', [VariationsControllerAdmin::class, 'delete'])->name('deleteVariations')->where(['id' => '[0-9]+']);
+                }
+            );
+            Route::middleware(['role:10'])->prefix('variations-values')->name('variations-values.')->group(
+                function () {
+                    Route::match(['get', 'post'], '/', [VariationValuesControllerAdmin::class, 'index'])->name('index');
+                    Route::get('add', [VariationValuesControllerAdmin::class, 'add'])->name('addVariationValues');
+                    Route::post('add', [VariationValuesControllerAdmin::class, 'postAdd'])->name('postAddVariationValues');
+                    Route::get('edit/{id?}', [VariationValuesControllerAdmin::class, 'edit'])->name('editVariationValues')->where(['id' => '[0-9]+']);
+                    Route::put('edit/{id?}', [VariationValuesControllerAdmin::class, 'postEdit'])->name('postEditVariationValues');
                 }
             );
         });
