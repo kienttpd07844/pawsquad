@@ -126,6 +126,8 @@ Route::middleware(['checkaccount'])->group(function () {
                 function () {
                     Route::match(['get', 'post'], '/', [CategoryControllerAdmin::class, 'index'])->name('index');
                     Route::match(['get', 'post'], '/parent/{id?}', [CategoryControllerAdmin::class, 'parent'])->name('parent')->where(['id' => '[0-9]+']);
+                    Route::match(['get', 'post'], '/trashed', [CategoryControllerAdmin::class, 'trashed'])->name('trashed');
+                    Route::get('restore/{id?}', [CategoryControllerAdmin::class, 'restore'])->name('restoreBrands')->where(['id' => '[0-9]+']);
                     Route::get('add', [CategoryControllerAdmin::class, 'add'])->name('addCategory');
                     Route::post('add', [CategoryControllerAdmin::class, 'postAdd'])->name('postAddCategory');
                     Route::get('edit/{id?}', [CategoryControllerAdmin::class, 'edit'])->name('editCategory')->where(['id' => '[0-9]+']);

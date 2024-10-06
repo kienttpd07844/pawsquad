@@ -191,15 +191,66 @@ class CategoryControllerAdmin extends Controller
 
         if ($category == NULL) {
             return redirect(route('admin.category.index'))->withErrorMessage('Không tìm thấy danh mục.');
-        } else {
-            if ($category->id == Category::defaultCategory()->id) {
-                return redirect()->back()->withErrorMessage('Không thể xoá danh mục này.');
-            }
-            if ($category->image) {
-                deleteImages($category->image);
-            }
-            $category->delete();
-            return redirect(route('admin.category.index'))->withSuccessMessage('Xoá danh mục thành công');
         }
+        if ($category->id == Category::defaultCategory()->id) {
+            return redirect()->back()->withErrorMessage('Không thể xoá danh mục này.');
+        }
+        if ($category->deleted_at) {
+            if ($category->logo) {
+                deleteImages($category->logo);
+            }
+            $category->forceDelete();
+            return redirect(route('admin.category.index'))->withSuccessMessage('Đã xóa hoàn toàn danh mục sản phẩm.');
+        } else {
+            $category->delete();
+            return redirect(route('admin.category.index'))->withSuccessMessage('Đã xóa danh mục sản phẩm, có thể khôi phục.');
+        }
+    }
+    public function trashed(Request $request)
+    {
+        if ($request->isMethod('post')) {
+            $categories = Category::onlyTrashed()->with('parent')->select(['id', 'name', 'status', 'image', 'parent_id', 'views']);
+
+            $data = DataTables::of($categories)
+                ->filter(function ($query) use ($request) {
+                    if ($request->has('search') && !empty($request->get('search')['value'])) {
+                        $search = $request->get('search')['value'];
+                        $query->where(function ($q) use ($search) {
+                            $q->where('id', $search)
+                                ->orWhereHas('parent', function ($subQuery) use ($search) {
+                                    $subQuery->where('name', 'like', "%{$search}%");
+                                })
+                                ->orWhere('name', 'like', "%{$search}%")
+                                ->orWhere('views', $search);
+                        });
+                    }
+                })
+                ->addColumn('children_count', function ($row) {
+                    $childrenCount = Category::where('parent_id', $row->id)->count();
+                    return $childrenCount;
+                })
+                ->addColumn('action', function ($row) {
+                    return '<a href="' . route('admin.category.restoreBrands', $row->id) . '" class="me-2 btn btn-sm btn-primary">Khôi phục</a>'
+                        . '<a href="' . route('admin.category.editCategory', $row->id) . '" class="btn btn-sm btn-primary">Sửa</a>'
+                        . ' <a href="' . route('admin.category.deleteCategory', $row->id) . '" class="btn btn-sm btn-danger delete-btn" data-id="' . $row->id . '">Xóa</a>';
+                })
+                ->make(true);
+            return $data;
+        }
+        request()->session()->forget('uploadImages');
+        request()->session()->forget('parent_category');
+        return view('admin.category.trashed');
+    }
+    public function restore($id)
+    {
+        $category = Category::onlyTrashed()->find($id);
+        if ($category->id == Category::defaultCategory()->id) {
+            return redirect()->back()->withErrorMessage('Không thể khôi phục danh mục sản phẩm này.');
+        }
+        if (!$category) {
+            return redirect()->route('admin.category.index')->withErrorMessage('Danh mục sản phẩm không tìm thấy.');
+        }
+        $category->restore();
+        return redirect()->route('admin.category.index')->withSuccessMessage('Khôi phục danh mục sản phẩm thành công.');
     }
 }

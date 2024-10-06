@@ -50,7 +50,7 @@
                     url: "{{ asset('assets/admin/vendor/libs/datatables-bs5/vi.json') }}",
                 },
                 ajax: {
-                    url: "{{ route('admin.category.index') }}",
+                    url: "{{ route('admin.category.trashed') }}",
                     type: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -203,21 +203,12 @@
                 lengthMenu: [10, 20, 50, 75, 100],
                 // Buttons with Dropdown
                 buttons: [{
-                        text: '<i class="ti ti-plus ti-xs me-md-2"></i><span class="d-md-inline-block d-none">Tạo danh mục</span>',
-                        className: 'btn btn-primary waves-effect waves-light',
-                        action: function(e, dt, button, config) {
-                            window.location = "{{ route('admin.category.addCategory') }}";
-                        }
-                    },
-                    {
-                        text: '<i class="ti ti-trash ti-xs me-md-2"></i><span class="d-md-inline-block d-none"></span>',
-                        className: 'ms-2 btn btn-warning waves-effect waves-light',
-                        action: function(e, dt, button, config) {
-                            window.location =
-                                "{{ route('admin.category.trashed') }}";
-                        }
+                    text: '<i class="ti ti-plus ti-xs me-md-2"></i><span class="d-md-inline-block d-none">Tạo danh mục sản phẩm</span>',
+                    className: 'btn btn-primary waves-effect waves-light',
+                    action: function(e, dt, button, config) {
+                        window.location = "{{ route('admin.category.addCategory') }}";
                     }
-                ],
+                }],
                 // For responsive popup
                 responsive: {
                     details: {
