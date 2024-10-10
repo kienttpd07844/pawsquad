@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\HomeControllerAdmin;
 use App\Http\Controllers\Admin\UploadControllerAdmin;
 use App\Http\Controllers\Admin\VariationsControllerAdmin;
 use App\Http\Controllers\Admin\VariationValuesControllerAdmin;
+use App\Http\Controllers\Admin\VoucherControllerAdmin;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\SignUpController;
@@ -169,6 +170,17 @@ Route::middleware(['checkaccount'])->group(function () {
                     Route::post('add', [VariationValuesControllerAdmin::class, 'postAdd'])->name('postAddVariationValues');
                     Route::get('edit/{id?}', [VariationValuesControllerAdmin::class, 'edit'])->name('editVariationValues')->where(['id' => '[0-9]+']);
                     Route::put('edit/{id?}', [VariationValuesControllerAdmin::class, 'postEdit'])->name('postEditVariationValues');
+                }
+            );
+
+            Route::middleware(['role:10'])->prefix('vouchers')->name('vouchers.')->group(
+                function () {
+                    Route::match(['get', 'post'], '/', [VoucherControllerAdmin::class, 'index'])->name('index');
+                    Route::get('add', [VoucherControllerAdmin::class, 'add'])->name('addVouchers');
+                    Route::post('add', [VoucherControllerAdmin::class, 'postAdd'])->name('postAddVouchers');
+                    Route::get('edit/{id?}', [VoucherControllerAdmin::class, 'edit'])->name('editVouchers')->where(['id' => '[0-9]+']);
+                    Route::put('edit/{id?}', [VoucherControllerAdmin::class, 'postEdit'])->name('postEditVouchers');
+                    Route::get('delete/{id?}', [VoucherControllerAdmin::class, 'delete'])->name('deleteVouchers')->where(['id' => '[0-9]+']);
                 }
             );
         });

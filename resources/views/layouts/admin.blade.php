@@ -400,6 +400,26 @@
                 return basePath + '/' + image;
             }
         }
+
+        function format_date(dateString) {
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) {
+                return 'Invalid';
+            }
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0'); 
+            const year = date.getFullYear();
+
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+
+            if (dateString.includes(':')) {
+                return `${day}/${month}/${year} ${hours}:${minutes}`;
+            }
+
+            return `${day}/${month}/${year}`;
+        }
+
         function ChangeToSlug() {
             var title, slug;
             //Lấy text từ thẻ input title

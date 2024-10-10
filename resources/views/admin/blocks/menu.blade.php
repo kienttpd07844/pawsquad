@@ -86,6 +86,12 @@
 
             </ul>
         </li>
+        <li class="menu-item {{ Route::is(['admin.vouchers.*']) ? 'active open' : '' }}">
+            <a href="{{ route('admin.vouchers.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons ti ti-ticket"></i>
+                <div>Mã giảm giá</div>
+            </a>
+        </li>
 
     </ul>
 </aside>
