@@ -2,6 +2,33 @@
 @section('css')
     <link rel="stylesheet" href="{{ asset('assets/admin/vendor/libs/select2/select2.css') }}" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
+
+    <link rel="stylesheet" href="{{ asset('assets/admin/vendor/libs/select2/select2.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/admin/vendor/libs/quill/typography.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/admin/vendor/libs/quill/katex.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/admin/vendor/libs/quill/editor.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/admin/vendor/libs/select2/select2.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/admin/vendor/libs/dropzone/dropzone.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/admin/vendor/libs/flatpickr/flatpickr.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/admin/vendor/libs/tagify/tagify.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/admin/vendor/libs/shepherd/shepherd.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/admin/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.css') }}" />
+    <link rel="stylesheet"
+        href="{{ asset('assets/admin/vendor/libs/bootstrap-daterangepicker/bootstrap-daterangepicker.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/admin/vendor/libs/jquery-timepicker/jquery-timepicker.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/admin/vendor/libs/pickr/pickr-themes.css') }}" />
+    <style>
+        .flatpickr-calendar {
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+        }
+
+        @media (max-width: 768px) {
+            #dateRange {
+                display: none;
+            }
+        }
+    </style>
 @endsection
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
@@ -10,8 +37,8 @@
         <!-- Category List Table -->
         <div class="card">
             <div class="card-header">
-                <h5 class="card-title">Danh sách danh mục sản phẩm - {{ $super->name }}</h5>
-                <small class="text-muted">Đây là danh mục các sản phẩm - {{ $super->name }}</small>
+                <h5 class="card-title">Lịch sử dùng mã giảm giá</h5>
+                <small class="text-muted">Đây là danh sách những người đã sử dụng mã giảm giá</small>
 
             </div>
             <div class="card-datatable table-responsive">
@@ -20,12 +47,10 @@
                         <tr>
                             <th></th>
                             <th>ID</th>
-                            <th>Hình</th>
-                            <th>Tên danh mục</th>
-                            <th>Tổng sản phẩm</th>
-                            <th>Trạng thái</th>
-                            <th>Lượt xem</th>
-                            <th>Hành động</th>
+                            <th>Người dùng</th>
+                            <th>Tên mã</th>
+                            <th>Thời gian</th>
+                            <td>Số lượng</td>
                         </tr>
                     </thead>
                 </table>
@@ -39,8 +64,18 @@
     <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
     <script src="{{ asset('assets/admin/vendor/libs/block-ui/block-ui.js') }}"></script>
 
+    <script src="{{ asset('assets/admin/vendor/libs/moment/moment.js') }}"></script>
+    <script src="{{ asset('assets/admin/vendor/libs/flatpickr/flatpickr.js') }}"></script>
+    <script src="{{ asset('assets/admin/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('assets/admin/vendor/libs/bootstrap-daterangepicker/bootstrap-daterangepicker.js') }}"></script>
+    <script src="{{ asset('assets/admin/vendor/libs/jquery-timepicker/jquery-timepicker.js') }}"></script>
+    <script src="{{ asset('assets/admin/vendor/libs/pickr/pickr.js') }}"></script>
+    <script src="{{ asset('assets/admin/vendor/libs/flatpickr/vn.js') }}?v=1"></script>
+
     <script>
         $(document).ready(function() {
+            console.log($.fn.dataTable.version);
+
             $('.datatables-products').DataTable({
                 processing: true,
                 serverSide: true,
@@ -48,10 +83,13 @@
                     url: "{{ asset('assets/admin/vendor/libs/datatables-bs5/vi.json') }}",
                 },
                 ajax: {
-                    url: window.location.href,
+                    url: "{{ route('admin.vouchers.history') }}",
                     type: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: function(d) {
+                        d.date_range = $('#dateRange').val(); // Lấy giá trị range ngày
                     },
                     dataSrc: function(json) {
                         window.status_flag = json.status_flag || [];
@@ -82,19 +120,13 @@
                         data: 'id'
                     },
                     {
-                        data: 'image'
-                    },
-                    {
                         data: 'name'
                     },
                     {
-                        data: 'products_count'
+                        data: 'created_at'
                     },
                     {
-                        data: 'status'
-                    },
-                    {
-                        data: 'views'
+                        data: 'usage_count'
                     },
                     {
                         data: 'action',
@@ -122,29 +154,10 @@
                         }
                     },
                     {
-                        // Image
+                        // user_name
                         targets: 2,
                         render: function(data, type, full, meta) {
-                            var $img = full['image'];
-                            var $category = full['name'];
-                            var $row_output =
-                                '<div class="d-flex justify-content-start align-items-center product-name">';
-
-                            // Avatar (hình ảnh)
-                            if ($img) {
-                                $row_output += '<div class="avatar-wrapper me-4">';
-                                $row_output +=
-                                    '<div class="avatar avatar rounded-2 bg-label-secondary">';
-                                $row_output += '<img src="' + getImage($img) +
-                                    '" data-fancybox data-caption="' + $category +
-                                    '" alt="' + $category +
-                                    '" class="rounded-2">';
-                                $row_output += '</img>';
-                                $row_output += '</div>';
-                                $row_output += '</div>';
-                            }
-
-                            $row_output += '</div>';
+                            var $row_output = full['user_name'];
                             return $row_output;
                         }
                     },
@@ -152,39 +165,46 @@
                         // Name
                         targets: 3,
                         render: function(data, type, full, meta) {
-                            return limitText(full['name'], 20);
+                            var $row_output = '';
+                            var $name = full['voucher'] ? full['voucher']['name'] : 'N/A';
+                            var $voucherType = full['voucher_type'] ? full['voucher_type']['name'] :
+                                'N/A';
+                            $row_output += '<div class="d-flex flex-column">';
+                            $row_output += '<h6 class="text-nowrap mb-0">' + limitText($name,
+                                    20) +
+                                '</h6>';
+                            $row_output +=
+                                '<small class="text-truncate d-none d-sm-block text-success">' +
+                                limitText($voucherType, 15) + ' </small>';
+                            $row_output += '</div>';
+                            return $row_output;
                         }
                     },
                     {
-                        // Childrent count
+                        // Date
                         targets: 4,
                         render: function(data, type, full, meta) {
-                            return full['products_count'];
+                            var $row_output = '';
+                            var $created_at = format_date(full['created_at']);
+                            var $row_output = '<div class="d-flex flex-column">';
+                            $row_output += '<h6 class="text-nowrap mb-0">' +
+                                $created_at + '</h6>';
+                            return $row_output;
                         }
                     },
                     {
-                        // Status
+                        // usage_count
                         targets: 5,
                         render: function(data, type, full, meta) {
-                            var invoiceStatus = full['status'] === 1 ? 'hien' : 'an';
-                            var statusBadge = {
-                                'hien': '<span class="me-2 badge d-flex align-items-center justify-content-center bg-success" style="white-space: nowrap;">Hiện</span>',
-                                'an': '<span class="me-2 badge d-flex align-items-center justify-content-center bg-secondary" style="white-space: nowrap;">Ẩn</span>'
-                            };
-                            return (
-                                "<div class='d-inline-flex align-items-center'>" +
-                                statusBadge[invoiceStatus] +
-                                "</div>"
-                            );
+                            var $row_output = '';
+                            var usage_count = full['usage_count'];
+                            var row_output = '<div class="d-flex flex-column">';
+                            row_output += '<h6 class="text-nowrap mb-0">' + usage_count +
+                                '</h6>';
+                            row_output += '</div>';
+                            return row_output;
                         }
-                    },
-                    {
-                        // View
-                        targets: 6,
-                        render: function(data, type, full, meta) {
-                            return full['views'];
-                        }
-                    },
+                    }
                 ],
                 order: [
                     [1, 'desc']
@@ -199,21 +219,37 @@
                     '>',
                 displayLength: 10,
                 lengthMenu: [10, 20, 50, 75, 100],
-                // Buttons with Dropdown
                 buttons: [{
-                    text: '<i class="ti ti-plus ti-xs me-md-2"></i><span class="d-md-inline-block d-none">Tạo danh mục sản phẩm</span>',
-                    className: 'btn btn-primary waves-effect waves-light',
-                    action: function(e, dt, button, config) {
-                        window.location = "{{ route('admin.category.addCategory') }}";
+                        text: '<i class="ti ti-plus ti-xs me-md-2"></i><span class="d-md-inline-block d-none">Tạo mã giảm giá</span>',
+                        className: 'btn btn-primary waves-effect waves-light',
+                        action: function(e, dt, button, config) {
+                            window.location = "{{ route('admin.vouchers.addVouchers') }}";
+                        }
+                    },
+                    {
+                        text: '<i class="ti ti-calendar ti-xs me-md-2"></i>',
+                        className: 'ms-2 btn btn-primary',
+                        action: function(e, dt, button, config) {
+                            flatpickr("#dateRange", {
+                                mode: "range",
+                                enableTime: false,
+                                "locale": "vn",
+                                dateFormat: "Y-m-d",
+                                onClose: function(selectedDates, dateStr, instance) {
+                                    dt.ajax
+                                        .reload();
+                                },
+                            }).open();
+                        }
                     }
-                }],
+                ],
                 // For responsive popup
                 responsive: {
                     details: {
                         display: $.fn.dataTable.Responsive.display.modal({
                             header: function(row) {
                                 var data = row.data();
-                                return 'Chi tiết danh mục - ' + data['name'];
+                                return 'Chi tiết sử dụng mã giảm giá - ' + data['name'];
                             }
                         }),
                         type: 'column',
@@ -243,6 +279,7 @@
                     }
                 }
             });
+            $('body').append('<input type="hidden" id="dateRange">');
             Fancybox.bind("[data-fancybox]", {
                 infinite: false,
                 transitionEffect: "fade",

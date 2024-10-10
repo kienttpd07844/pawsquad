@@ -176,6 +176,7 @@ Route::middleware(['checkaccount'])->group(function () {
             Route::middleware(['role:10'])->prefix('vouchers')->name('vouchers.')->group(
                 function () {
                     Route::match(['get', 'post'], '/', [VoucherControllerAdmin::class, 'index'])->name('index');
+                    Route::match(['get', 'post'], '/history', [VoucherControllerAdmin::class, 'history'])->name('history');
                     Route::get('add', [VoucherControllerAdmin::class, 'add'])->name('addVouchers');
                     Route::post('add', [VoucherControllerAdmin::class, 'postAdd'])->name('postAddVouchers');
                     Route::get('edit/{id?}', [VoucherControllerAdmin::class, 'edit'])->name('editVouchers')->where(['id' => '[0-9]+']);

@@ -30,7 +30,7 @@ class VoucherControllerAdmin extends Controller
                     $endDate = \Carbon\Carbon::createFromFormat('Y-m-d', trim($dates[1]))->endOfDay();
                     $vouchers->where(function ($query) use ($startDate, $endDate) {
                         $query->whereBetween('start_date', [$startDate, $endDate])
-                              ->orWhereBetween('expired_date', [$startDate, $endDate]);
+                            ->orWhereBetween('expired_date', [$startDate, $endDate]);
                     });
                 }
             }
@@ -63,14 +63,48 @@ class VoucherControllerAdmin extends Controller
         return view('admin.vouchers.index');
     }
 
-    public function history()
+    public function history(Request $request)
     {
-        $title = 'Lịch sử sử dụng mã giảm giá';
-        $data = VoucherUsage::all();
-        showAlert();
-        SEOSON($title);
-        return view('admin.voucher.history', compact('data'));
+        if ($request->isMethod('post')) {
+            // Lấy danh sách VoucherUsage với thông tin voucher và người dùng
+            $voucherUsages = VoucherUsage::with(['voucherType', 'user','voucher'])
+                ->select(['id', 'name', 'user_id', 'usage_count', 'created_at']);
+
+            if ($request->has('date_range') && !empty($request->get('date_range'))) {
+                //2024-10-01 đến 2024-10-31
+                // Phân tách chuỗi thành 2 ngày
+                $dates = explode(' đến ', $request->get('date_range'));
+                if (count($dates) == 2) {
+                    // Sử dụng Carbon để phân tích ngày tháng
+                    $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', trim($dates[0]))->startOfDay();
+                    $endDate = \Carbon\Carbon::createFromFormat('Y-m-d', trim($dates[1]))->endOfDay();
+                    $voucherUsages->whereBetween('created_at', [$startDate, $endDate]);
+                }
+            }
+
+            $data = DataTables::of($voucherUsages)
+                ->filter(function ($query) use ($request) {
+                    if ($request->has('search') && !empty($request->get('search')['value'])) {
+                        $search = $request->get('search')['value'];
+                        $query->where(function ($q) use ($search) {
+                            $q->where('name', 'like', "%{$search}%")
+                                ->orWhere('user_id', $search)
+                                ->orWhereHas('voucherType', function ($subQuery) use ($search) {
+                                    $subQuery->where('name', 'like', "%{$search}%");
+                                });
+                        });
+                    }
+                })
+                ->addColumn('user_name', function ($row) {
+                    return $row->user ? $row->user->name : 'N/A';
+                })
+                ->make(true);
+
+            return $data;
+        }
+        return view('admin.vouchers.history');
     }
+
     public function add()
     {
         return view('admin.vouchers.add');
@@ -133,7 +167,7 @@ class VoucherControllerAdmin extends Controller
             return redirect(route('admin.vouchers.index'))->withErrorMessage('Không tìm mã giảm giá này.');
         }
         $voucherType = $voucher->voucherType;
-        return view('admin.vouchers.edit', compact( 'voucherType', 'voucher'));
+        return view('admin.vouchers.edit', compact('voucherType', 'voucher'));
     }
 
     public function postEdit(VoucherRequestAdmin $request, $id)

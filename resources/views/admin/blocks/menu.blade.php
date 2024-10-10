@@ -36,7 +36,7 @@
             <ul class="menu-sub">
                 <li class="menu-item" style="">
                     <a href="" class="menu-link">
-                        <div>Danh sách Sản phẩm</div>
+                        <div>Sản phẩm</div>
                     </a>
                 </li>
                 <li class="menu-item {{ Route::is('admin.category.*') ? 'active open' : '' }}">
@@ -87,11 +87,24 @@
             </ul>
         </li>
         <li class="menu-item {{ Route::is(['admin.vouchers.*']) ? 'active open' : '' }}">
-            <a href="{{ route('admin.vouchers.index') }}" class="menu-link">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons ti ti-ticket"></i>
                 <div>Mã giảm giá</div>
             </a>
+            <ul class="menu-sub">
+                <li class="menu-item {{ Route::is('admin.vouchers.index') ? 'active open' : '' }}" style="">
+                    <a href="{{ route('admin.vouchers.index') }}" class="menu-link">
+                        <div>Danh sách</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ Route::is('admin.vouchers.history') ? 'active open' : '' }}">
+                    <a href="{{ route('admin.vouchers.history') }}" class="menu-link">
+                        <div>Lịch sử</div>
+                    </a>
+                </li>
+            </ul>
         </li>
+
 
     </ul>
 </aside>
