@@ -28,14 +28,14 @@
             <span class="menu-header-text">Quản lý</span>
         </li>
 
-        <li class="menu-item {{ Route::is(['admin.variations-values.*','admin.variations.*','admin.brands.*','admin.category.*','admin.attributes_sets.*','admin.attributes.*']) ? 'active open' : '' }}">
+        <li class="menu-item {{ Route::is(['admin.products.*','admin.variations-values.*','admin.variations.*','admin.brands.*','admin.category.*','admin.attributes_sets.*','admin.attributes.*']) ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons ti ti-truck"></i>
                 <div>Sản phẩm</div>
             </a>
             <ul class="menu-sub">
-                <li class="menu-item" style="">
-                    <a href="" class="menu-link">
+                <li class="menu-item {{ Route::is('admin.products.*') ? 'active open' : '' }}">
+                    <a href="{{ route('admin.products.index') }}" class="menu-link">
                         <div>Sản phẩm</div>
                     </a>
                 </li>
@@ -83,7 +83,6 @@
                         </li>
                     </ul>
                 </li>
-
             </ul>
         </li>
         <li class="menu-item {{ Route::is(['admin.vouchers.*']) ? 'active open' : '' }}">

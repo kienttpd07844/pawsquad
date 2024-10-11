@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('product_id');
             $table->string('variation_key')->nullable();
-            $table->string('sku')->nullable();
             $table->string('code')->nullable();
             $table->integer('price')->default(0);
             $table->timestamps();

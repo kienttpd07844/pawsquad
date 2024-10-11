@@ -25,6 +25,7 @@ return new class extends Migration
             $table->integer('min_price')->default(0); //
             $table->integer('max_price')->default(0); //
             $table->integer('has_variation')->default(0); //
+            $table->integer('stock_qty')->default(1);
             $table->bigInteger('brand_id');
             $table->bigInteger('category_id');
             $table->integer('status')->default(1);

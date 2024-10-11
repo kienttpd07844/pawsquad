@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AttributesControllerAdmin;
 use App\Http\Controllers\Admin\BrandsControllerAdmin;
 use App\Http\Controllers\Admin\CategoryControllerAdmin;
 use App\Http\Controllers\Admin\HomeControllerAdmin;
+use App\Http\Controllers\Admin\ProductControllerAdmin;
 use App\Http\Controllers\Admin\UploadControllerAdmin;
 use App\Http\Controllers\Admin\VariationsControllerAdmin;
 use App\Http\Controllers\Admin\VariationValuesControllerAdmin;
@@ -182,6 +183,27 @@ Route::middleware(['checkaccount'])->group(function () {
                     Route::get('edit/{id?}', [VoucherControllerAdmin::class, 'edit'])->name('editVouchers')->where(['id' => '[0-9]+']);
                     Route::put('edit/{id?}', [VoucherControllerAdmin::class, 'postEdit'])->name('postEditVouchers');
                     Route::get('delete/{id?}', [VoucherControllerAdmin::class, 'delete'])->name('deleteVouchers')->where(['id' => '[0-9]+']);
+                }
+            );
+
+            Route::middleware(['role:9,10'])->prefix('products')->name('products.')->group(
+                function () {
+                    Route::match(['get', 'post'], '/', [ProductControllerAdmin::class, 'index'])->name('index');
+                    Route::match(['get', 'post'], '/parent/{id?}', [ProductControllerAdmin::class, 'parent'])->name('parent')->where(['id' => '[0-9]+']);
+                    Route::match(['get', 'post'], '/trashed', [ProductControllerAdmin::class, 'trashed'])->name('trashed');
+                    Route::get('restore/{id?}', [ProductControllerAdmin::class, 'restore'])->name('restoreProduct')->where(['id' => '[0-9]+']);
+                    Route::get('add', [ProductControllerAdmin::class, 'add'])->name('addProduct');
+                    Route::post('add', [ProductControllerAdmin::class, 'postAdd'])->name('postAddProduct');
+                    Route::get('edit/{id?}', [ProductControllerAdmin::class, 'edit'])->name('editProduct')->where(['id' => '[0-9]+']);
+                    Route::post('edit/{id?}', [ProductControllerAdmin::class, 'postEdit'])->name('postEditProduct');
+                    Route::get('delete/{id?}', [ProductControllerAdmin::class, 'delete'])->name('deleteProduct')->where(['id' => '[0-9]+']);
+
+                    Route::post('/get-variation-values', [ProductControllerAdmin::class, 'getVariationValues'])->name('getVariationValues');
+                    Route::post('/new-variation', [ProductControllerAdmin::class, 'getNewVariation'])->name('newVariation');
+                    Route::post('/variation-combination', [ProductControllerAdmin::class, 'generateVariationCombinations'])->name('generateVariationCombinations');
+                    Route::get('/get-attribute', [ProductControllerAdmin::class, 'attribute'])->name('get_attribute');
+                    Route::get('/get-attributeset', [ProductControllerAdmin::class, 'attributeset'])->name('get_attributeset');
+                    Route::get('/get-attribute-edit/{id?}', [ProductControllerAdmin::class, 'get_attribute_edit'])->name('get_attribute_edit');
                 }
             );
         });

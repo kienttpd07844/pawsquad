@@ -6,6 +6,9 @@ use App\Models\AttributeSet;
 use App\Models\Blog;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Product;
+use App\Models\Variations;
+use App\Models\VariationValues;
 use Artesaos\SEOTools\Facades\SEOTools;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -80,54 +83,70 @@ function generateSlug($string, $type, $id = null)
     switch ($type) {
         case 'category':
             while (Category::select('slug')
-                           ->where('slug', $slug)
-                           ->where('id', '!=', $id) // Bỏ qua nếu ID hiện tại trùng
-                           ->exists()) {
+                ->where('slug', $slug)
+                ->where('id', '!=', $id) // Bỏ qua nếu ID hiện tại trùng
+                ->exists()
+            ) {
                 $slug = $slug . '-' . $count;
                 $count++;
             }
             break;
         case 'attributeset':
             while (AttributeSet::select('slug')
-                               ->where('slug', $slug)
-                               ->where('id', '!=', $id)
-                               ->exists()) {
+                ->where('slug', $slug)
+                ->where('id', '!=', $id)
+                ->exists()
+            ) {
                 $slug = $slug . '-' . $count;
                 $count++;
             }
             break;
         case 'attribute':
             while (Attribute::select('slug')
-                            ->where('slug', $slug)
-                            ->where('id', '!=', $id)
-                            ->exists()) {
+                ->where('slug', $slug)
+                ->where('id', '!=', $id)
+                ->exists()
+            ) {
                 $slug = $slug . '-' . $count;
                 $count++;
             }
             break;
         case 'brand':
             while (Brand::select('slug')
-                         ->where('slug', $slug)
-                         ->where('id', '!=', $id)
-                         ->exists()) {
+                ->where('slug', $slug)
+                ->where('id', '!=', $id)
+                ->exists()
+            ) {
+                $slug = $slug . '-' . $count;
+                $count++;
+            }
+            break;
+        case 'product':
+            while (Product::select('slug')
+                ->where('slug', $slug)
+                ->where('id', '!=', $id)
+                ->exists()
+            ) {
                 $slug = $slug . '-' . $count;
                 $count++;
             }
             break;
         case 'article':
             while (Article::select('slug')
-                           ->where('slug', $slug)
-                           ->where('id', '!=', $id)
-                           ->exists()) {
+                ->where('slug', $slug)
+                ->where('id', '!=', $id)
+                ->exists()
+            ) {
                 $slug = $slug . '-' . $count;
                 $count++;
             }
             break;
         case 'blog':
             while (Blog::select('slug')
-                        ->where('slug', $slug)
-                        ->where('id', '!=', $id)
-                        ->exists()) {
+                ->where('slug', $slug)
+                ->where('id', '!=', $id)
+                ->exists()
+            ) {
                 $slug = $slug . '-' . $count;
                 $count++;
             }
@@ -164,59 +183,50 @@ function deleteImages($imagePaths)
     }
 }
 
-function systemLog($action, $additional_info = [], $type = "default")
+function generateVariationOptions($options, $withTrash = true)
 {
-    $user_id = auth()->check() ? auth()->user()->id : NULL;
-    $ip_address = request()->ip();
-    $user_agent = request()->header('User-Agent');
 
-    // Xử lý theo từng loại log
-    switch ($type) {
-        case 'default':
-            \App\Models\AdminLog::create([
-                'user_id'        => $user_id,            // ID người dùng
-                'action'         => $action,             // Mô tả hành động
-                'ip_address'     => $ip_address,         // Địa chỉ IP của người dùng
-                'user_agent'     => $user_agent,         // Trình duyệt/người dùng
-                'additional_info' => json_encode($additional_info), // Thông tin bổ sung (JSON)
-                'created_at'     => now(),               // Thời gian hành động
-            ]);
-            break;
-
-        case 'login':
-            // Trường hợp custom log, ví dụ ghi log theo cách đặc biệt
-            \App\Models\AdminLog::create([
-                'user_id'        => $user_id,
-                'action'         => '[LOGIN] ' . $action,
-                'ip_address'     => $ip_address,
-                'user_agent'     => $user_agent,
-                'additional_info' => json_encode(array_merge($additional_info, ['login' => true])),
-                'created_at'     => now(),
-            ]);
-            break;
-
-        case 'error':
-            // Ghi log cho trường hợp lỗi
-            \App\Models\AdminLog::create([
-                'user_id'        => $user_id,
-                'action'         => '[ERROR] ' . $action, // Gắn nhãn error cho action
-                'ip_address'     => $ip_address,
-                'user_agent'     => $user_agent,
-                'additional_info' => json_encode(array_merge($additional_info, ['severity' => 'high'])),
-                'created_at'     => now(),
-            ]);
-            break;
-
-        default:
-            // Xử lý trường hợp không khớp với bất kỳ loại nào
-            \App\Models\AdminLog::create([
-                'user_id'        => $user_id,
-                'action'         => '[UNKNOWN] ' . $action,
-                'ip_address'     => $ip_address,
-                'user_agent'     => $user_agent,
-                'additional_info' => json_encode($additional_info),
-                'created_at'     => now(),
-            ]);
-            break;
+    if (count($options) == 0) {
+        return $options;
     }
+    $variation_ids = array();
+    foreach ($options as $option) {
+
+        $value_ids = array();
+        if (isset($variation_ids[$option->variation_id])) {
+            $value_ids = $variation_ids[$option->variation_id];
+        }
+        if (!in_array($option->variation_value_id, $value_ids)) {
+            array_push($value_ids, $option->variation_value_id);
+        }
+        $variation_ids[$option->variation_id] = $value_ids;
+    }
+    $options = array();
+    foreach ($variation_ids as $id => $values) {
+        $variationValues = array();
+        foreach ($values as $value) {
+            $variationValue = VariationValues::find($value);
+            $val = array(
+                'id'   => $value,
+                'name' => $variationValue->name,
+                'code' => $variationValue->color_code
+            );
+            array_push($variationValues, $val);
+        }
+        $data['id'] = $id;
+
+        if($withTrash == true) {
+            $data['name'] = Variations::withTrashed()->find($id)->name;
+        }else{
+            $data['name'] = Variations::find($id) ? Variations::find($id)->name : null;
+        }
+        if( $data['name']){
+            $data['values'] = $variationValues;
+        }else{
+            $data['values'] = $variationValues;
+        }
+
+        array_push($options, $data);
+    }
+    return $options;
 }
