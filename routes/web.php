@@ -61,8 +61,9 @@ Route::middleware(['checkaccount'])->group(function () {
     Route::get('/dich-vu/{slug}', [ServiceController::class, 'index'])->name('service');
 
     Route::get('/san-pham', [ProductController::class, 'all'])->name('product');
-    Route::get('/san-pham/{slug}', [ProductController::class, 'list'])->name('list.product');
+    Route::get('/san-pham/{slug}', [ProductController::class, 'detail'])->name('product.detail');
     Route::get('/danh-muc/{slug}', [CategoryController::class, 'list'])->name('list.category');
+    Route::get('/danh-muc/loc/{slug}', [CategoryController::class, 'filter'])->name('filter.category');
 
     Route::get('/gio-hang', [CartController::class, 'index'])->name('cart');
     Route::get('/thanh-toan', [CheckoutController::class, 'index'])->name('checkout');

@@ -215,14 +215,14 @@ function generateVariationOptions($options, $withTrash = true)
         }
         $data['id'] = $id;
 
-        if($withTrash == true) {
+        if ($withTrash == true) {
             $data['name'] = Variations::withTrashed()->find($id)->name;
-        }else{
+        } else {
             $data['name'] = Variations::find($id) ? Variations::find($id)->name : null;
         }
-        if( $data['name']){
+        if ($data['name']) {
             $data['values'] = $variationValues;
-        }else{
+        } else {
             $data['values'] = $variationValues;
         }
 

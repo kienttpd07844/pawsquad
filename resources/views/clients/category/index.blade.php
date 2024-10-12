@@ -70,7 +70,7 @@
 
     <div class="shop-page pt-120 mb-120">
         <div class="container">
-            <div class="row">
+            <div class="row" id="filterForm">
                 <div class="col-lg-3">
                     <div class="shop-sidebar">
                         <div class="shop-widget">
@@ -94,7 +94,8 @@
                                     <div class="checkbox-container">
                                         @foreach ($childCategories as $child)
                                             <label class="containerss">{{ $child->name }}
-                                                <input type="checkbox" class="category-filter" value="{{ $child->slug }}">
+                                                <input type="checkbox" class="category-filter" name="category"
+                                                    data-category="{{ $child->slug }}" value="{{ $child->slug }}">
                                                 <span class="checkmark"></span>
                                             </label>
                                         @endforeach
@@ -109,7 +110,8 @@
                                     <div class="checkbox-container">
                                         @foreach ($brands as $brand)
                                             <label class="containerss">{{ $brand->name }}
-                                                <input type="checkbox" class="brand-filter" value="{{ $brand->slug }}">
+                                                <input type="checkbox" class="brand-filter" name="brand"
+                                                    data-brand="{{ $brand->slug }}" value="{{ $brand->slug }}">
                                                 <span class="checkmark"></span>
                                             </label>
                                         @endforeach
@@ -127,575 +129,31 @@
                                 <div class="multiselect-area">
                                     <div class="single-select">
                                         <span>Hiển thị</span>
-                                        <select class="defult-select-drowpown" id="color-dropdown">
-                                            <option selected value="0">12</option>
-                                            <option value="1">15</option>
-                                            <option value="2">18</option>
-                                            <option value="3">21</option>
-                                            <option value="4">25</option>
+                                        <select class="defult-select-drowpown" id="take-dropdown" name="per_page">
+                                            <option selected value="1">1</option>
+                                            <option value="12">12</option>
+                                            <option value="15">15</option>
+                                            <option value="18">18</option>
+                                            <option value="21">21</option>
                                         </select>
                                     </div>
                                     <div class="single-select two">
-                                        <select class="defult-select-drowpown" id="eyes-dropdown">
+                                        <select class="defult-select-drowpown" id="eyes-dropdown" name="order">
                                             <option selected value="0">Sắp xếp theo</option>
-                                            <option value="1">Giá từ cao xuống thấp</option>
-                                            <option value="2">Giá từ thấp lên cao</option>
+                                            <option value="1">Mới nhất</option>
+                                            <option value="2">Nhiều lượt xem</option>
+                                            <option value="3">Giá từ cao xuống thấp</option>
+                                            <option value="4">Giá từ thấp lên cao</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row g-4 justify-content-center">
-                        <div class="col-lg-4 col-md-4 col-6">
-                            <div class="collection-card h-100">
-                                <div class="offer-card">
-                                    <span>Nổi bật</span>
-                                </div>
-                                <div class="collection-img">
-                                    <img class="img-gluid"
-                                        src="{{ asset('assets/clients/images/bg/category/h3-collection-02.png') }}" alt>
-                                    <div class="view-dt-btn">
-                                        <div class="plus-icon">
-                                            <i class="bi bi-plus"></i>
-                                        </div>
-                                        <a href="shop-details.html">Xem chi tiết</a>
-                                    </div>
-                                    <ul class="cart-icon-list">
-                                        <li><a href="cart.html"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-cart3.svg') }}" alt></a>
-                                        </li>
-                                        <li><a href="#"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-favorites3.svg') }}"
-                                                    alt></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="collection-content text-center">
-                                    <h4 class="title-limit"><a href="shop-details.html">Thức ăn cho mèo Friskies asc</a>
-                                    </h4>
-                                    <div class="price">
-                                        <h6>120.000đ</h6>
-                                        <del>150.000đ</del>
-                                    </div>
-                                    <div class="review">
-                                        <ul>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                        </ul>
-                                        <span>(50)</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-6">
-                            <div class="collection-card">
-                                <div class="offer-card sale">
-                                    <span>Mua nhiều</span>
-                                </div>
-                                <div class="collection-img">
-                                    <img class="img-gluid"
-                                        src="{{ asset('assets/clients/images/bg/category/h3-collection-03.png') }}" alt>
-                                    <div class="view-dt-btn">
-                                        <div class="plus-icon">
-                                            <i class="bi bi-plus"></i>
-                                        </div>
-                                        <a href="shop-details.html">Xem chi tiết</a>
-                                    </div>
-                                    <ul class="cart-icon-list">
-                                        <li><a href="cart.html"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-cart3.svg') }}" alt></a>
-                                        </li>
-                                        <li><a href="#"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-favorites3.svg') }}"
-                                                    alt></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="collection-content text-center">
-                                    <h4 class="title-limit"><a href="shop-details.html">Nhà bông dành cho mèo</a></h4>
-                                    <div class="price">
-                                        <h6>250.000đ</h6>
-                                        <del>299.000đ</del>
-                                    </div>
-                                    <div class="review">
-                                        <ul>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                        </ul>
-                                        <span>(20)</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-6">
-                            <div class="collection-card">
-                                <div class="offer-card sold-out">
-                                    <span>Hết hàng</span>
-                                </div>
-                                <div class="collection-img">
-                                    <img class="img-gluid"
-                                        src="{{ asset('assets/clients/images/bg/category/h3-collection-04.png') }}" alt>
-                                    <div class="view-dt-btn">
-                                        <div class="plus-icon">
-                                            <i class="bi bi-plus"></i>
-                                        </div>
-                                        <a href="shop-details.html">Xem chi tiết</a>
-                                    </div>
-                                    <ul class="cart-icon-list">
-                                        <li><a href="cart.html"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-cart3.svg') }}"
-                                                    alt></a>
-                                        </li>
-                                        <li><a href="#"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-favorites3.svg') }}"
-                                                    alt></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="collection-content text-center">
-                                    <h4 class="title-limit"><a href="shop-details.html">Đồ hộp Beyona dành cho chó</a>
-                                    </h4>
-                                    <div class="price">
-                                        <h6>50.000đ</h6>
-                                    </div>
-                                    <div class="review">
-                                        <ul>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                        </ul>
-                                        <span>(100)</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div id="gallery" class="row g-4 justify-content-center">
 
-                        <div class="col-lg-4 col-md-4 col-6">
-                            <div class="collection-card h-100">
-                                <div class="offer-card">
-                                    <span>Nổi bật</span>
-                                </div>
-                                <div class="collection-img">
-                                    <img class="img-gluid"
-                                        src="{{ asset('assets/clients/images/bg/category/h3-collection-02.png') }}" alt>
-                                    <div class="view-dt-btn">
-                                        <div class="plus-icon">
-                                            <i class="bi bi-plus"></i>
-                                        </div>
-                                        <a href="shop-details.html">Xem chi tiết</a>
-                                    </div>
-                                    <ul class="cart-icon-list">
-                                        <li><a href="cart.html"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-cart3.svg') }}"
-                                                    alt></a>
-                                        </li>
-                                        <li><a href="#"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-favorites3.svg') }}"
-                                                    alt></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="collection-content text-center">
-                                    <h4 class="title-limit"><a href="shop-details.html">Thức ăn cho mèo Friskies asc</a>
-                                    </h4>
-                                    <div class="price">
-                                        <h6>120.000đ</h6>
-                                        <del>150.000đ</del>
-                                    </div>
-                                    <div class="review">
-                                        <ul>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                        </ul>
-                                        <span>(50)</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-6">
-                            <div class="collection-card">
-                                <div class="offer-card sale">
-                                    <span>Mua nhiều</span>
-                                </div>
-                                <div class="collection-img">
-                                    <img class="img-gluid"
-                                        src="{{ asset('assets/clients/images/bg/category/h3-collection-03.png') }}" alt>
-                                    <div class="view-dt-btn">
-                                        <div class="plus-icon">
-                                            <i class="bi bi-plus"></i>
-                                        </div>
-                                        <a href="shop-details.html">Xem chi tiết</a>
-                                    </div>
-                                    <ul class="cart-icon-list">
-                                        <li><a href="cart.html"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-cart3.svg') }}"
-                                                    alt></a>
-                                        </li>
-                                        <li><a href="#"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-favorites3.svg') }}"
-                                                    alt></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="collection-content text-center">
-                                    <h4 class="title-limit"><a href="shop-details.html">Nhà bông dành cho mèo</a></h4>
-                                    <div class="price">
-                                        <h6>250.000đ</h6>
-                                        <del>299.000đ</del>
-                                    </div>
-                                    <div class="review">
-                                        <ul>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                        </ul>
-                                        <span>(20)</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-6">
-                            <div class="collection-card">
-                                <div class="offer-card sold-out">
-                                    <span>Hết hàng</span>
-                                </div>
-                                <div class="collection-img">
-                                    <img class="img-gluid"
-                                        src="{{ asset('assets/clients/images/bg/category/h3-collection-04.png') }}" alt>
-                                    <div class="view-dt-btn">
-                                        <div class="plus-icon">
-                                            <i class="bi bi-plus"></i>
-                                        </div>
-                                        <a href="shop-details.html">Xem chi tiết</a>
-                                    </div>
-                                    <ul class="cart-icon-list">
-                                        <li><a href="cart.html"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-cart3.svg') }}"
-                                                    alt></a>
-                                        </li>
-                                        <li><a href="#"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-favorites3.svg') }}"
-                                                    alt></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="collection-content text-center">
-                                    <h4 class="title-limit"><a href="shop-details.html">Đồ hộp Beyona dành cho chó</a>
-                                    </h4>
-                                    <div class="price">
-                                        <h6>50.000đ</h6>
-                                    </div>
-                                    <div class="review">
-                                        <ul>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                        </ul>
-                                        <span>(100)</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-6">
-                            <div class="collection-card h-100">
-                                <div class="offer-card">
-                                    <span>Nổi bật</span>
-                                </div>
-                                <div class="collection-img">
-                                    <img class="img-gluid"
-                                        src="{{ asset('assets/clients/images/bg/category/h3-collection-02.png') }}" alt>
-                                    <div class="view-dt-btn">
-                                        <div class="plus-icon">
-                                            <i class="bi bi-plus"></i>
-                                        </div>
-                                        <a href="shop-details.html">Xem chi tiết</a>
-                                    </div>
-                                    <ul class="cart-icon-list">
-                                        <li><a href="cart.html"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-cart3.svg') }}"
-                                                    alt></a>
-                                        </li>
-                                        <li><a href="#"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-favorites3.svg') }}"
-                                                    alt></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="collection-content text-center">
-                                    <h4 class="title-limit"><a href="shop-details.html">Thức ăn cho mèo Friskies asc</a>
-                                    </h4>
-                                    <div class="price">
-                                        <h6>120.000đ</h6>
-                                        <del>150.000đ</del>
-                                    </div>
-                                    <div class="review">
-                                        <ul>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                        </ul>
-                                        <span>(50)</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-6">
-                            <div class="collection-card">
-                                <div class="offer-card sale">
-                                    <span>Mua nhiều</span>
-                                </div>
-                                <div class="collection-img">
-                                    <img class="img-gluid"
-                                        src="{{ asset('assets/clients/images/bg/category/h3-collection-03.png') }}" alt>
-                                    <div class="view-dt-btn">
-                                        <div class="plus-icon">
-                                            <i class="bi bi-plus"></i>
-                                        </div>
-                                        <a href="shop-details.html">Xem chi tiết</a>
-                                    </div>
-                                    <ul class="cart-icon-list">
-                                        <li><a href="cart.html"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-cart3.svg') }}"
-                                                    alt></a>
-                                        </li>
-                                        <li><a href="#"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-favorites3.svg') }}"
-                                                    alt></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="collection-content text-center">
-                                    <h4 class="title-limit"><a href="shop-details.html">Nhà bông dành cho mèo</a></h4>
-                                    <div class="price">
-                                        <h6>250.000đ</h6>
-                                        <del>299.000đ</del>
-                                    </div>
-                                    <div class="review">
-                                        <ul>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                        </ul>
-                                        <span>(20)</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-6">
-                            <div class="collection-card">
-                                <div class="offer-card sold-out">
-                                    <span>Hết hàng</span>
-                                </div>
-                                <div class="collection-img">
-                                    <img class="img-gluid"
-                                        src="{{ asset('assets/clients/images/bg/category/h3-collection-04.png') }}" alt>
-                                    <div class="view-dt-btn">
-                                        <div class="plus-icon">
-                                            <i class="bi bi-plus"></i>
-                                        </div>
-                                        <a href="shop-details.html">Xem chi tiết</a>
-                                    </div>
-                                    <ul class="cart-icon-list">
-                                        <li><a href="cart.html"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-cart3.svg') }}"
-                                                    alt></a>
-                                        </li>
-                                        <li><a href="#"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-favorites3.svg') }}"
-                                                    alt></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="collection-content text-center">
-                                    <h4 class="title-limit"><a href="shop-details.html">Đồ hộp Beyona dành cho chó</a>
-                                    </h4>
-                                    <div class="price">
-                                        <h6>50.000đ</h6>
-                                    </div>
-                                    <div class="review">
-                                        <ul>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                        </ul>
-                                        <span>(100)</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-6">
-                            <div class="collection-card h-100">
-                                <div class="offer-card">
-                                    <span>Nổi bật</span>
-                                </div>
-                                <div class="collection-img">
-                                    <img class="img-gluid"
-                                        src="{{ asset('assets/clients/images/bg/category/h3-collection-02.png') }}" alt>
-                                    <div class="view-dt-btn">
-                                        <div class="plus-icon">
-                                            <i class="bi bi-plus"></i>
-                                        </div>
-                                        <a href="shop-details.html">Xem chi tiết</a>
-                                    </div>
-                                    <ul class="cart-icon-list">
-                                        <li><a href="cart.html"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-cart3.svg') }}"
-                                                    alt></a>
-                                        </li>
-                                        <li><a href="#"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-favorites3.svg') }}"
-                                                    alt></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="collection-content text-center">
-                                    <h4 class="title-limit"><a href="shop-details.html">Thức ăn cho mèo Friskies asc</a>
-                                    </h4>
-                                    <div class="price">
-                                        <h6>120.000đ</h6>
-                                        <del>150.000đ</del>
-                                    </div>
-                                    <div class="review">
-                                        <ul>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                        </ul>
-                                        <span>(50)</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-6">
-                            <div class="collection-card">
-                                <div class="offer-card sale">
-                                    <span>Mua nhiều</span>
-                                </div>
-                                <div class="collection-img">
-                                    <img class="img-gluid"
-                                        src="{{ asset('assets/clients/images/bg/category/h3-collection-03.png') }}" alt>
-                                    <div class="view-dt-btn">
-                                        <div class="plus-icon">
-                                            <i class="bi bi-plus"></i>
-                                        </div>
-                                        <a href="shop-details.html">Xem chi tiết</a>
-                                    </div>
-                                    <ul class="cart-icon-list">
-                                        <li><a href="cart.html"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-cart3.svg') }}"
-                                                    alt></a>
-                                        </li>
-                                        <li><a href="#"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-favorites3.svg') }}"
-                                                    alt></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="collection-content text-center">
-                                    <h4 class="title-limit"><a href="shop-details.html">Nhà bông dành cho mèo</a></h4>
-                                    <div class="price">
-                                        <h6>250.000đ</h6>
-                                        <del>299.000đ</del>
-                                    </div>
-                                    <div class="review">
-                                        <ul>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                        </ul>
-                                        <span>(20)</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-6">
-                            <div class="collection-card">
-                                <div class="offer-card sold-out">
-                                    <span>Hết hàng</span>
-                                </div>
-                                <div class="collection-img">
-                                    <img class="img-gluid"
-                                        src="{{ asset('assets/clients/images/bg/category/h3-collection-04.png') }}" alt>
-                                    <div class="view-dt-btn">
-                                        <div class="plus-icon">
-                                            <i class="bi bi-plus"></i>
-                                        </div>
-                                        <a href="shop-details.html">Xem chi tiết</a>
-                                    </div>
-                                    <ul class="cart-icon-list">
-                                        <li><a href="cart.html"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-cart3.svg') }}"
-                                                    alt></a>
-                                        </li>
-                                        <li><a href="#"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-favorites3.svg') }}"
-                                                    alt></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="collection-content text-center">
-                                    <h4 class="title-limit"><a href="shop-details.html">Đồ hộp Beyona dành cho chó</a>
-                                    </h4>
-                                    <div class="price">
-                                        <h6>50.000đ</h6>
-                                    </div>
-                                    <div class="review">
-                                        <ul>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                        </ul>
-                                        <span>(100)</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
-                    <div class="row pt-70">
-                        <div class="col-lg-12 d-flex justify-content-center">
-                            <div class="paginations-area">
-                                <nav aria-label="Page navigation example">
-                                    <ul class="pagination">
-                                        <li class="page-item"><a class="page-link" href="#"><i
-                                                    class="bi bi-arrow-left-short"></i></a></li>
-                                        <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">02</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">03</a></li>
-                                        <li class="page-item"><a class="page-link" href="#"><i
-                                                    class="bi bi-arrow-right-short"></i></a></li>
-                                    </ul>
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -757,6 +215,92 @@
             var max_price = $('#max_price').val();
             $("#searchResults").text("Here List of products will be shown which are cost between " + min_price +
                 " and " + max_price + ".");
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('filterForm');
+
+            function collectFormData() {
+                const formData = {};
+                const categoryInput = document.querySelector('input[name="category"]:checked');
+                if (categoryInput) {
+                    formData.category = categoryInput.dataset.category;
+                }
+                // Lấy giá trị từ slider
+                formData.price_min = $("#min_price").val();
+                formData.price_max = $("#max_price").val();
+                const orderInput = document.querySelector('select[name="order"]');
+                if (orderInput) {
+                    formData.order = orderInput.value;
+                }
+                const perPageInput = document.querySelector('select[name="per_page"]');
+                if (perPageInput) {
+                    formData.per_page = perPageInput.value;
+                }
+                return formData;
+            }
+
+            function performAjaxRequest(formData = {}, page = 1) {
+                $('#gallery').html('<p>Đang xử lý...</p>');
+
+                $.ajax({
+                    type: "GET",
+                    url: "{{ route('filter.category', ['slug' => request()->slug]) }}",
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    data: {
+                        'slug': '{{ request()->slug }}',
+                        ...formData,
+                        page
+                    },
+                    success: function(data) {
+                        updateProduct(data);
+                    },
+                    error: function(error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+
+            function updateProduct(data) {
+                $('#gallery').html(data.products);
+            }
+
+            // Lắng nghe thay đổi trên slider
+            $("#slider-range").on("slidechange", function() {
+                const formData = collectFormData();
+                performAjaxRequest(formData);
+            });
+
+            // Lắng nghe thay đổi trên form
+            form.addEventListener('change', function(event) {
+                const formData = collectFormData();
+                console.log(formData);
+                performAjaxRequest(formData);
+            });
+
+            // Lắng nghe thay đổi trên dropdowns của nice-select
+            $('#take-dropdown').on('change', function() {
+                const formData = collectFormData();
+                performAjaxRequest(formData);
+            });
+
+            $('#eyes-dropdown').on('change', function() {
+                const formData = collectFormData();
+                performAjaxRequest(formData);
+            });
+
+            // Sự kiện phân trang
+            $(document).on('click', '.pagination a', function(event) {
+                event.preventDefault();
+                const pageUrl = $(this).attr('href');
+                if (!pageUrl) return; // Nếu không có URL, thoát hàm
+                const page = new URLSearchParams(pageUrl.split('?')[1]).get('page');
+                const formData = collectFormData();
+                performAjaxRequest(formData, page);
+            });
+
         });
     </script>
 @endsection

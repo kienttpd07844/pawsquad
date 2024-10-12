@@ -115,6 +115,22 @@
         }
     </style>
     <style>
+        .image-wrapper {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .img-gluid {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .image-wrapper:hover .img-gluid {
+            transform: scale(1.1);
+        }
+
         .h3-category-slider .swiper-slide {
             width: 100% !important;
             flex-shrink: 0;
@@ -129,7 +145,8 @@
             height: 100px;
             object-fit: cover;
         }
-        .category-card-back img{
+
+        .category-card-back img {
             width: 100px;
             height: 100px;
             object-fit: cover;

@@ -9,7 +9,7 @@ class ProductController extends Controller
     public function all(){
         return view('clients.product.index');
     }
-    public function list(Request $request){
+    public function detail(Request $request){
         return view('clients.product.detail');
     }
 }
