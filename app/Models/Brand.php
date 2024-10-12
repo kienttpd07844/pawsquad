@@ -44,5 +44,9 @@ class Brand extends Model
             'status' => 0,
         ]);
     }
+    public function scopeIsActive($query)
+    {
+        return $query->where('status', 1);
+    }
 
 }

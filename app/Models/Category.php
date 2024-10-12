@@ -5,9 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Category extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
     protected $table = 'categories';
     protected $fillable = [
         'name',
@@ -66,5 +67,21 @@ class Category extends Model
     public function children()
     {
         return $this->hasMany(Category::class, 'parent_id');
+    }
+    public function scopeIsActive($query)
+    {
+        return $query->where('status', 1);
+    }
+    public function scopeIsParent($query)
+    {
+        return $query->where(function ($q) {
+            $q->whereNull('parent_id')
+                ->orWhere('parent_id', 0);
+        });
+    }
+
+    public function scopeNotIsParent($query)
+    {
+        return $query->whereNotNull('parent_id')->where('parent_id', '!=', 0);
     }
 }

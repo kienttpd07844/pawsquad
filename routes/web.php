@@ -19,6 +19,7 @@ use App\Http\Controllers\Auth\SocialController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
@@ -61,6 +62,7 @@ Route::middleware(['checkaccount'])->group(function () {
 
     Route::get('/san-pham', [ProductController::class, 'all'])->name('product');
     Route::get('/san-pham/{slug}', [ProductController::class, 'list'])->name('list.product');
+    Route::get('/danh-muc/{slug}', [CategoryController::class, 'list'])->name('list.category');
 
     Route::get('/gio-hang', [CartController::class, 'index'])->name('cart');
     Route::get('/thanh-toan', [CheckoutController::class, 'index'])->name('checkout');

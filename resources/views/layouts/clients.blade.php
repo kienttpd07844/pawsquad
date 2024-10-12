@@ -81,40 +81,60 @@
         }
 
         .dropdown-main {
-            width:200px!important;
-            list-style-type: none!important;
-            margin: 0!important;
+            width: 200px !important;
+            list-style-type: none !important;
+            margin: 0 !important;
         }
 
         .dropdown-main ul {
-            width:100%!important;
+            width: 100% !important;
             flex-direction: column;
             display: flex;
         }
 
         .dropdown-main li {
-            width:100%!important;
-            display: block!important;
+            width: 100% !important;
+            display: block !important;
         }
 
         .dropdown-main li a {
-            width:100%!important;
-            height:100%!important;
-            text-decoration: none!important;
-            padding: 10px!important;
-            display: block!important;
-            color: white!important;
-            border:none!important;
-            background:none!important;
-            border-radius: 4px!important;
-            transition: background-color 0.3s!important;
+            width: 100% !important;
+            height: 100% !important;
+            text-decoration: none !important;
+            padding: 10px !important;
+            display: block !important;
+            color: white !important;
+            border: none !important;
+            background: none !important;
+            border-radius: 4px !important;
+            transition: background-color 0.3s !important;
         }
 
         .dropdown-main li a:hover {
-            background-color: var(--primary-color3)!important;
+            background-color: var(--primary-color3) !important;
         }
     </style>
     <style>
+        .h3-category-slider .swiper-slide {
+            width: 100% !important;
+            flex-shrink: 0;
+        }
+
+        .h3-category-slider {
+            overflow: hidden;
+        }
+
+        .category-icon img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+        .category-card-back img{
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+
         input[aria-describedby$="error"][aria-invalid="true"] {
             border: 1px solid red;
             background: rgb(250 190 190 / 5%);

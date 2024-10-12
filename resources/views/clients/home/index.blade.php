@@ -90,139 +90,56 @@
         </div>
     </div>
 
-
-    <div class="home3-categoty-area pt-120 mb-120">
-        <div class="container">
-            <div class="row mb-60">
-                <div class="col-lg-12 d-flex align-items-center justify-content-between flex-wrap gap-3">
-                    <div class="section-title3">
-                        <h2><img src="{{ asset('assets/clients/images/icon/h3-sec-tt-vect-left.svg') }}" alt><span>
-                                Danh mục</span><img src="{{ asset('assets/clients/images/icon/h3-sec-tt-vect-right.svg') }}"
-                                alt></h2>
-                    </div>
-                    <div class="slider-btn-wrap">
-                        <div class="slider-btn prev-btn-11">
-                            <i class="bi bi-arrow-left"></i>
+    @if (isset($categories) && $categories->isNotEmpty())
+        <div class="home3-categoty-area pt-120 mb-120">
+            <div class="container">
+                <div class="row mb-60">
+                    <div class="col-lg-12 d-flex align-items-center justify-content-between flex-wrap gap-3">
+                        <div class="section-title3">
+                            <h2><img src="{{ asset('assets/clients/images/icon/h3-sec-tt-vect-left.svg') }}" alt><span>
+                                    Danh mục</span><img
+                                    src="{{ asset('assets/clients/images/icon/h3-sec-tt-vect-right.svg') }}" alt></h2>
                         </div>
-                        <div class="slider-btn next-btn-11">
-                            <i class="bi bi-arrow-right"></i>
+                        <div class="slider-btn-wrap">
+                            <div class="slider-btn prev-btn-11">
+                                <i class="bi bi-arrow-left"></i>
+                            </div>
+                            <div class="slider-btn next-btn-11">
+                                <i class="bi bi-arrow-right"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12 d-flex justify-content-center">
-                    <div class="swiper h3-category-slider">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <div class="category-card">
-                                    <a href="shop.html" class="category-card-inner">
-                                        <div class="category-card-front">
-                                            <div class="category-icon">
-                                                <img src="{{ asset('assets/clients/images/icon/dog.svg') }}" alt>
-                                            </div>
-                                            <div class="content">
-                                                <h4>Thức ăn chó</h4>
-                                            </div>
+                <div class="row">
+                    <div class="col-lg-12 d-flex justify-content-center">
+                        <div class="swiper h3-category-slider">
+                            <div class="swiper-wrapper">
+                                @foreach ($categories as $category)
+                                    <div class="swiper-slide">
+                                        <div class="category-card">
+                                            <a href="{{ route('list.category', ['slug' => $category->slug]) }}" class="category-card-inner">
+                                                <div class="category-card-front">
+                                                    <div class="category-icon">
+                                                        <img src="{{ getImage($category->image) }}" alt="{{ $category->name }}">
+                                                    </div>
+                                                    <div class="content">
+                                                        <h4>{{ $category->name }}</h4>
+                                                    </div>
+                                                </div>
+                                                <div class="category-card-back">
+                                                    <img src="{{ getImage($category->image) }}" alt="{{ $category->name }}">
+                                                </div>
+                                            </a>
                                         </div>
-                                        <div class="category-card-back">
-                                            <img src="{{ asset('assets/clients/images/bg/h3-category-1.png') }}" alt>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="category-card">
-                                    <a href="shop.html" class="category-card-inner">
-                                        <div class="category-card-front">
-                                            <div class="category-icon">
-                                                <img src="{{ asset('assets/clients/images/icon/cat.svg') }}" alt>
-                                            </div>
-                                            <div class="content">
-                                                <h4>Cát mèo</h4>
-                                            </div>
-                                        </div>
-                                        <div class="category-card-back">
-                                            <img src="{{ asset('assets/clients/images/bg/h3-category-2.png') }}" alt>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="category-card">
-                                    <a href="shop.html" class="category-card-inner">
-                                        <div class="category-card-front">
-                                            <div class="category-icon">
-                                                <img src="{{ asset('assets/clients/images/icon/cat.svg') }}" alt>
-                                            </div>
-                                            <div class="content">
-                                                <h4>Pate mèo</h4>
-                                            </div>
-                                        </div>
-                                        <div class="category-card-back">
-                                            <img src="{{ asset('assets/clients/images/bg/h3-category-2.png') }}" alt>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="category-card">
-                                    <a href="shop.html" class="category-card-inner">
-                                        <div class="category-card-front">
-                                            <div class="category-icon">
-                                                <img src="{{ asset('assets/clients/images/icon/dog.svg') }}" alt>
-                                            </div>
-                                            <div class="content">
-                                                <h4>Thức ăn chó</h4>
-                                            </div>
-                                        </div>
-                                        <div class="category-card-back">
-                                            <img src="{{ asset('assets/clients/images/bg/h3-category-1.png') }}" alt>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="category-card">
-                                    <a href="shop.html" class="category-card-inner">
-                                        <div class="category-card-front">
-                                            <div class="category-icon">
-                                                <img src="{{ asset('assets/clients/images/icon/dog.svg') }}" alt>
-                                            </div>
-                                            <div class="content">
-                                                <h4>Phụ kiện chó</h4>
-                                            </div>
-                                        </div>
-                                        <div class="category-card-back">
-                                            <img src="{{ asset('assets/clients/images/bg/h3-category-1.png') }}" alt>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="category-card">
-                                    <a href="shop.html" class="category-card-inner">
-                                        <div class="category-card-front">
-                                            <div class="category-icon">
-                                                <img src="{{ asset('assets/clients/images/icon/cat.svg') }}" alt>
-                                            </div>
-                                            <div class="content">
-                                                <h4>Phụ kiện mèo</h4>
-                                            </div>
-                                        </div>
-                                        <div class="category-card-back">
-                                            <img src="{{ asset('assets/clients/images/bg/h3-category-2.png') }}" alt>
-                                        </div>
-                                    </a>
-                                </div>
+                                    </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
+    @endif
 
     <div class="home3-collection-area mb-120">
         <div class="container">
