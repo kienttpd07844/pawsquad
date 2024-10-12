@@ -130,7 +130,7 @@
                                     <div class="single-select">
                                         <span>Hiển thị</span>
                                         <select class="defult-select-drowpown" id="take-dropdown" name="per_page">
-                                            <option selected value="1">1</option>
+                                            <option selected value="9">9</option>
                                             <option value="12">12</option>
                                             <option value="15">15</option>
                                             <option value="18">18</option>

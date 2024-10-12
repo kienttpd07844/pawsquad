@@ -17,7 +17,7 @@ class CategoryController extends Controller
             return redirect()->back()->withErrorMessage('Không tìm thấy danh mục này.');
         }
         $childCategories = $category->children;
-        $products = Product::where('category_id', $childCategories->pluck('id'))->get();
+        $products = Product::whereIn('category_id', $childCategories->pluck('id'))->get();
         $brands = Brand::IsActive()->where('slug', '!=', 'uncategorized')
             ->whereIn('id', $products->pluck('brand_id'))->get();
         return view('clients.category.index', compact('childCategories', 'category', 'brands', 'products'));
@@ -43,10 +43,10 @@ class CategoryController extends Controller
             $priceMax = $priceMax ?? 500;
         }
         if (!$request->category && !$request->input('order') && ($priceMin == 0 || $priceMin == 1000) && ($priceMax == 500 || $priceMax == 1000)) {
-            $products = Product::where('category_id', $childCategories->pluck('id'))
+            $products = Product::whereIn('category_id', $childCategories->pluck('id'))
                 ->with('category')->orderBy('created_at', 'desc')->paginate($perPage);
         } else {
-            $products = Product::where('category_id', $childCategories->pluck('id'))
+            $products = Product::whereIn('category_id', $childCategories->pluck('id'))
                 ->with('category')
                 ->when($request->category, function ($query) use ($request) {
                     return $query->whereHas('category', function ($query) use ($request) {
