@@ -52,13 +52,8 @@
                         <li><a href="service-details.html">DV B</a></li>
                     </ul>
                 </li>
-                <li class="menu-item-has-children {{ request()->routeIs('product') ? 'active' : '' }}">
-                    <a href="{{ route('product') }}" class="drop-down">Sản phẩm</a><i
-                        class="bi bi-plus dropdown-icon"></i>
-                    <ul class="sub-menu">
-                        <li><a href="{{ route('product') }}">SP A </a></li>
-                        <li><a href="service-details.html">SP B</a></li>
-                    </ul>
+                <li class="{{ request()->routeIs('product') ? 'active' : '' }}">
+                    <a href="{{ route('product') }}">Sản phẩm</a>
                 </li>
                 <li class="{{ request()->routeIs('brand') ? 'active' : '' }}">
                     <a href="{{ route('brand') }}">Thương hiệu</a>

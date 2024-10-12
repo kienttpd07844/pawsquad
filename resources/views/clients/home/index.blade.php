@@ -151,53 +151,12 @@
                                 alt></h2>
                     </div>
                     <div class="h3-view-btn d-md-flex d-none">
-                        <a href="shop.html">Xem tất cả<img
+                        <a href="{{ route('product') }}">Xem tất cả<img
                                 src="{{ asset('assets/clients/images/icon/haf-button-2.svg') }}" alt></a>
                     </div>
                 </div>
             </div>
             <div class="row g-4 justify-content-center">
-                {{-- <div class="col-lg-3 col-md-4 col-sm-6 d-flex">
-                    <div class="collection-card h-100">
-                        <div class="offer-card">
-                            <span>Nổi bật</span>
-                        </div>
-                        <div class="collection-img">
-                            <img class="img-gluid"
-                                src="{{ asset('assets/clients/images/bg/category/h3-collection-01.png') }}" alt>
-                            <div class="view-dt-btn">
-                                <div class="plus-icon">
-                                    <i class="bi bi-plus"></i>
-                                </div>
-                                <a href="shop-details.html">Xem chi tiết</a>
-                            </div>
-                            <ul class="cart-icon-list">
-                                <li><a href="cart.html"><img
-                                            src="{{ asset('assets/clients/images/icon/Icon-cart3.svg') }}" alt></a></li>
-                                <li><a href="#"><img
-                                            src="{{ asset('assets/clients/images/icon/Icon-favorites3.svg') }}" alt></a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="collection-content text-center">
-                            <h4 class="title-limit"><a href="shop-details.html">Thức ăn cho mèo Brit</a></h4>
-                            <div class="price">
-                                <h6>100.000đ</h6>
-                                <del>150.000đ</del>
-                            </div>
-                            <div class="review">
-                                <ul>
-                                    <li><i class="bi bi-star-fill"></i></li>
-                                    <li><i class="bi bi-star-fill"></i></li>
-                                    <li><i class="bi bi-star-fill"></i></li>
-                                    <li><i class="bi bi-star-fill"></i></li>
-                                    <li><i class="bi bi-star-fill"></i></li>
-                                </ul>
-                                <span>(50)</span>
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
                 @include('clients.partials.product2', ['products' => $products])
             </div>
             <div class="row d-md-none d-block pt-30">

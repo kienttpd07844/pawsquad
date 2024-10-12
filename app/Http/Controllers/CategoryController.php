@@ -12,7 +12,7 @@ class CategoryController extends Controller
 {
     public function list(Request $request)
     {
-        $category = Category::where('slug', $request->slug)->first();
+        $category = Category::where('slug', $request->slug)->IsActive()->first();
         if (!$category) {
             return redirect()->back()->withErrorMessage('Không tìm thấy danh mục này.');
         }

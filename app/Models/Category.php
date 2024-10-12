@@ -79,6 +79,7 @@ class Category extends Model
                 ->orWhere('parent_id', 0);
         });
     }
+    
 
     public function scopeNotIsParent($query)
     {
