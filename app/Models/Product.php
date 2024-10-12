@@ -61,4 +61,8 @@ class Product extends Model
     {
         return $this->hasMany(Cart::class);
     }
+    public function scopeIsActive($query)
+    {
+        return $query->where('status', 1);
+    }
 }
