@@ -1,6 +1,26 @@
 @extends('layouts.clients')
 @section('css')
     <style>
+        .swiper-thumbnails {
+
+            height: 100px;
+            overflow: hidden;
+        }
+
+        .swiper-thumbnails .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100px;
+            height: 100px;
+        }
+
+        .swiper-thumbnails .swiper-slide img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+
         .single-review {
             display: flex;
             align-items: flex-start;
@@ -200,9 +220,9 @@
     @include('clients.partials.breadcrum', [
         'breadcrumbs' => [
             ['name' => 'Sản phẩm', 'url' => route('product')],
-            ['name' => 'Sản phẩm A', 'url' => '#'],
+            ['name' => $product->name, 'url' => '#'],
         ],
-        'title' => 'Sản phẩm A',
+        'title' => $product->name,
     ])
 
     <div class="shop-details-page pt-120 mb-120">
@@ -211,50 +231,17 @@
                 <div class="col-lg-7">
                     <div class="swiper mySwiper">
                         <div class="swiper-wrapper main-slider">
-                            <div class="swiper-slide">
-                                <a data-fancybox="gallery"
-                                    data-thumb="{{ asset('assets/clients/images/bg/shop-big-01.png') }}"
-                                    href="{{ asset('assets/clients/images/bg/shop-big-01.png') }}">
-                                    <img class="img-fluid" src="{{ asset('assets/clients/images/bg/shop-big-01.png') }}"
-                                        alt>
-                                </a>
-                            </div>
-                            <div class="swiper-slide">
-                                <a data-fancybox="gallery"
-                                    data-thumb="{{ asset('assets/clients/images/bg/shop-big-02.png') }}"
-                                    href="{{ asset('assets/clients/images/bg/shop-big-02.png') }}">
-                                    <img class="img-fluid" src="{{ asset('assets/clients/images/bg/shop-big-02.png') }}"
-                                        alt>
-                                </a>
-                            </div>
-                            <div class="swiper-slide">
-                                <a data-fancybox="gallery"
-                                    data-thumb="{{ asset('assets/clients/images/bg/shop-big-03.png') }}"
-                                    href="{{ asset('assets/clients/images/bg/shop-big-03.png') }}">
-                                    <img class="img-fluid" src="{{ asset('assets/clients/images/bg/shop-big-03.png') }}"
-                                        alt>
-                                </a>
-                            </div>
-                            <div class="swiper-slide">
-                                <a data-fancybox="gallery"
-                                    data-thumb="{{ asset('assets/clients/images/bg/shop-big-04.png') }}"
-                                    href="{{ asset('assets/clients/images/bg/shop-big-04.png') }}">
-                                    <img class="img-fluid" src="{{ asset('assets/clients/images/bg/shop-big-04.png') }}"
-                                        alt>
-                                </a>
-                            </div>
-                            <div class="swiper-slide">
-                                <a data-fancybox="gallery"
-                                    data-thumb="{{ asset('assets/clients/images/bg/shop-big-05.png') }}"
-                                    href="{{ asset('assets/clients/images/bg/shop-big-05.png') }}">
-                                    <img class="img-fluid" src="{{ asset('assets/clients/images/bg/shop-big-05.png') }}"
-                                        alt>
-                                </a>
-                            </div>
+                            @foreach ($mergedList as $images)
+                                @foreach ($images as $image)
+                                    <div class="swiper-slide">
+                                        <a data-fancybox="gallery" data-thumb="{{ getImage($image) }}"
+                                            href="{{ getImage($image) }}">
+                                            <img class="img-fluid" src="{{ getImage($image) }}" alt="">
+                                        </a>
+                                    </div>
+                                @endforeach
+                            @endforeach
                         </div>
-
-
-
 
                         <div class="swiper-button-next"></div>
                         <div class="swiper-button-prev"></div>
@@ -262,29 +249,22 @@
                         <!-- Thumbnails (Navigation) -->
                         <div class="swiper-thumbnails">
                             <div class="swiper-wrapper">
-                                <div class="swiper-slide">
-                                    <img src="{{ asset('assets/clients/images/bg/shop-sm-01.png') }}" alt>
-                                </div>
-                                <div class="swiper-slide">
-                                    <img src="{{ asset('assets/clients/images/bg/shop-sm-02.png') }}" alt>
-                                </div>
-                                <div class="swiper-slide">
-                                    <img src="{{ asset('assets/clients/images/bg/shop-sm-03.png') }}" alt>
-                                </div>
-                                <div class="swiper-slide">
-                                    <img src="{{ asset('assets/clients/images/bg/shop-sm-04.png') }}" alt>
-                                </div>
-                                <div class="swiper-slide">
-                                    <img src="{{ asset('assets/clients/images/bg/shop-sm-05.png') }}" alt>
-                                </div>
+                                @foreach ($mergedList as $images)
+                                    @foreach ($images as $image)
+                                        <div class="swiper-slide">
+                                            <img src="{{ getImage($image) }}" alt="">
+                                        </div>
+                                    @endforeach
+                                @endforeach
                             </div>
                         </div>
+
                     </div>
                 </div>
 
                 <div class="col-lg-5">
                     <div class="shop-details-content">
-                        <h3>Thức ăn cho chó lớn dạng hạt khô Pedigree - Vị bò và rau củ 1.5kg</h3>
+                        <h3>{{ $product->name }}</h3>
                         <ul class="shopuct-review2 d-flex flex-row align-items-center mb-25">
                             <li><i class="bi bi-star-fill"></i></li>
                             <li><i class="bi bi-star-fill"></i></li>
@@ -292,13 +272,23 @@
                             <li><i class="bi bi-star-fill"></i></li>
                             <li><i class="bi bi-star-fill"></i></li>
                             <li><a href="#" class="review-no">(1 đánh giá)</a></li>
+
+                            <li><a href="#" class="review-no"><i class="bi bi-eye"></i> {{ $product->views }}</a></li>
                         </ul>
                         <div class="price-tag">
-                            <h4>150.000đ <del>200.000đ</del></h4>
+                            <h4>
+                                @if ($product->min_price == $product->max_price)
+                                    {{ format_cash($product->min_price) }}
+                                @else
+                                    {{ format_cash($product->min_price) . '-' . format_cash($product->max_price) }}
+                                @endif <del>
+                                    @if ($product->old_price)
+                                        {{ format_cash($product->old_price) }}
+                                    @endif
+                                </del>
+                            </h4>
                         </div>
-                        <p>Thức ăn cho chó lớn Pedigree hương bò và rau củ túi 1.5kg là sản phẩm thức ăn dạng hạt dành cho
-                            chó. Thức ăn cho chó Pedigree giúp bổ sung khoáng chất và vitamin, ngoài ra còn có chất sắt và
-                            kẽm đã được chứng mình là sẽ làm bộ lông của cún cưng được mềm mượt hơn.</p>
+                        <p>{{ $product->short_description }} </p>
                         <div class="shop-quantity d-flex align-items-center justify-content-start mb-20">
                             <div class="quantity d-flex align-items-center">
                                 <div class="quantity-nav nice-number d-flex align-items-center">
@@ -337,56 +327,38 @@
                         <div class="tab-pane fade active show" id="v-pills-home" role="tabpanel"
                             aria-labelledby="v-pills-home-tab">
                             <div class="description">
-                                <p class="para-2 mb-3">
-                                    Tại Pedigree ®, mọi sản phẩm đều được tạo nên bằng tình yêu với những chú cún cưng. Đó
-                                    cũng là lý do tại sao các công thức của Pedigree ® được dựa trên nghiên cứu từ Trung tâm
-                                    Dinh Dưỡng Vật Nuôi WALTHAM™ giúp cung cấp cho cún dưỡng chất đầy đủ nhất.
-                                    <br>
-                                    1) Chất chống oxy hóa với Dinh Dưỡng Toàn Diện & Cân Bằng, hỗ trợ hệ miễn dịch khỏe mạnh
-                                    <br>
-                                    2) 38 Dưỡng Chất Thiết Yếu cho Hệ thống Cơ thể hoạt động hiệu quả
-                                    <br>
-                                    3) Canxi & Phốt pho cho xương chắc khỏe
-                                    <br>
-                                    4) Chất xơ tự nhiên hỗ trợ hoạt động hệ tiêu hóa
-                                    <br>
-                                    5) Omega 6 & Kẽm đã được khoa học chứng minh giúp lớp lông bóng mượt trong 6 tuần!
-                                    <br>
-                                    6) Protein cao cấp cho cơ bắp rắn chắc
-                                </p>
+                                {!! $product->description !!}
                             </div>
                         </div>
                         <div class="tab-pane fade" id="v-pills-profile" role="tabpanel"
                             aria-labelledby="v-pills-profile-tab">
                             <div class="addithonal-information">
                                 <table class="table total-table2">
-                                    <tbody>
+                                    @if (!is_null($details))
+                                        @foreach ($details as $detail)
+                                            @foreach ($detail as $attribute)
+                                                <tr>
+                                                    <td>{{ $attribute['name'] }}</td>
+                                                    <td>
+                                                        @foreach ($attribute['value'] as $value)
+                                                            {{ $value['value'] }}@if (!$loop->last)
+                                                                ,
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        @endforeach
+                                    @else
                                         <tr>
-                                            <td>Chất đạm</td>
-                                            <td>25%</td>
+                                            <td colspan="2">Không có thông tin chi tiết sản phẩm.</td>
                                         </tr>
-                                        <tr>
-                                            <td>Chất béo</td>
-                                            <td>0.5%.</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Carbohydrates</td>
-                                            <td>10%.</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Khoáng chất</td>
-                                            <td>20%.</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Vitamins</td>
-                                            <td>15.5%.</td>
-                                        </tr>
+                                    @endif
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="v-pills-common" role="tabpanel"
-                            aria-labelledby="v-pills-common-tab">
+                        <div class="tab-pane fade" id="v-pills-common" role="tabpanel" aria-labelledby="v-pills-common-tab">
                             <div class="reviews-area">
                                 <div class="row g-lg-4 gy-5">
                                     <div class="col-lg-8">
@@ -500,223 +472,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="swiper essential-items-slider">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide d-flex">
-                            <div class="collection-card h-100">
-                                <div class="offer-card">
-                                    <span>Nổi bật</span>
-                                </div>
-                                <div class="collection-img">
-                                    <img class="img-gluid"
-                                        src="{{ asset('assets/clients/images/bg/category/h3-collection-01.png') }}" alt>
-                                    <div class="view-dt-btn">
-                                        <div class="plus-icon">
-                                            <i class="bi bi-plus"></i>
-                                        </div>
-                                        <a href="shop-details.html">Xem chi tiết</a>
-                                    </div>
-                                    <ul class="cart-icon-list">
-                                        <li><a href="cart.html"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-cart3.svg') }}"
-                                                    alt></a></li>
-                                        <li><a href="#"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-favorites3.svg') }}"
-                                                    alt></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="collection-content text-center">
-                                    <h4 class="title-limit"><a href="shop-details.html">Thức ăn cho mèo Brit</a></h4>
-                                    <div class="price">
-                                        <h6>100.000đ</h6>
-                                        <del>150.000đ</del>
-                                    </div>
-                                    <div class="review">
-                                        <ul>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                        </ul>
-                                        <span>(50)</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide d-flex">
-                            <div class="collection-card h-100">
-                                <div class="collection-img">
-                                    <img class="img-gluid"
-                                        src="{{ asset('assets/clients/images/bg/category/h3-collection-02.png') }}" alt>
-                                    <div class="view-dt-btn">
-                                        <div class="plus-icon">
-                                            <i class="bi bi-plus"></i>
-                                        </div>
-                                        <a href="shop-details.html">Xem chi tiết</a>
-                                    </div>
-                                    <ul class="cart-icon-list">
-                                        <li><a href="cart.html"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-cart3.svg') }}"
-                                                    alt></a></li>
-                                        <li><a href="#"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-favorites3.svg') }}"
-                                                    alt></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="collection-content text-center">
-                                    <h4 class="title-limit"><a href="shop-details.html">Thức ăn cho mèo Friskies asc</a>
-                                    </h4>
-                                    <div class="price">
-                                        <h6>120.000đ</h6>
-                                        <del>150.000đ</del>
-                                    </div>
-                                    <div class="review">
-                                        <ul>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                        </ul>
-                                        <span>(50)</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide d-flex">
-                            <div class="collection-card h-100">
-                                <div class="offer-card sale">
-                                    <span>Mua nhiều</span>
-                                </div>
-                                <div class="collection-img">
-                                    <img class="img-gluid"
-                                        src="{{ asset('assets/clients/images/bg/category/h3-collection-03.png') }}" alt>
-                                    <div class="view-dt-btn">
-                                        <div class="plus-icon">
-                                            <i class="bi bi-plus"></i>
-                                        </div>
-                                        <a href="shop-details.html">Xem chi tiết</a>
-                                    </div>
-                                    <ul class="cart-icon-list">
-                                        <li><a href="cart.html"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-cart3.svg') }}"
-                                                    alt></a></li>
-                                        <li><a href="#"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-favorites3.svg') }}"
-                                                    alt></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="collection-content text-center">
-                                    <h4 class="title-limit"><a href="shop-details.html">Nhà bông dành cho mèo</a></h4>
-                                    <div class="price">
-                                        <h6>250.000đ</h6>
-                                        <del>299.000đ</del>
-                                    </div>
-                                    <div class="review">
-                                        <ul>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                        </ul>
-                                        <span>(20)</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide d-flex">
-                            <div class="collection-card h-100">
-                                <div class="offer-card sold-out">
-                                    <span>Hết hàng</span>
-                                </div>
-                                <div class="collection-img">
-                                    <img class="img-gluid"
-                                        src="{{ asset('assets/clients/images/bg/category/h3-collection-04.png') }}" alt>
-                                    <div class="view-dt-btn">
-                                        <div class="plus-icon">
-                                            <i class="bi bi-plus"></i>
-                                        </div>
-                                        <a href="shop-details.html">Xem chi tiết</a>
-                                    </div>
-                                    <ul class="cart-icon-list">
-                                        <li><a href="cart.html"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-cart3.svg') }}"
-                                                    alt></a></li>
-                                        <li><a href="#"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-favorites3.svg') }}"
-                                                    alt></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="collection-content text-center">
-                                    <h4 class="title-limit"><a href="shop-details.html">Đồ hộp Beyona dành cho chó</a>
-                                    </h4>
-                                    <div class="price">
-                                        <h6>50.000đ</h6>
-                                    </div>
-                                    <div class="review">
-                                        <ul>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                        </ul>
-                                        <span>(100)</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide d-flex">
-                            <div class="collection-card h-100">
-                                <div class="offer-card sold-out">
-                                    <span>Hết hàng</span>
-                                </div>
-                                <div class="collection-img">
-                                    <img class="img-gluid"
-                                        src="{{ asset('assets/clients/images/bg/category/h3-collection-04.png') }}" alt>
-                                    <div class="view-dt-btn">
-                                        <div class="plus-icon">
-                                            <i class="bi bi-plus"></i>
-                                        </div>
-                                        <a href="shop-details.html">Xem chi tiết</a>
-                                    </div>
-                                    <ul class="cart-icon-list">
-                                        <li><a href="cart.html"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-cart3.svg') }}"
-                                                    alt></a></li>
-                                        <li><a href="#"><img
-                                                    src="{{ asset('assets/clients/images/icon/Icon-favorites3.svg') }}"
-                                                    alt></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="collection-content text-center">
-                                    <h4 class="title-limit"><a href="shop-details.html">Đồ hộp ASC Beyona dành cho chó</a>
-                                    </h4>
-                                    <div class="price">
-                                        <h6>60.000đ</h6>
-                                    </div>
-                                    <div class="review">
-                                        <ul>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                            <li><i class="bi bi-star-fill"></i></li>
-                                        </ul>
-                                        <span>(200)</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @include('clients.partials.related-products', ['relatedProducts' => $relatedProducts])
             </div>
         </div>
     </div>

@@ -230,3 +230,30 @@ function generateVariationOptions($options, $withTrash = true)
     }
     return $options;
 }
+function mergeImageWithList($image, $imageList)
+{
+    $decodedImageList = json_decode($imageList, true);
+
+    // Kiểm tra nếu giải mã không thành công
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        return $imageList; // Trả về danh sách gốc nếu có lỗi
+    }
+
+    $found = false;
+
+    foreach ($decodedImageList as $item) {
+        // Kiểm tra nếu hình ảnh đã tồn tại trong một trong các mảng con
+        if (in_array($image, $item)) {
+            $found = true;
+            break;
+        }
+    }
+
+    // Nếu chưa tồn tại trong danh sách, thêm hình ảnh vào đầu mảng
+    if (!$found) {
+        array_unshift($decodedImageList, [$image]);
+    }
+
+    return $decodedImageList;
+}
+

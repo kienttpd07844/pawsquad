@@ -9,10 +9,11 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function all(){
+    public function all()
+    {
         $categories = Category::where('slug', '!=', 'uncategorized')->IsActive()->isParent()->with('children')->get();
         $brands = Brand::IsActive()->where('slug', '!=', 'uncategorized')->get();
-        return view('clients.product.index',compact('categories','brands'));
+        return view('clients.product.index', compact('categories', 'brands'));
     }
     public function filter(Request $request)
     {
@@ -84,7 +85,32 @@ class ProductController extends Controller
             'products'          => getRender('clients.partials.product', ['products' => $products]),
         ];
     }
-    public function detail(Request $request){
-        return view('clients.product.detail');
+    public function detail(Request $request)
+    {
+        $product = Product::with('category')->isActive()->where('slug', $request->slug)->first();
+        if (!$product) {
+            return redirect()->route('product')->withErrorMessage('Không tìm sản phẩm!');
+        }
+        $mergedList = mergeImageWithList($product->image, $product->image_list);
+        if ($product) {
+            $view = 1;
+            $product->views += $view;
+            $product->save();
+        }
+        $details = null;
+        if (!is_null($product->details) && $this->isValidJson($product->details)) {
+            $details = json_decode($product->details, true);
+        }
+        $relatedProducts = Product::where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->isActive()
+            ->take(8)
+            ->get();
+        return view('clients.product.detail', compact('product', 'mergedList', 'details','relatedProducts'));
+    }
+    private function isValidJson($string)
+    {
+        json_decode($string);
+        return (json_last_error() === JSON_ERROR_NONE);
     }
 }
