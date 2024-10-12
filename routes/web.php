@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\Attribute_SetControllerAdmin;
 use App\Http\Controllers\Admin\AttributesControllerAdmin;
 use App\Http\Controllers\Admin\BrandsControllerAdmin;
 use App\Http\Controllers\Admin\CategoryControllerAdmin;
+use App\Http\Controllers\Admin\EmailControllerAdmin;
 use App\Http\Controllers\Admin\HomeControllerAdmin;
 use App\Http\Controllers\Admin\ProductControllerAdmin;
 use App\Http\Controllers\Admin\UploadControllerAdmin;
@@ -86,6 +87,7 @@ Route::middleware(['checkaccount'])->group(function () {
         Route::get('/tai-khoan/xac-minh', [UserController::class, 'verify'])->name('verify');
         Route::post('/tai-khoan/xac-minh', [UserController::class, 'postVerify'])->name('postVerify');
     });
+    Route::get('emails/theme/{id?}', [EmailControllerAdmin::class, 'getTheme'])->name('admin.emails.getTheme')->where(['id' => '[0-9]+']);
     Route::middleware(['role:1,9,10'])->group(function () {
         Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/', [HomeControllerAdmin::class, 'index'])->name('home');
@@ -204,6 +206,15 @@ Route::middleware(['checkaccount'])->group(function () {
                     Route::get('/get-attribute', [ProductControllerAdmin::class, 'attribute'])->name('get_attribute');
                     Route::get('/get-attributeset', [ProductControllerAdmin::class, 'attributeset'])->name('get_attributeset');
                     Route::get('/get-attribute-edit/{id?}', [ProductControllerAdmin::class, 'get_attribute_edit'])->name('get_attribute_edit');
+                }
+            );
+
+            Route::middleware(['role:10'])->prefix('emails')->name('emails.')->group(
+                function () {
+                    Route::match(['get', 'post'], '/', [EmailControllerAdmin::class, 'index'])->name('index');
+                    Route::get('edit/{id?}', [EmailControllerAdmin::class, 'edit'])->name('editEmail')->where(['id' => '[0-9]+']);
+                    Route::post('edit/{id?}', [EmailControllerAdmin::class, 'postEdit'])->name('postEditEmail');
+                    Route::post('uploadAsset',[EmailControllerAdmin::class,'uploadAsset'])->name('uploadAsset');
                 }
             );
         });

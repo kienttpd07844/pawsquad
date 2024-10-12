@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Mail\CustomVerifyEmail;
+use App\Mail\ThemeMail;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -56,7 +57,15 @@ class User extends Authenticatable
     public function sendEmailVerificationNotificationCustom()
     {
         $verificationUrl = $this->createCustomVerificationUrl();
-        Mail::to($this->email)->send(new CustomVerifyEmail($verificationUrl));
+        // Mail::to($this->email)->send(new CustomVerifyEmail($verificationUrl));
+        $dataMail =[
+            'name' => $this->name ?? NULL,
+            'veirfyLink' => $verificationUrl ?? NULL,
+            'email' => $this->email ?? NULL,
+            'phone' => $this->phone ?? NULL,
+        ];
+        Mail::to($this->email)
+        ->send((new ThemeMail($dataMail, 'verify'))->subject('Xác minh tài khoản tại ' . env('APP_NAME')));
     }
     protected function createCustomVerificationUrl()
     {

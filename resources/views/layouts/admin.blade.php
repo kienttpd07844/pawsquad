@@ -120,6 +120,9 @@
         }
     </style>
     <style>
+        .tox-statusbar__branding{
+            display:none!important;
+        }
         tr td[class*="footable-"][class$="-visible"]:not(.footable-last-visible) {
             display: flex !important;
         }

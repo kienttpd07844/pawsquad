@@ -6,6 +6,7 @@ use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\ForgotPasswordFormRequest;
 use App\Mail\ResetPassword;
+use App\Mail\ThemeMail;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -53,7 +54,15 @@ class ForgotPasswordController extends Controller
                 'created_at' => Carbon::now()
             ]);
             $resetLink = url(config('app.url') . route('password.reset', ['token' => $encryptedToken, 'email' => $user->email], false));
-            $mail = Mail::to($user->email)->send(new ResetPassword($resetLink));
+            $dataMail =[
+                'name' => $user->name ?? NULL,
+                'resetLink' => $resetLink ?? NULL,
+                'email' => $user->email ?? NULL,
+                'phone' => $user->phone ?? NULL,
+            ];
+            // $mail = Mail::to($user->email)->send(new ResetPassword($dataMail));
+            $mail = Mail::to($user->email)
+            ->send((new ThemeMail($dataMail, 'forgotpassword'))->subject('Thay đổi mật khẩu tại ' . env('APP_NAME')));
         }
         if ($user && $mail) {
             return redirect()->route('forgotpassword')->with(noti('Liên kết đặt lại mật khẩu đã được gửi đến email của bạn.', 'success'));

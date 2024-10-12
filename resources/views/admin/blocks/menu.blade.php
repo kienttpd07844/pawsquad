@@ -18,7 +18,7 @@
     <ul class="menu-inner py-1">
         <li class="menu-item {{ Route::is('admin.home') ? 'active' : '' }}">
             <a href="{{ route('admin.home') }}" class=" menu-link">
-                <i class="menu-icon tf-icons ti ti-mail"></i>
+                <i class="menu-icon tf-icons ti ti-dashboard"></i>
                 <div>Thống kê</div>
                 <div class="badge bg-danger rounded-pill ms-auto">5</div>
             </a>
@@ -102,6 +102,12 @@
                     </a>
                 </li>
             </ul>
+        </li>
+        <li class="menu-item {{ Route::is('admin.emails.index') ? 'active' : '' }}">
+            <a href="{{ route('admin.emails.index') }}" class=" menu-link">
+                <i class="menu-icon tf-icons ti ti-mail"></i>
+                <div>Email</div>
+            </a>
         </li>
 
 

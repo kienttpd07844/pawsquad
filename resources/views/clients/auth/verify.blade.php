@@ -74,7 +74,7 @@
                         @if (!auth()->user()->email_verified && !auth()->user()->email_verified_at)
                             <form method="POST" action="{{ route('postVerify') }}">
                                 @csrf
-                                <button class="account-btn" type="submit">Gửi lại mail xác minh</button>
+                                <button class="account-btn" type="submit">Gửi mail xác minh</button>
                             </form>
                         @endif
                     </div>
