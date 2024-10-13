@@ -19,8 +19,11 @@
                                     tiết</a>
                             </div>
                             <ul class="cart-icon-list">
-                                <li><a href="cart.html"><img
-                                            src="{{ asset('assets/clients/images/icon/Icon-cart3.svg') }}" alt></a></li>
+                                <li>
+                                    <a onclick="showProductDetailsModal({{ $row->id }})">
+                                        <i class="bi bi-eye-fill text-white"></i>
+                                    </a>
+                                </li>
                                 <li><a href="#"><img
                                             src="{{ asset('assets/clients/images/icon/Icon-favorites3.svg') }}" alt></a>
                                 </li>

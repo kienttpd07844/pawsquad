@@ -63,6 +63,7 @@ Route::middleware(['checkaccount'])->group(function () {
     Route::get('/san-pham', [ProductController::class, 'all'])->name('product');
     Route::get('/san-pham/{slug}', [ProductController::class, 'detail'])->where('slug', '^(?!loc$).*')->name('product.detail');
     Route::get('/san-pham/loc', [ProductController::class, 'filter'])->name('filter.product');
+    Route::post('/san-pham/thong-tin', [ProductController::class, 'showInfo'])->name('showInfo.product');
     Route::get('/danh-muc/{slug}', [CategoryController::class, 'list'])->name('list.category');
     Route::get('/danh-muc/loc/{slug}', [CategoryController::class, 'filter'])->name('filter.category');
 

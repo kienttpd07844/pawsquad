@@ -113,4 +113,11 @@ class ProductController extends Controller
         json_decode($string);
         return (json_last_error() === JSON_ERROR_NONE);
     }
+    public function showInfo(Request $request)
+    {
+        $product = Product::findOrFail($request->id);
+        $mergedList = mergeImageWithList($product->image, $product->image_list);
+
+        return view('clients.partials.product-view-box', ['product' => $product,'mergedList'=>$mergedList]);
+    }
 }

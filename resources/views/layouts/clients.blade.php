@@ -377,6 +377,221 @@
             transition-property: transform, -webkit-transform;
             display: block;
         }
+
+        .swiper-thumbnails {
+
+            height: 100px;
+            overflow: hidden;
+        }
+
+        .swiper-thumbnails .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100px;
+            height: 100px;
+        }
+
+        .swiper-thumbnails .swiper-slide img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+
+        .single-review {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .review-image img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .review-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .fancybox-button--play,
+        .fancybox-button--thumbs,
+        .fancybox-button--zoom {
+            display: none !important;
+        }
+
+        .shop-details-page .swiper-container {
+            width: 100%;
+            height: auto;
+            position: relative;
+        }
+
+        .shop-details-page .swiper-button-next,
+        .shop-details-page .swiper-button-prev {
+            color: #fff;
+            width: 40px;
+            height: 40px;
+            background-color: #F46F30;
+            border-radius: 50%;
+            top: 43%;
+            position: absolute;
+            transform: translateY(-50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .shop-details-page .swiper-button-prev:after,
+        .shop-details-page .swiper-button-next:after {
+            font-size: 18px !important;
+        }
+
+        .shop-details-page .swiper-button-next:hover,
+        .shop-details-page .swiper-button-prev:hover {
+            background-color: #F46F30;
+        }
+
+        .shop-details-page .swiper-button-next {
+            right: 10px;
+        }
+
+        .shop-details-page .swiper-button-prev {
+            left: 10px;
+        }
+
+
+        .shop-details-page .thumbnail-slider .swiper-slide {
+            cursor: pointer;
+            opacity: 0.4;
+        }
+
+        .shop-details-page .thumbnail-slider .swiper-slide-thumb-active {
+            opacity: 1;
+        }
+
+        .shop-details-page .main-slider .swiper-slide {
+            height: 370px;
+            overflow: hidden;
+        }
+
+        .shop-details-page .main-slider .swiper-slide a {
+            display: block;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .shop-details-page .main-slider .swiper-slide a img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .shop-details-page .main-slider .swiper-slide a:hover img {
+            transform: scale(1.05);
+        }
+
+        .shop-details-page .main-slider .swiper-slide img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .shop-details-page .swiper-slide {
+            margin-bottom: 10px;
+            padding: 5px;
+            background: #E1E4E5 !important;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+        }
+
+        .shop-details-page .swiper-slide img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .shop-details-page .swiper-thumbnails .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .shop-details-page .swiper-thumbnails .swiper-slide img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .shop-details-page .swiper-slide-thumb-active {
+            border: 2px solid #F46F30;
+        }
+
+        @media (max-width: 768px) {
+            .shop-details-page .swiper-container {
+                width: 100%;
+                height: auto;
+            }
+
+            .shop-details-page .swiper-slide {
+                margin-bottom: 8px;
+                padding: 5px;
+                background: #E1E4E5 !important;
+            }
+
+            .shop-details-page .main-slider .swiper-slide {
+                height: 250px;
+            }
+
+            .shop-details-page .thumbnail-slider .swiper-slide {
+                width: 80px;
+                opacity: 0.6;
+            }
+
+            .shop-details-page .thumbnail-slider .swiper-slide-thumb-active {
+                opacity: 1;
+            }
+
+            .shop-details-page .swiper-thumbnails .swiper-slide {
+                margin-right: 8px;
+            }
+
+            .shop-details-page .swiper-thumbnails .swiper-slide img {
+                max-width: 60px;
+                max-height: 60px;
+                object-fit: contain;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .shop-details-page .swiper-slide {
+                margin-bottom: 5px;
+                padding: 3px;
+            }
+
+            .shop-details-page .main-slider .swiper-slide {
+                height: 250px;
+            }
+
+            .shop-details-page .thumbnail-slider .swiper-slide {
+                width: 60px;
+            }
+
+            .shop-details-page .swiper-thumbnails .swiper-slide img {
+                max-width: 80px;
+                max-height: 80px;
+                object-fit: contain;
+            }
+        }
+
+        .min-h-400 {
+            min-height: 400px !important;
+        }
     </style>
 
     @yield('css')
@@ -387,7 +602,30 @@
     @include('clients.blocks.header')
 
     @yield('content')
+    @if (Route::is('home') || Route::is('product') || Route::is('product.detail') || Route::is('category'))
+         <!-- Quickview -->
+        <div class="modal fade" id="quickview_modal">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content min-h-400">
+                    <div class="modal-body h-100 bg-white">
+                        <button type="button" class="btn-close float-end" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
 
+                        <div class="data-preloader-wrapper d-flex align-items-center justify-content-center min-h-400">
+                            <div class="" role="status">
+                                <span class="sr-only"></span>
+                            </div>
+                        </div>
+
+                        <div class="product-info">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Quickview -->
+    @endif
     @include('clients.blocks.footer')
 
     <script src="{{ asset('assets/clients/js/jquery-3.6.0.min.js') }}"></script>
@@ -416,6 +654,9 @@
         integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
+
     <script>
         function notifyMe(level, message) {
             if (level == 'danger') {
@@ -468,7 +709,110 @@
                 minTime: '07:15',
                 maxTime: '18:45'
             });
+
         });
+    </script>
+    <script>
+        "use strict"
+        // tooltip
+        $(function() {
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        });
+
+        function showProductDetailsModal(productId) {
+            $('#quickview_modal .product-info').html(null);
+            $('.data-preloader-wrapper>div').addClass('spinner-border');
+            $('.data-preloader-wrapper').addClass('min-h-400');
+            $('#quickview_modal').modal('show');
+
+            $.post('{{ route('showInfo.product') }}', {
+                _token: '{{ csrf_token() }}',
+                id: productId
+            }, function(data) {
+                setTimeout(() => {
+                    $('.data-preloader-wrapper>div').removeClass('spinner-border');
+                    $('.data-preloader-wrapper').removeClass('min-h-400');
+                    $('#quickview_modal .product-info').html(data);
+                    ProductInfo();
+                    // cartFunc();
+                }, 200);
+            });
+        }
+
+        $('#quickview_modal').on('hide.bs.modal', function(e) {
+            $('#quickview_modal .product-info').html(null);
+        });
+
+        function ProductInfo() {
+            // Khởi tạo Swiper trước
+            var swiperThumbnails = new Swiper('.swiper-thumbnails-box', {
+                spaceBetween: 10,
+                slidesPerView: 4,
+                freeMode: true,
+                watchSlidesVisibility: true,
+                watchSlidesProgress: true,
+                breakpoints: {
+                    320: {
+                        slidesPerView: 3
+                    },
+                    768: {
+                        slidesPerView: 4
+                    },
+                    992: {
+                        slidesPerView: 4
+                    }
+                }
+            });
+
+            var swiperMain = new Swiper('.mySwiperBox', {
+                spaceBetween: 10,
+                slidesPerView: 1,
+                loop: true,
+                thumbs: {
+                    swiper: swiperThumbnails
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                breakpoints: {
+                    320: {
+                        slidesPerView: 1
+                    },
+                    768: {
+                        slidesPerView: 1
+                    },
+                    992: {
+                        slidesPerView: 1
+                    }
+                }
+            });
+
+            // Khởi tạo Fancybox
+            Fancybox.bind("[data-fancybox='gallery']", {
+                Carousel: {
+                    infinite: false,
+                    autoplay: false,
+                    transition: "slide"
+                },
+                Thumbs: {
+                    autoStart: true,
+                    type: "classic"
+                },
+                Image: {
+                    zoom: false
+                },
+                loop: false
+            });
+
+            // Khởi tạo NiceNumber Input
+            if ($('input[type="number').length) {
+                $('input[type="number"]').niceNumber({
+                    buttonDecrement: '<i class="bi bi-dash"></i>',
+                    buttonIncrement: '<i class="bi bi-plus"></i>',
+                });
+            }
+        }
     </script>
 </body>
 
