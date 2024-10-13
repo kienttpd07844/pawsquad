@@ -592,8 +592,70 @@
         .min-h-400 {
             min-height: 400px !important;
         }
-    </style>
 
+        .shop-details-page .shop-details-content .buy-now-btn button {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--title-color1);
+            font-family: var(--font-dosis);
+            letter-spacing: .03em;
+            position: relative;
+            text-align: center;
+            display: block;
+            padding: 12px 15px;
+            transition: .4s
+        }
+
+        .shop-details-page .shop-details-content .buy-now-btn button::after {
+            content: "";
+            background: var(--gradient-color);
+            opacity: .5;
+            border-radius: 5px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            z-index: -1;
+            transition: .4s
+        }
+
+        .shop-details-page .shop-details-content .buy-now-btn button:hover {
+            color: var(--white)
+        }
+
+        .shop-details-page .shop-details-content .buy-now-btn button:hover::after {
+            background: var(--title-color1);
+            opacity: 1
+        }
+    </style>
+    <style>
+        .product-radio-btn li {
+            position: relative;
+            display: inline-block
+        }
+
+        .product-radio-btn li input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0
+        }
+
+        .product-radio-btn li input:checked~label {
+            color: #ff7c08;
+            border-color: #ff7c08
+        }
+
+        .product-radio-btn li label {
+            padding: 4px 16px;
+            border: 1px solid #e9e9e9;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600
+        }
+    </style>
     @yield('css')
 </head>
 
@@ -603,7 +665,7 @@
 
     @yield('content')
     @if (Route::is('home') || Route::is('product') || Route::is('product.detail') || Route::is('category'))
-         <!-- Quickview -->
+        <!-- Quickview -->
         <div class="modal fade" id="quickview_modal">
             <div class="modal-dialog modal-dialog-centered modal-xl">
                 <div class="modal-content min-h-400">

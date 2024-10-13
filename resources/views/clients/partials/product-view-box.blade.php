@@ -6,7 +6,7 @@
                     <div class="swiper-wrapper main-slider">
                         @foreach ($mergedList as $images)
                             @foreach ($images as $image)
-                                <div class="swiper-slide" style="height:300px">
+                                <div class="swiper-slide">
                                     <a data-fancybox="gallery" data-thumb="{{ getImage($image) }}"
                                         href="{{ getImage($image) }}">
                                         <img class="img-fluid" src="{{ getImage($image) }}" alt="">
@@ -61,25 +61,57 @@
                             </del>
                         </h4>
                     </div>
-                    <p>{{ limitText($product->short_description,150)}} </p>
-                    <div class="shop-quantity d-flex align-items-center justify-content-start mb-20">
-                        <div class="quantity d-flex align-items-center">
-                            <div class="quantity-nav nice-number d-flex align-items-center">
-                                <input type="number" value="1" min="1">
+                    <p>{{ limitText($product->short_description, 150) }} </p>
+                    <form action="" class="add-to-cart-form">
+                        @php
+                            $isVariantProduct = 0;
+                            $stock = 0;
+                            if ($product->variations()->count() > 1) {
+                                $isVariantProduct = 1;
+                            } else {
+                                $stock = $product->variations[0]->product_variation_stock
+                                    ? $product->variations[0]->product_variation_stock->stock_qty
+                                    : 0;
+                            }
+                        @endphp
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="product_variation_id"
+                            @if (!$isVariantProduct) value="{{ $product->variations[0]->id }}" @endif>
+                        <!-- Biến thể -->
+                        @include('clients.partials.variations', compact('product'))
+                        <!-- Biến thể -->
+                        <div class="shop-quantity d-flex align-items-center justify-content-start mb-20">
+                            <div class="quantity d-flex align-items-center">
+                                <div class="quantity-nav nice-number d-flex align-items-center">
+                                    <input type="number" readonly value="1" min="1"
+                                        @if (!$isVariantProduct) max="{{ $stock }}" @endif>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="buy-now-btn">
-                        <a href="cart.html" style="background:linear-gradient(90deg, #F86CA7 0%, #FF7F18 100%)">Thêm vào giỏ hàng</a>
-                    </div>
-                    <div class="compare-wishlist-area">
-                        <ul>
-                            <li><a href="#"><span><img
-                                            src="{{ asset('assets/clients/images/icon/Icon-favorites2.svg') }}"
-                                            alt></span>
-                                    Thêm vào yêu thích</a></li>
-                        </ul>
-                    </div>
+                        <div class="buy-now-btn">
+                            <button class="w-100" style="background:linear-gradient(90deg, #F86CA7 0%, #FF7F18 100%)"
+                                @if (!$isVariantProduct && $stock < 1) disabled @endif>
+                                <span class="me-2">
+                                    <i class="fa-solid fa-bag-shopping"></i>
+                                </span>
+                                <span class="add-to-cart-text">
+                                    @if (!$isVariantProduct && $stock < 1)
+                                        Hết hàng
+                                    @else
+                                        Thêm vào giỏ hàng
+                                    @endif
+                                </span>
+                            </button>
+                        </div>
+                        <div class="compare-wishlist-area">
+                            <ul>
+                                <li><a href="#"><span><img
+                                                src="{{ asset('assets/clients/images/icon/Icon-favorites2.svg') }}"
+                                                alt></span>
+                                        Thêm vào yêu thích</a></li>
+                            </ul>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
