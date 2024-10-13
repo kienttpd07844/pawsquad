@@ -306,7 +306,7 @@
                                             <div class="mb-3">
                                                 <label for="price" class="form-label">Giá</label>
                                                 <input type="number" min="0" step="1000" id="price"
-                                                    name="price" placeholder="Giá sản phẩm" class="form-control" value="{{ old('price',$data->price) }}"
+                                                    name="price" placeholder="Giá sản phẩm" class="form-control" value="{{ old('price',$price) }}"
                                                     {{ !$data->has_variation ? 'required' : '' }}>
                                             </div>
                                         </div>

@@ -546,7 +546,7 @@ class ProductControllerAdmin extends Controller
                     }
                 } else {
                     # kiểm tra xem sản phẩm cũ có phải là biến thể không, sau đó xóa tất cả các biến thể và kết hợp cũ
-                    if ($oldProduct->is_variant) {
+                    if ($oldProduct->has_variation) {
                         foreach ($productData->variations as $variation) {
                             foreach ($variation->combinations as $comb) {
                                 $comb->delete();

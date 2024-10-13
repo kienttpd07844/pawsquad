@@ -89,7 +89,7 @@
                             </div>
                         </div>
                         <div class="buy-now-btn">
-                            <button class="w-100" style="background:linear-gradient(90deg, #F86CA7 0%, #FF7F18 100%)"
+                            <button class="w-100 add-to-cart-btn" style="background:linear-gradient(90deg, #F86CA7 0%, #FF7F18 100%)"
                                 @if (!$isVariantProduct && $stock < 1) disabled @endif>
                                 <span class="me-2">
                                     <i class="fa-solid fa-bag-shopping"></i>
