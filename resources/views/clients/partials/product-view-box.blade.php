@@ -49,7 +49,7 @@
                         <li><a href="#" class="review-no"><i class="bi bi-eye"></i> {{ $product->views }}</a></li>
                     </ul>
                     <div class="price-tag">
-                        <h4>
+                        <h4 class="all-pricing">
                             @if ($product->min_price == $product->max_price)
                                 {{ format_cash($product->min_price) }}
                             @else
@@ -60,6 +60,11 @@
                                 @endif
                             </del>
                         </h4>
+                        <!-- Giá biến thể -->
+                        <div class="pricing variation-pricing mt-2 d-none">
+
+                        </div>
+                        <!-- Giá biến thể -->
                     </div>
                     <p>{{ limitText($product->short_description, 150) }} </p>
                     <form action="" class="add-to-cart-form">
@@ -82,14 +87,15 @@
                         <!-- Biến thể -->
                         <div class="shop-quantity d-flex align-items-center justify-content-start mb-20">
                             <div class="quantity d-flex align-items-center">
-                                <div class="quantity-nav nice-number d-flex align-items-center">
-                                    <input type="number" readonly value="1" min="1"
+                                <div class="product-qty quantity-nav qty-increase-decrease nice-number d-flex align-items-center">
+                                    <input type="number" readonly value="1" min="1" name="quantity"
                                         @if (!$isVariantProduct) max="{{ $stock }}" @endif>
                                 </div>
                             </div>
                         </div>
                         <div class="buy-now-btn">
-                            <button class="w-100 add-to-cart-btn" style="background:linear-gradient(90deg, #F86CA7 0%, #FF7F18 100%)"
+                            <button class="w-100 add-to-cart-btn"
+                                style="background:linear-gradient(90deg, #F86CA7 0%, #FF7F18 100%)"
                                 @if (!$isVariantProduct && $stock < 1) disabled @endif>
                                 <span class="me-2">
                                     <i class="fa-solid fa-bag-shopping"></i>

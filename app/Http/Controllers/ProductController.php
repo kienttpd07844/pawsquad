@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProductVariationInfoResource;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductVariation;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -119,5 +121,16 @@ class ProductController extends Controller
         $mergedList = mergeImageWithList($product->image, $product->image_list);
 
         return view('clients.partials.product-view-box', ['product' => $product,'mergedList'=>$mergedList]);
+    }
+    public function getVariationInfo(Request $request)
+    {
+        $variationKey = "";
+        foreach ($request->variation_id as $variationId) {
+            $fieldName      = 'variation_value_for_variation_' . $variationId;
+            $variationKey  .=  $variationId . ':' . $request[$fieldName] . '/';
+        }
+        $productVariation = ProductVariation::where('variation_key', $variationKey)->where('product_id', $request->product_id)->first();
+
+        return new ProductVariationInfoResource($productVariation);
     }
 }

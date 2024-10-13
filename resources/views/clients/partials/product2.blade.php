@@ -1,6 +1,6 @@
 @if (isset($products) && $products->isNotEmpty())
     @foreach ($products as $row)
-        <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="col-lg-3 col-md-4 col-6">
             <div class="collection-card h-100">
                 <div class="offer-card">
                     <span>Nổi bật</span>

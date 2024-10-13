@@ -64,10 +64,13 @@ Route::middleware(['checkaccount'])->group(function () {
     Route::get('/san-pham/{slug}', [ProductController::class, 'detail'])->where('slug', '^(?!loc$).*')->name('product.detail');
     Route::get('/san-pham/loc', [ProductController::class, 'filter'])->name('filter.product');
     Route::post('/san-pham/thong-tin', [ProductController::class, 'showInfo'])->name('showInfo.product');
+    Route::post('/san-pham/thong-tin-bien-the', [ProductController::class, 'getVariationInfo'])->name('showVariationInfo.product');
     Route::get('/danh-muc/{slug}', [CategoryController::class, 'list'])->name('list.category');
     Route::get('/danh-muc/loc/{slug}', [CategoryController::class, 'filter'])->name('filter.category');
 
     Route::get('/gio-hang', [CartController::class, 'index'])->name('cart');
+    Route::post('/gio-hang/them', [CartController::class, 'add'])->name('carts.add');
+    Route::post('/gio-hang/cap-nhat', [CartController::class, 'update'])->name('carts.update');
     Route::get('/thanh-toan', [CheckoutController::class, 'index'])->name('checkout');
 
     Route::get('/thuong-hieu', [BrandController::class, 'index'])->name('brand');
@@ -219,11 +222,9 @@ Route::middleware(['checkaccount'])->group(function () {
                     Route::match(['get', 'post'], '/', [EmailControllerAdmin::class, 'index'])->name('index');
                     Route::get('edit/{id?}', [EmailControllerAdmin::class, 'edit'])->name('editEmail')->where(['id' => '[0-9]+']);
                     Route::post('edit/{id?}', [EmailControllerAdmin::class, 'postEdit'])->name('postEditEmail');
-                    Route::post('uploadAsset',[EmailControllerAdmin::class,'uploadAsset'])->name('uploadAsset');
+                    Route::post('uploadAsset', [EmailControllerAdmin::class, 'uploadAsset'])->name('uploadAsset');
                 }
             );
         });
     });
-
-
 });

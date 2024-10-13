@@ -64,7 +64,7 @@
                             <li><a href="#" class="review-no"><i class="bi bi-eye"></i> {{ $product->views }}</a></li>
                         </ul>
                         <div class="price-tag">
-                            <h4>
+                            <h4 class="all-pricing">
                                 @if ($product->min_price == $product->max_price)
                                     {{ format_cash($product->min_price) }}
                                 @else
@@ -75,6 +75,11 @@
                                     @endif
                                 </del>
                             </h4>
+                            <!-- Giá biến thể -->
+                            <div class="pricing variation-pricing mt-2 d-none">
+
+                            </div>
+                            <!-- Giá biến thể -->
                         </div>
                         <p>{{ $product->short_description }} </p>
                         <form action="" class="add-to-cart-form">
@@ -97,8 +102,8 @@
                             <!-- Biến thể -->
                             <div class="shop-quantity d-flex align-items-center justify-content-start mb-20">
                                 <div class="quantity d-flex align-items-center">
-                                    <div class="quantity-nav nice-number d-flex align-items-center">
-                                        <input type="number" readonly value="1" min="1"
+                                    <div class="product-qty quantity-nav qty-increase-decrease nice-number d-flex align-items-center">
+                                        <input type="number" readonly value="1" min="1" name="quantity"
                                             @if (!$isVariantProduct) max="{{ $stock }}" @endif>
                                     </div>
                                 </div>

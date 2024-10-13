@@ -9,6 +9,9 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Variations;
 use App\Models\VariationValues;
+use App\Models\Voucher;
+use App\Models\VoucherType;
+use App\Models\VoucherUsage;
 use Artesaos\SEOTools\Facades\SEOTools;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
@@ -256,4 +259,163 @@ function mergeImageWithList($image, $imageList)
 
     return $decodedImageList;
 }
+function removeCoupon()
+{
+    if (request()->hasCookie('coupon_code')) {
+        $response = new Response();
+        Cookie::queue(Cookie::forget('coupon_code'));
+        Cookie::queue(Cookie::forget('coupon_data'));
+        return $response;
+    }
+}
 
+
+function setCoupon($coupon)
+{
+    $theTime = now()->addDays(7)->timestamp;
+    // setCouponTypeDiscount($coupon->discount,$coupon->discount_type);
+    return Cookie::queue('coupon_code', $coupon->name, $theTime);
+}
+
+function setCouponTypeDiscount($amount, $type)
+{
+    $theTime = now()->addDays(7)->timestamp;
+
+    $formattedAmount = '';
+    if ($type === 'flat') {
+        $formattedAmount = format_cash($amount);
+    } else {
+        $formattedAmount = $amount . '%';
+    }
+    return Cookie::queue('coupon_data', $formattedAmount, $theTime);
+}
+
+
+
+
+function getCoupon($type = "default")
+{
+    if ($type == "default") {
+        if (request()->hasHeader("Coupon-Code")) {
+            return request()->header("Coupon-Code");
+        }
+        if (request()->hasCookie('coupon_code')) {
+            return request()->cookie('coupon_code');
+        }
+    }
+    if ($type == "coupon_data") {
+        if (request()->hasCookie('coupon_data')) {
+            return request()->cookie('coupon_data');
+        }
+    }
+
+    return '';
+}
+
+
+function checkCouponValidityForCheckout($carts)
+{
+    if (getCoupon() != '') {
+        $voucherType = VoucherType::where('name', getCoupon())->first();
+        if ($voucherType) {
+            $voucher = Voucher::where('voucher_type_id', $voucherType->id)->first();
+            $currentDate = Carbon::now()->toDateString();
+            if ($voucher->voucher_quantity <= 0) {
+                removeCoupon();
+                return [
+                    'status'    => false,
+                    'message'   => 'Mã giảm giá đã hết lượt'
+                ];
+            }
+            # total coupon usage
+            $totalCouponUsage = VoucherUsage::where('name', $voucherType->name)->sum('usage_count');
+            if ($totalCouponUsage > $voucherType->customer_usage_limit) {
+                # coupon usage limit reached
+                removeCoupon();
+                return [
+                    'status'    => false,
+                    'message'   => 'Mã giảm giá đã sử dụng'
+                ];
+            }
+
+
+            # check if coupon is expired
+            if ($voucher->start_date <= $currentDate && $voucher->expired_date >= $currentDate) {
+                $subTotal = (float) getSubTotal($carts, false);
+                if ($subTotal >= (float) $voucherType->min_spend) {
+                    return [
+                        'status'    => true,
+                        'message'   => ''
+                    ];
+                } else {
+                    removeCoupon();
+                    return [
+                        'status'    => false,
+                        'message'   => 'Không đạt được số tiền tối thiểu để sử dụng phiếu giảm giá này'
+                    ];
+                }
+            } else {
+                removeCoupon();
+                return [
+                    'status'    => false,
+                    'message'   => 'Mã giảm giá đã hết hạn'
+                ];
+            }
+        } else {
+            removeCoupon();
+            return [
+                'status'    => false,
+                'message'   => 'Mã giảm giá không tồn tại'
+            ];
+        }
+    }
+
+    return [
+        'status'    => true,
+        'message'   => ''
+    ];
+}
+function getSubTotal($carts, $couponDiscount = true, $couponCode = '')
+{
+    $price = 0;
+    $amount = 0;
+    if (count($carts) > 0) {
+        foreach ($carts as $cart) {
+            $variation  = $cart->product_variation;
+            $price += (float) $variation->price * $cart->quantity;
+        }
+
+        # calculate coupon discount
+        if ($couponDiscount) {
+            $amount = getCouponDiscount($price, $couponCode);
+        }
+    }
+
+    return $price - $amount;
+}
+function getCouponDiscount($subTotal, $code = '')
+{
+    $amount = 0;
+    $voucherType = VoucherType::where('name', $code)->first();
+    if ($voucherType) {
+        $voucher = Voucher::where('voucher_type_id', $voucherType->id)->first();
+        $currentDate = Carbon::now()->toDateString();
+        # kiểm tra
+        if ($voucher->start_date <= $currentDate && $voucher->expired_date >= $currentDate) {
+            if ($voucherType->discount_type == 'flat') {
+                $amount = $subTotal - (float) $voucherType->discount;
+            } else {
+                $amount = $subTotal - ((float) $voucherType->discount * $subTotal) / 100;
+            }
+            if ($amount < 0) {
+                $amount = 0;
+            }
+        } else {
+            removeCoupon();
+        }
+    } else {
+        removeCoupon();
+    }
+
+    return $amount;
+}

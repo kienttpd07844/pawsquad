@@ -126,12 +126,63 @@
                                     d="M12.4147 1.51371C11.0037 0.302997 8.92573 0.534835 7.61736 1.87434L7.12993 2.38954L6.61684 1.87434C5.33413 0.534835 3.23047 0.302997 1.81948 1.51371C0.203258 2.90473 0.126295 5.37767 1.56294 6.87174L6.53988 12.0237C6.84773 12.3586 7.38647 12.3586 7.69433 12.0237L12.6713 6.87174C14.1079 5.37767 14.0309 2.90473 12.4147 1.51371Z" />
                             </svg>
                         </a></li>
-                    <li><a href="{{ route('cart') }}">
+                    <li class="search-btn">
+                        @php
+                            $carts = [];
+                            if (Auth::check()) {
+                                $carts = App\Models\Cart::where('user_id', Auth::user()->id)->get();
+                            } else {
+                                if (isset($_COOKIE['guest_user_id'])) {
+                                    $carts = App\Models\Cart::where(
+                                        'guest_user_id',
+                                        request()->cookie('guest_user_id'),
+                                    )->get();
+                                }
+                            }
+                        @endphp
+                        <a>
                             <svg width="16" height="13" viewBox="0 0 16 13" xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M15.6365 5.46266C15.6365 5.12721 15.3541 4.84336 15.0202 4.84336H13.274L10.5262 1.07601C10.2694 0.688956 9.75576 0.611544 9.39624 0.895386C9.01104 1.15342 8.934 1.6695 9.21648 2.03075L11.2452 4.84336H5.21036L7.2391 2.03075C7.52158 1.6695 7.44454 1.15342 7.05934 0.895386C6.69982 0.611544 6.18621 0.688956 5.92941 1.07601L3.18163 4.84336H1.46105C1.10153 4.84336 0.844727 5.12721 0.844727 5.46266V5.87552C0.844727 6.23677 1.10153 6.49481 1.46105 6.49481H1.66649L2.33418 11.2169C2.41122 11.8362 2.92482 12.2749 3.54115 12.2749H12.9144C13.5308 12.2749 14.0444 11.8362 14.1214 11.2169L14.8148 6.49481H15.0202C15.3541 6.49481 15.6365 6.23677 15.6365 5.87552V5.46266ZM8.85696 10.0041C8.85696 10.3654 8.57447 10.6234 8.24063 10.6234C7.88111 10.6234 7.6243 10.3654 7.6243 10.0041V7.1141C7.6243 6.77865 7.88111 6.49481 8.24063 6.49481C8.57447 6.49481 8.85696 6.77865 8.85696 7.1141V10.0041ZM11.7331 10.0041C11.7331 10.3654 11.4507 10.6234 11.1168 10.6234C10.7573 10.6234 10.5005 10.3654 10.5005 10.0041V7.1141C10.5005 6.77865 10.7573 6.49481 11.1168 6.49481C11.4507 6.49481 11.7331 6.77865 11.7331 7.1141V10.0041ZM5.98077 10.0041C5.98077 10.3654 5.69829 10.6234 5.36445 10.6234C5.00492 10.6234 4.74812 10.3654 4.74812 10.0041V7.1141C4.74812 6.77865 5.00492 6.49481 5.36445 6.49481C5.69829 6.49481 5.98077 6.77865 5.98077 7.1141V10.0041Z" />
                             </svg>
-                        </a></li>
+                        </a>
+                        <span
+                            class="cart-counter badge rounded-circle p-0 {{ count($carts) > 0 ? '' : 'd-none' }}">{{ count($carts) }}</span>
+
+
+                        <form class="nav__search-form w-100  dropdown-main gshop-header-user p-0">
+                            <div class="gshop-header-cart position-relative">
+
+                                <div class="cart-box-wrapper w-100">
+                                    <div class="apt_cart_box theme-scrollbar">
+                                        <ul class="at_scrollbar scrollbar cart-navbar-wrapper">
+                                            @include('clients.partials.cart-navbar', [
+                                                'carts' => $carts,
+                                            ])
+                                        </ul>
+                                        <div class="d-flex align-items-center justify-content-between mt-3">
+                                            <h6 class="mb-0">Tổng:</h6>
+                                            <span
+                                                class="fw-semibold sub-total-price text-white">{{ format_cash(getSubTotal($carts, false)) }}</span>
+                                        </div>
+                                        <div class="row align-items-center justify-content-between btn-group w-100 m-auto">
+                                            <div class="col-6">
+                                                <a class="primary-btn6 btn-md mt-4 w-100"
+                                                    style="height:40px;border-radius:5px;padding: 10px 28px;background:#F46F30"
+                                                    href="{{ route('cart') }}">Giỏ hàng</a>
+                                            </div>
+                                            <div class="col-6">
+                                                <a class="primary-btn6 btn-md mt-4 w-100"
+                                                    style="height:40px;border-radius:5px;padding: 10px 28px;background:#F46F30"
+                                                    href="shop-details.html">Thanh
+                                                    toán</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </li>
                     <li class="search-btn"><a>
                             <svg width="15" height="15" viewBox="0 0 15 15" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -146,8 +197,8 @@
                                 <li><a href="{{ route('account') }}">Tài khoản </a></li>
                                 <li><a href="{{ route('signup') }}">Đơn hàng đã mua</a></li>
                                 <li><a href="{{ route('signup') }}">Danh sách địa chỉ</a></li>
-                                @if(auth()->user()->role == 9 || auth()->user()->role ==10)
-                                <li class="text-danger"><a href="{{ route('admin.home') }}">Quản lý</a></li>
+                                @if (auth()->user()->role == 9 || auth()->user()->role == 10)
+                                    <li class="text-danger"><a href="{{ route('admin.home') }}">Quản lý</a></li>
                                 @endif
                                 <li><a href="{{ route('logout') }}">Đăng xuất</a></li>
                             </ul>

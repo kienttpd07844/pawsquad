@@ -37,6 +37,7 @@
     <link rel="stylesheet" href="{{ asset('assets/clients/css/uiicss.css') }}">
 
     <link rel="stylesheet" href="{{ asset('assets/clients/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/clients/css/custom.css') }}">
 
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.css"
@@ -45,131 +46,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css"
         integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simplebar/6.0.0/simplebar.min.css"
+        integrity="sha512-iQBsppXZIltfj3yN99ljZ/JqWSXOMMArhR6paziJaU42nMPfTuDkXF+yE/PBqbF9guEczGppZctiZ32ZCYssXw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        .title-limit {
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: normal;
-        }
-
-        .title-limit-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: normal;
-        }
-
-        .service .list {
-            width: 100%;
-        }
-
-        .service .nice-select {
-            color: #a2a2a2;
-            font-family: var(--font-cabin);
-            background: rgba(255, 255, 255, .6);
-            border: 1px solid rgba(0, 29, 35, .1);
-            border-radius: 5px;
-        }
-
-        .inner-page-banner .banner-content h1 {
-            font-size: 2.375rem !important;
-        }
-
-        .dropdown-main {
-            width: 200px !important;
-            list-style-type: none !important;
-            margin: 0 !important;
-        }
-
-        .dropdown-main ul {
-            width: 100% !important;
-            flex-direction: column;
-            display: flex;
-        }
-
-        .dropdown-main li {
-            width: 100% !important;
-            display: block !important;
-        }
-
-        .dropdown-main li a {
-            width: 100% !important;
-            height: 100% !important;
-            text-decoration: none !important;
-            padding: 10px !important;
-            display: block !important;
-            color: white !important;
-            border: none !important;
-            background: none !important;
-            border-radius: 4px !important;
-            transition: background-color 0.3s !important;
-        }
-
-        .dropdown-main li a:hover {
-            background-color: var(--primary-color3) !important;
-        }
-    </style>
-    <style>
-        .image-wrapper {
-            overflow: hidden;
-            position: relative;
-        }
-
-        .img-gluid {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .image-wrapper:hover .img-gluid {
-            transform: scale(1.1);
-        }
-
-        .h3-category-slider .swiper-slide {
-            width: 100% !important;
-            flex-shrink: 0;
-        }
-
-        .h3-category-slider {
-            overflow: hidden;
-        }
-
-        .category-icon img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-        }
-
-        .category-card-back img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-        }
-
-        input[aria-describedby$="error"][aria-invalid="true"] {
-            border: 1px solid red;
-            background: rgb(250 190 190 / 5%);
-        }
-
-        .error-help-block {
-            align-items: start;
-            display: flex;
-            color: #f56c6c;
-            justify-content: flex-start;
-            text-align: left;
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            box-sizing: border-box;
-
-        }
-
         .toast {
             background-size: auto !important;
         }
@@ -359,303 +239,9 @@
         #toast-container>.toast-error {
             background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIlSURBVHgB3VbBbtNAEH2zTugFFIPgwAlzA4mK8AdrvgC+APiSKl/S9AvoH8SfEEQP3PCNAwjcA6IQeYcdYxtvbK/jNr30SVG86519npk3swvcdNCuC7880dF0Ck1QzxVMKHMGKmOYD5sNkoefknSXfQYJvz7TekJ0xIAe2CjJwSf3PybLgXXd+BzpcHZHHQP8CiPAoOWfjVn0edxJKOE7mNLKPka4HNLfG467SOkayGpSCvjF3XWSNSfV9qpbU3W0BzJBxLmkxIXj4bdD/VaBjrFH5Mzxg7MkqcaOhwHwBuOR+V4GVuHNcU0oubMK032GNh+P5Wdjsq4nGet6vh/619OXj1qEUtQeI/EiswJISXFckArZhGMRxcUFvPhJJm4REmPusQnZ0OrHXIdCIKQVmdTrwYTee2xBStV7T/7PIvQZWY/mJWlcSb1oDrdtCZH3Y6HIzOpnjIFxh2E4eofGcvarrZkz8awZXkdIXd/J6rxFyH6jzJK9rsgkjNs5hac8mMy6RRgESDyEECU6OStzKuVk30lwezXQ3NvpNN8Pte2h/bVYeuEX1zYYyb2zVbssBDljMWA+jszCEJ80xw7hv57Hp9gTCLzcPpBboqYA7+xfiqsjtc25FbEWYaG6oFBdiiuQyR7SCgcJS9LCgOHGfxfYMJ6WB2/a/X4AxRnJ9tgir3oLNdpL1KJ59l2KsIIt8ijP7TWRixqcldbn0jDGXBNvPv4C3QjuTqveJGAAAAAASUVORK5CYII=') !important;
         }
-
-        .container_partner .swiper-slide {
-            background: none !important;
-        }
-
-        .container_partner .swiper-slide {
-            -webkit-flex-shrink: 0;
-            -ms-flex-negative: 0;
-            flex-shrink: 0;
-            width: 100%;
-            height: 100%;
-            position: relative;
-            -webkit-transition-property: -webkit-transform;
-            transition-property: -webkit-transform;
-            transition-property: transform;
-            transition-property: transform, -webkit-transform;
-            display: block;
-        }
-
-        .swiper-thumbnails {
-
-            height: 100px;
-            overflow: hidden;
-        }
-
-        .swiper-thumbnails .swiper-slide {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100px;
-            height: 100px;
-        }
-
-        .swiper-thumbnails .swiper-slide img {
-            width: 100%;
-            height: auto;
-            object-fit: cover;
-        }
-
-        .single-review {
-            display: flex;
-            align-items: flex-start;
-            gap: 15px;
-        }
-
-        .review-image img {
-            max-width: 100%;
-            height: auto;
-        }
-
-        .review-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .fancybox-button--play,
-        .fancybox-button--thumbs,
-        .fancybox-button--zoom {
-            display: none !important;
-        }
-
-        .shop-details-page .swiper-container {
-            width: 100%;
-            height: auto;
-            position: relative;
-        }
-
-        .shop-details-page .swiper-button-next,
-        .shop-details-page .swiper-button-prev {
-            color: #fff;
-            width: 40px;
-            height: 40px;
-            background-color: #F46F30;
-            border-radius: 50%;
-            top: 43%;
-            position: absolute;
-            transform: translateY(-50%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-        }
-
-        .shop-details-page .swiper-button-prev:after,
-        .shop-details-page .swiper-button-next:after {
-            font-size: 18px !important;
-        }
-
-        .shop-details-page .swiper-button-next:hover,
-        .shop-details-page .swiper-button-prev:hover {
-            background-color: #F46F30;
-        }
-
-        .shop-details-page .swiper-button-next {
-            right: 10px;
-        }
-
-        .shop-details-page .swiper-button-prev {
-            left: 10px;
-        }
-
-
-        .shop-details-page .thumbnail-slider .swiper-slide {
-            cursor: pointer;
-            opacity: 0.4;
-        }
-
-        .shop-details-page .thumbnail-slider .swiper-slide-thumb-active {
-            opacity: 1;
-        }
-
-        .shop-details-page .main-slider .swiper-slide {
-            height: 370px;
-            overflow: hidden;
-        }
-
-        .shop-details-page .main-slider .swiper-slide a {
-            display: block;
-            height: 100%;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .shop-details-page .main-slider .swiper-slide a img {
-            width: 100%;
-            height: auto;
-            object-fit: contain;
-            transition: transform 0.3s ease;
-        }
-
-        .shop-details-page .main-slider .swiper-slide a:hover img {
-            transform: scale(1.05);
-        }
-
-        .shop-details-page .main-slider .swiper-slide img {
-            width: 100%;
-            height: auto;
-            object-fit: contain;
-        }
-
-        .shop-details-page .swiper-slide {
-            margin-bottom: 10px;
-            padding: 5px;
-            background: #E1E4E5 !important;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 5px;
-        }
-
-        .shop-details-page .swiper-slide img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-
-        .shop-details-page .swiper-thumbnails .swiper-slide {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .shop-details-page .swiper-thumbnails .swiper-slide img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-
-        .shop-details-page .swiper-slide-thumb-active {
-            border: 2px solid #F46F30;
-        }
-
-        @media (max-width: 768px) {
-            .shop-details-page .swiper-container {
-                width: 100%;
-                height: auto;
-            }
-
-            .shop-details-page .swiper-slide {
-                margin-bottom: 8px;
-                padding: 5px;
-                background: #E1E4E5 !important;
-            }
-
-            .shop-details-page .main-slider .swiper-slide {
-                height: 250px;
-            }
-
-            .shop-details-page .thumbnail-slider .swiper-slide {
-                width: 80px;
-                opacity: 0.6;
-            }
-
-            .shop-details-page .thumbnail-slider .swiper-slide-thumb-active {
-                opacity: 1;
-            }
-
-            .shop-details-page .swiper-thumbnails .swiper-slide {
-                margin-right: 8px;
-            }
-
-            .shop-details-page .swiper-thumbnails .swiper-slide img {
-                max-width: 60px;
-                max-height: 60px;
-                object-fit: contain;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .shop-details-page .swiper-slide {
-                margin-bottom: 5px;
-                padding: 3px;
-            }
-
-            .shop-details-page .main-slider .swiper-slide {
-                height: 250px;
-            }
-
-            .shop-details-page .thumbnail-slider .swiper-slide {
-                width: 60px;
-            }
-
-            .shop-details-page .swiper-thumbnails .swiper-slide img {
-                max-width: 80px;
-                max-height: 80px;
-                object-fit: contain;
-            }
-        }
-
-        .min-h-400 {
-            min-height: 400px !important;
-        }
-
-        .shop-details-page .shop-details-content .buy-now-btn button {
-            font-size: 1.125rem;
-            font-weight: 700;
-            color: var(--title-color1);
-            font-family: var(--font-dosis);
-            letter-spacing: .03em;
-            position: relative;
-            text-align: center;
-            display: block;
-            padding: 12px 15px;
-            transition: .4s
-        }
-
-        .shop-details-page .shop-details-content .buy-now-btn button::after {
-            content: "";
-            background: var(--gradient-color);
-            opacity: .5;
-            border-radius: 5px;
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 100%;
-            z-index: -1;
-            transition: .4s
-        }
-
-        .shop-details-page .shop-details-content .buy-now-btn button:hover {
-            color: var(--white)
-        }
-
-        .shop-details-page .shop-details-content .buy-now-btn button:hover::after {
-            background: var(--title-color1);
-            opacity: 1
-        }
     </style>
-    <style>
-        .product-radio-btn li {
-            position: relative;
-            display: inline-block
-        }
 
-        .product-radio-btn li input {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            opacity: 0
-        }
 
-        .product-radio-btn li input:checked~label {
-            color: #ff7c08;
-            border-color: #ff7c08
-        }
-
-        .product-radio-btn li label {
-            padding: 4px 16px;
-            border: 1px solid #e9e9e9;
-            border-radius: 4px;
-            font-size: 14px;
-            font-weight: 600
-        }
-    </style>
     @yield('css')
 </head>
 
@@ -669,10 +255,10 @@
         <div class="modal fade" id="quickview_modal">
             <div class="modal-dialog modal-dialog-centered modal-xl">
                 <div class="modal-content min-h-400">
-                    <div class="modal-body h-100 bg-white">
-                        <button type="button" class="btn-close float-end" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-
+                    <div class="modal-header bg-white">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body bg-white">
                         <div class="data-preloader-wrapper d-flex align-items-center justify-content-center min-h-400">
                             <div class="" role="status">
                                 <span class="sr-only"></span>
@@ -707,6 +293,7 @@
     <script src="{{ asset('assets/clients/js/jquery.magnific-popup.min.js') }}"></script>
     <script src="{{ asset('assets/clients/js/masonry.pkgd.min.js') }}"></script>
     <script src="{{ asset('assets/clients/js/main.js') }}"></script>
+    <script src="{{ asset('assets/clients/js/simplebar.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js">
     </script>
@@ -795,8 +382,13 @@
                     $('.data-preloader-wrapper>div').removeClass('spinner-border');
                     $('.data-preloader-wrapper').removeClass('min-h-400');
                     $('#quickview_modal .product-info').html(data);
+                    var modalBody = $('#quickview_modal .modal-body');
+                    var productInfoHeight = $('#quickview_modal .product-info').outerHeight();
+
+                    // Điều chỉnh chiều cao của modal-body dựa vào chiều cao nội dung thực tế
+                    modalBody.css('height', productInfoHeight + 'px');
                     ProductInfo();
-                    // cartFunc();
+                    cartFunc();
                 }, 200);
             });
         }
@@ -875,6 +467,202 @@
                 });
             }
         }
+        // Lấy thông  tin biến thể
+        function getVariationInfo() {
+            if ($('.add-to-cart-form input[name=quantity]').val() > 0 && isValidForAddingToCart()) {
+                let data = $('.add-to-cart-form').serializeArray();
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('showVariationInfo.product') }}",
+                    data: data,
+                    success: function(response) {
+                        $('.all-pricing').addClass('d-none');
+                        $('.variation-pricing').removeClass('d-none');
+                        $('.variation-pricing').html(response.data.price);
+
+                        $('.add-to-cart-form input[name=product_variation_id]').val(response.data
+                            .id);
+                        $('.add-to-cart-form input[name=quantity]').prop('max', response.data.stock);
+
+                        if (response.data.stock < 1) {
+                            $('.add-to-cart-btn').prop('disabled', true);
+                            $('.add-to-cart-btn .add-to-cart-text').html('Hết hàng');
+                        } else {
+                            $('.add-to-cart-btn').prop('disabled', false);
+                            $('.add-to-cart-btn .add-to-cart-text').html('Thêm vào giỏ hàng');
+                            $('.qty-increase-decrease input[name=quantity]').val(1);
+                        }
+                    }
+                });
+            }
+        }
+
+        // Kiểm tra có thể thêm vào giỏ hàng không
+        function isValidForAddingToCart() {
+            var count = 0;
+            $('.variation-for-cart').each(function() {
+                // bao nhiêu biến thể
+                count++;
+            });
+            if ($('.product-radio-btn input:radio:checked').length == count) {
+                return true;
+            }
+            return false;
+        }
+
+        // giỏ hàng
+        function cartFunc() {
+            // Chọn biến thể
+            $('.product-radio-btn input').on('change', function() {
+                getVariationInfo();
+            });
+
+            // tăng số lượng
+            $('.qty-increase-decrease .increase').on('click', function() {
+                var prevValue = $('.product-qty input[name=quantity]').val();
+                var maxValue = $('.product-qty input[name=quantity]').attr('max');
+                if (maxValue == undefined || parseInt(prevValue) < parseInt(maxValue)) {
+                    $('.qty-increase-decrease input[name=quantity]').val(parseInt(prevValue) + 1)
+                }
+            });
+
+            // giảm số lượng
+            $('.qty-increase-decrease .decrease').on('click', function() {
+                var prevValue = $('.product-qty input[name=quantity]').val();
+                if (prevValue > 1) {
+                    $('.qty-increase-decrease input[name=quantity]').val(parseInt(prevValue) - 1)
+                }
+            });
+
+            // submit form
+            $('.add-to-cart-form').on('submit', function(e) {
+                e.preventDefault();
+                if (isValidForAddingToCart()) {
+                    $('.add-to-cart-btn').prop('disabled', true);
+                    $('.add-to-cart-btn .add-to-cart-text').html('Đang thêm vào giỏ hàng');
+
+                    // thêm
+                    let data = $('.add-to-cart-form').serializeArray();
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('carts.add') }}",
+                        data: data,
+                        success: function(data) {
+                            $('.add-to-cart-btn').prop('disabled', false);
+                            $('.add-to-cart-btn .add-to-cart-text').html('Thêm vào giỏ hàng');
+                            updateCarts(data);
+                            notifyMe(data.alert, data.message);
+                        }
+                    });
+
+                } else {
+                    optionsAlert();
+                }
+            })
+        }
+        cartFunc();
+
+        // Không có biến thể
+        // function directAddToCartFormSubmit($this) {
+        //     // thên
+        //     let parent = $($this).closest('.direct-add-to-cart-form');
+
+        //     parent.find('.direct-add-to-cart-btn').prop('disabled', true);
+
+        //     let text = parent.find('.add-to-cart-text').html();
+        //     parent.find('.add-to-cart-text').html(TT.localize.pleaseWait);
+
+
+        //     let data = parent.serializeArray();
+        //     $.ajax({
+        //         type: "POST",
+        //         url: 'http://127.0.0.1:8082/add-to-cart',
+        //         data: data,
+        //         success: function(data) {
+        //             parent.find('.direct-add-to-cart-btn').prop('disabled', false);
+
+        //             if (text.includes("Buy Now")) {
+        //                 parent.find('.add-to-cart-text').html(TT.localize.buyNow);
+        //             } else {
+        //                 parent.find('.add-to-cart-text').html(TT.localize.addToCart);
+        //             }
+        //             updateCarts(data);
+        //             notifyMe(data.alert, data.message);
+        //         }
+        //     });
+        // }
+
+        // please choose all the available options
+        function optionsAlert() {
+            notifyMe('warning', TT.localize.optionsAlert);
+        }
+
+        // handleCartItem
+        function handleCartItem(action, id) {
+            let data = {
+                _token: " {{ csrf_token() }} ",
+                action: action,
+                id: id,
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('carts.update') }}",
+                data: data,
+                success: function(data) {
+                    if (data.success == true) {
+                        $('.apply-coupon-btn').removeClass('d-none');
+                        $('.clear-coupon-btn').addClass('d-none');
+                        $('.apply-coupon-btn').prop('disabled', false);
+                        $('.apply-coupon-btn').html('Mã giảm giá');
+                        updateCarts(data);
+                        if (action == 'increase' && data.message) {
+                            notifyMe(data.alert, data.message);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log("Lỗi AJAX:", error);
+                }
+            });
+        }
+        $('.gshop-header-user').on('submit', function(event) {
+            event.preventDefault();
+        });
+
+        function updateCarts(data) {
+            $('.cart-counter').empty();
+            $('.sub-total-price').empty();
+
+            $('.cart-navbar-wrapper .simplebar-content').empty();
+            $('.cart-listing').empty();
+
+            if (data.cartCount > 0) {
+                $('.cart-counter').removeClass('d-none');
+            } else {
+                $('.cart-counter').addClass('d-none');
+            }
+
+            $('.cart-counter').html(data.cartCount);
+            $('.sub-total-price').html(data.subTotal);
+            $('.cart-navbar-wrapper .simplebar-content').html(data.navCarts);
+            $('.cart-listing').html(data.carts);
+            $('.coupon-discount-wrapper').addClass('d-none');
+            $('.checkout-sidebar').empty();
+
+        }
+        Array.from(document.querySelectorAll(".scrollbar")).forEach(
+            (el) => new SimpleBar(el, {
+                autoHide: false,
+                classNames: {
+                    // defaults
+                    content: "simplebar-content",
+                    scrollContent: "simplebar-scroll-content",
+                    scrollbar: "simplebar-scrollbar",
+                    track: "simplebar-track",
+                },
+            })
+        );
     </script>
 </body>
 
