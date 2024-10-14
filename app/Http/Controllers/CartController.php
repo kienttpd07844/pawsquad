@@ -54,7 +54,7 @@ class CartController extends Controller
             } else {
                 $product = $cart->product_variation->product;
                 if ($product->has_variation) {
-                    $stock = ProductVariationStock::where('product_variation_id',$cart->product_variation->id)->first();
+                    $stock = ProductVariationStock::where('product_variation_id', $cart->product_variation->id)->first();
                     if ($stock->stock_qty > $cart->quantity) {
                         $cart->quantity                  += (int) $request->quantity;
                         $message =  'Số lượng đã được tăng lên';
@@ -72,9 +72,7 @@ class CartController extends Controller
                     }
                 }
             }
-
             $cart->save();
-
             removeCoupon();
             return $this->getCartsInfo($message, false);
         }
@@ -89,17 +87,25 @@ class CartController extends Controller
             }
             if ($request->action == "increase") {
                 $product = $cart->product_variation->product;
-
-                if ($product->stock_qty > $cart->quantity) {
-                    $productVariationStock = $cart->product_variation->product_variation_stock;
-                    if ($productVariationStock->stock_qty > $cart->quantity) {
-                        $cart->quantity += 1;
+                if ($product->has_variation) {
+                    $stock = ProductVariationStock::where('product_variation_id', $cart->product_variation->id)->first();
+                    if ($stock->stock_qty > $cart->quantity) {
+                        $cart->quantity                  += 1;
                         $cart->save();
-                        $message =  'Số lượng sản phẩm đã tăng';
+                        $message =  'Số lượng đã được tăng lên';
+                    } else {
+                        $message = 'Vượt quá số lượng trong kho';
+                        return $this->getCartsInfo($message, true, '', 'warning');
                     }
                 } else {
-                    $message = 'Vượt quá số lượng trong kho';
-                    return $this->getCartsInfo($message, true, '', 'warning');
+                    if ($product->stock_qty > $cart->quantity) {
+                        $cart->quantity                  += 1;
+                        $cart->save();
+                        $message =  'Số lượng đã được tăng lên';
+                    } else {
+                        $message = 'Vượt quá số lượng trong kho';
+                        return $this->getCartsInfo($message, true, '', 'warning');
+                    }
                 }
             } elseif ($request->action == "decrease") {
                 if ($cart->quantity > 1) {
@@ -123,29 +129,23 @@ class CartController extends Controller
         $voucherType = VoucherType::where('name', $request->code)->first();
         if ($voucherType) {
             $voucher = Voucher::where('voucher_type_id', $voucherType->id)->first();
-            $currentDate = Carbon::now()->toDateString();
+            $currentDateTime = Carbon::now()->toDateTimeString();
 
             # Kiểm tra xem phiếu giảm giá có hết hạn chưa
-            if ($voucher->start_date <= $currentDate && $voucher->expired_date >= $currentDate) {
+            if ($voucher->start_date <= $currentDateTime && $voucher->expired_date >= $currentDateTime) {
                 $carts = null;
                 if (Auth::check()) {
                     $carts  = Cart::where('user_id', Auth::user()->id)->get();
                     if ($voucher->voucher_quantity <= 0) {
                         removeCoupon();
-                        return [
-                            'status'    => false,
-                            'message'   => 'Mã giảm giá đã hết lượt'
-                        ];
+                        return $this->couponApplyFailed('Đã hết lượt sử dụng mã giảm giá');
                     }
                     # total coupon usage
 
                     $totalCouponUsage = VoucherUsage::where('name', $voucherType->name)->sum('usage_count');
                     if ($totalCouponUsage >= $voucherType->customer_usage_limit) {
                         removeCoupon();
-                        return [
-                            'status'    => false,
-                            'message'   => 'Mã giảm giá đã sử dụng'
-                        ];
+                        return $this->couponApplyFailed('Mã giảm giá đã được sử dụng');
                     }
                 } else {
                     $carts  = Cart::where('guest_user_id', request()->cookie('guest_user_id'))->get();
@@ -154,6 +154,7 @@ class CartController extends Controller
 
                 # Chi tiêu tối thiểu
                 $subTotal = (float) getSubTotal($carts, false);
+
                 if ($subTotal >= (float) $voucherType->min_spend) {
                     setCoupon($voucherType);
                     setCouponTypeDiscount($voucherType->discount, $voucherType->discount_type);
@@ -161,7 +162,18 @@ class CartController extends Controller
                 }
                 # tối thiểu
                 removeCoupon();
-                return $this->couponApplyFailed('Hãy mua sắm ít nhất ' . $voucherType->min_spend);
+                return $this->couponApplyFailed('Hãy mua sắm ít nhất ' . format_cash($voucherType->min_spend));
+            }
+             # Kiểm tra nếu phiếu giảm giá chưa đến thời gian bắt đầu
+             if ($voucher->start_date > $currentDateTime) {
+                removeCoupon();
+                return $this->couponApplyFailed('Mã giảm giá chưa đến thời gian bắt đầu');
+            }
+
+            # Kiểm tra nếu phiếu giảm giá đã hết hạn
+            if ($voucher->expired_date < $currentDateTime) {
+                removeCoupon();
+                return $this->couponApplyFailed('Mã giảm giá đã hết hạn');
             }
 
             # hết hạn
@@ -186,7 +198,7 @@ class CartController extends Controller
     public function clearCoupon()
     {
         removeCoupon();
-        return $this->couponApplyFailed('Đã xoá mã giảm giá', true);
+        return $this->couponApplyFailed('Đã bỏ mã giảm giá', true);
     }
 
     # lấy thông tin giỏ hàng
@@ -198,6 +210,16 @@ class CartController extends Controller
         } else {
             $carts          = Cart::where('guest_user_id', (int) $_COOKIE['guest_user_id'])->get();
         }
+        $formattedAmount = NULL;
+        if ($couponCode) {
+            $voucherType = VoucherType::where('name',$couponCode)->first();
+            $formattedAmount = '';
+            if ($voucherType->discount_type === 'flat') {
+                $formattedAmount = format_cash($voucherType->discount);
+            } else {
+                $formattedAmount = $voucherType->discount . '%';
+            }
+        }
         return [
             'success'           => true,
             'message'           => $message,
@@ -206,7 +228,18 @@ class CartController extends Controller
             'navCarts'          => getRender('clients.partials.cart-navbar', ['carts' => $carts]),
             'cartCount'         => count($carts),
             'subTotal'          => format_cash(getSubTotal($carts, $couponDiscount, $couponCode)),
+            'couponCode'        => isset($voucherType) ? $voucherType->name : null,
             'couponDiscount'    => format_cash(getCouponDiscount(getSubTotal($carts, false), $couponCode)),
+            'couponData'        => $formattedAmount,
+            'coupon'            => getRender('clients.partials.coupon',['carts' => $carts]),
         ];
     }
+    public function infoCoupon(Request $request){
+        $currentTime = now()->toDateTimeString();
+        // Ghi log với thời gian
+        Log::info("[$currentTime] " . $request->name);
+
+        return $this->applyCoupon($request);
+    }
+
 }

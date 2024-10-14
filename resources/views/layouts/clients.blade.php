@@ -240,7 +240,45 @@
             background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAIlSURBVHgB3VbBbtNAEH2zTugFFIPgwAlzA4mK8AdrvgC+APiSKl/S9AvoH8SfEEQP3PCNAwjcA6IQeYcdYxtvbK/jNr30SVG86519npk3swvcdNCuC7880dF0Ck1QzxVMKHMGKmOYD5sNkoefknSXfQYJvz7TekJ0xIAe2CjJwSf3PybLgXXd+BzpcHZHHQP8CiPAoOWfjVn0edxJKOE7mNLKPka4HNLfG467SOkayGpSCvjF3XWSNSfV9qpbU3W0BzJBxLmkxIXj4bdD/VaBjrFH5Mzxg7MkqcaOhwHwBuOR+V4GVuHNcU0oubMK032GNh+P5Wdjsq4nGet6vh/619OXj1qEUtQeI/EiswJISXFckArZhGMRxcUFvPhJJm4REmPusQnZ0OrHXIdCIKQVmdTrwYTee2xBStV7T/7PIvQZWY/mJWlcSb1oDrdtCZH3Y6HIzOpnjIFxh2E4eofGcvarrZkz8awZXkdIXd/J6rxFyH6jzJK9rsgkjNs5hac8mMy6RRgESDyEECU6OStzKuVk30lwezXQ3NvpNN8Pte2h/bVYeuEX1zYYyb2zVbssBDljMWA+jszCEJ80xw7hv57Hp9gTCLzcPpBboqYA7+xfiqsjtc25FbEWYaG6oFBdiiuQyR7SCgcJS9LCgOHGfxfYMJ6WB2/a/X4AxRnJ9tgir3oLNdpL1KJ59l2KsIIt8ijP7TWRixqcldbn0jDGXBNvPv4C3QjuTqveJGAAAAAASUVORK5CYII=') !important;
         }
     </style>
+    <style>
+        .product-qty {
+            max-width: 136px
+        }
 
+        .product-qty input {
+            width: 52px;
+            height: 48px;
+            padding: 12px 3px;
+            text-align: center;
+            background: #fff;
+            color: black;
+            border: 1px solid #e9e9e9;
+            border-left: 0;
+            border-right: 0;
+            font-weight: 700;
+            margin-right: 0px;
+            border-radius: 0;
+        }
+
+        .product-qty button {
+            width: 40px;
+            height: 48px;
+            background: #fff;
+            border: 1px solid #e9e9e9;
+            border-radius: 4px 0 0 4px;
+            font-weight: 700;
+            -webkit-transition: all .3s ease-in-out;
+            transition: all .3s ease-in-out;
+        }
+
+        .product-qty button.increase {
+            border-radius: 0 4px 4px 0
+        }
+
+        .product-qty button:hover {
+            background-color: rgba(233, 233, 233, .5)
+        }
+    </style>
 
     @yield('css')
 </head>
@@ -562,39 +600,11 @@
         }
         cartFunc();
 
-        // Không có biến thể
-        // function directAddToCartFormSubmit($this) {
-        //     // thên
-        //     let parent = $($this).closest('.direct-add-to-cart-form');
-
-        //     parent.find('.direct-add-to-cart-btn').prop('disabled', true);
-
-        //     let text = parent.find('.add-to-cart-text').html();
-        //     parent.find('.add-to-cart-text').html(TT.localize.pleaseWait);
-
-
-        //     let data = parent.serializeArray();
-        //     $.ajax({
-        //         type: "POST",
-        //         url: 'http://127.0.0.1:8082/add-to-cart',
-        //         data: data,
-        //         success: function(data) {
-        //             parent.find('.direct-add-to-cart-btn').prop('disabled', false);
-
-        //             if (text.includes("Buy Now")) {
-        //                 parent.find('.add-to-cart-text').html(TT.localize.buyNow);
-        //             } else {
-        //                 parent.find('.add-to-cart-text').html(TT.localize.addToCart);
-        //             }
-        //             updateCarts(data);
-        //             notifyMe(data.alert, data.message);
-        //         }
-        //     });
-        // }
-
-        // please choose all the available options
-        function optionsAlert() {
-            notifyMe('warning', TT.localize.optionsAlert);
+        function formatPrice(price) {
+            return price.toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'đ'
+            });
         }
 
         // handleCartItem
@@ -614,7 +624,7 @@
                         $('.apply-coupon-btn').removeClass('d-none');
                         $('.clear-coupon-btn').addClass('d-none');
                         $('.apply-coupon-btn').prop('disabled', false);
-                        $('.apply-coupon-btn').html('Mã giảm giá');
+                        $('.apply-coupon-btn').html('Áp dụng');
                         updateCarts(data);
                         if (action == 'increase' && data.message) {
                             notifyMe(data.alert, data.message);
@@ -629,6 +639,134 @@
         $('.gshop-header-user').on('submit', function(event) {
             event.preventDefault();
         });
+        $('.coupon-form').on('submit', function(e) {
+            e.preventDefault();
+            $('.apply-coupon-btn').prop('disabled', true);
+            $('.apply-coupon-btn').html('Vui lòng chờ');
+            let data = $('.coupon-form').serializeArray();
+            // Kiểm tra xem có input nào có name là "code" không
+            let hasCode = data.some(function(field) {
+                return field.name === "code";
+            });
+            // Nếu không có "code", thì lấy giá trị từ 'input[name="code"].coupon-input'
+            if (!hasCode) {
+                let couponInput = $('input[name="code"].coupon-input');
+                let couponInputValue = couponInput.val();
+                data.push({
+                    name: "code",
+                    value: couponInputValue
+                });
+            }
+            $.ajax({
+                type: "POST",
+                url: "{{ route('carts.applyCoupon') }}",
+                data: data,
+                success: function(data) {
+                    if (data.success == false) {
+                        notifyMe('error', data.message);
+                        $('.apply-coupon-btn').prop('disabled', false);
+                        $('.apply-coupon-btn').html('Áp dụng');
+                    } else {
+                        $('.coupon-input').prop('disabled', false);
+                        $('.apply-coupon-btn').addClass('d-none');
+                        $('.clear-coupon-btn').removeClass('d-none');
+
+                        $('.apply-coupon-btn').prop('disabled', false);
+                        $('.apply-coupon-btn').html('Áp dụng');
+                        updateCouponPrice(data);
+
+                    }
+                }
+            });
+        })
+        $('.clear-coupon-btn').on('click', function(e) {
+            e.preventDefault();
+            $('.coupon-input').prop('disabled', false);
+            $('.apply-coupon-btn').removeClass('d-none');
+            $('.clear-coupon-btn').addClass('d-none');
+            $.ajax({
+                type: "GET",
+                url: "{{ route('carts.clearCoupon') }}",
+                success: function(data) {
+                    updateCouponPrice(data);
+                }
+            });
+        })
+
+        function updateCouponPrice(data) {
+            $('.coupon-discount-wrapper').toggleClass('d-none');
+            var alert = 'error';
+            if (data.message == 'Áp dụng mã giảm giá thành công') {
+                alert = 'success';
+                $('.coupon-discount-wrapper').empty();
+                $('.coupon-discount-wrapper').html(data.coupon);
+                if (data.couponCode) {
+                    $('.coupon-discount-code').html(data.couponCode);
+                }
+                if (data.couponDiscount) {
+                    $('.coupon-price').html(formatPrice(data.couponDiscount));
+                }
+                if (data.couponData) {
+                    $('.coupon-discount-type').html('-' + data.couponData);
+                }
+            } else {
+                alert = 'error';
+            }
+            notifyMe(alert, data.message);
+        }
+
+        function loadCoupon() {
+            let couponInput = $('input[name="code"].coupon-input');
+
+            if (couponInput.length) {
+                let couponInputValue = couponInput.val();
+                let clearCouponBtn = $('.clear-coupon-btn');
+                if (clearCouponBtn.hasClass('d-none')) {
+                    couponInput.prop('disabled', false);
+                }
+                if (couponInputValue) {
+                    if (!$('.coupon-discount-wrapper').hasClass('d-none')) {
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('carts.infoCoupon') }}",
+                            data: {
+                                _token: "{{ csrf_token() }}",
+                                code: couponInputValue
+                            },
+                            success: function(data) {
+                                if (data.success == true) {
+                                    $('.coupon-discount-wrapper').removeClass('d-none');
+                                    $('.coupon-discount-wrapper').empty();
+                                    $('.coupon-discount-wrapper').html(data.coupon);
+                                    if (data.couponCode) {
+                                        $('.coupon-discount-code').html(data.couponCode);
+                                    }
+                                    if (data.couponDiscount) {
+                                        $('.coupon-price').html(formatPrice(data.couponDiscount));
+                                    }
+                                    if (data.couponData) {
+                                        $('.coupon-discount-type').html('-' + data.couponData);
+                                    }
+                                } else {
+                                    notifyMe('error', 'Mã giảm giá không tồn tại');
+                                }
+
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Lỗi:", error);
+                            }
+                        });
+                    }
+                }
+            }
+        }
+        loadCoupon();
+
+
+
+
+
+
 
         function updateCarts(data) {
             $('.cart-counter').empty();

@@ -71,6 +71,10 @@ Route::middleware(['checkaccount'])->group(function () {
     Route::get('/gio-hang', [CartController::class, 'index'])->name('cart');
     Route::post('/gio-hang/them', [CartController::class, 'add'])->name('carts.add');
     Route::post('/gio-hang/cap-nhat', [CartController::class, 'update'])->name('carts.update');
+    Route::post('/gio-hang/ap-dung-ma-giam-gia', [CartController::class, 'applyCoupon'])->name('carts.applyCoupon');
+    Route::get('/gio-hang/xoa-ma-giam-gia', [CartController::class, 'clearCoupon'])->name('carts.clearCoupon');
+    Route::post('/gio-hang/thong-tin-ma-giam-gia', [CartController::class, 'infoCoupon'])->name('carts.infoCoupon');
+
     Route::get('/thanh-toan', [CheckoutController::class, 'index'])->name('checkout');
 
     Route::get('/thuong-hieu', [BrandController::class, 'index'])->name('brand');

@@ -273,7 +273,6 @@ function removeCoupon()
 function setCoupon($coupon)
 {
     $theTime = now()->addDays(7)->timestamp;
-    // setCouponTypeDiscount($coupon->discount,$coupon->discount_type);
     return Cookie::queue('coupon_code', $coupon->name, $theTime);
 }
 
@@ -289,9 +288,6 @@ function setCouponTypeDiscount($amount, $type)
     }
     return Cookie::queue('coupon_data', $formattedAmount, $theTime);
 }
-
-
-
 
 function getCoupon($type = "default")
 {
@@ -319,7 +315,7 @@ function checkCouponValidityForCheckout($carts)
         $voucherType = VoucherType::where('name', getCoupon())->first();
         if ($voucherType) {
             $voucher = Voucher::where('voucher_type_id', $voucherType->id)->first();
-            $currentDate = Carbon::now()->toDateString();
+            $currentDateTime = Carbon::now()->toDateTimeString();
             if ($voucher->voucher_quantity <= 0) {
                 removeCoupon();
                 return [
@@ -338,9 +334,21 @@ function checkCouponValidityForCheckout($carts)
                 ];
             }
 
-
-            # check if coupon is expired
-            if ($voucher->start_date <= $currentDate && $voucher->expired_date >= $currentDate) {
+            if ($voucher->start_date > $currentDateTime) {
+                removeCoupon();
+                return [
+                    'status'    => false,
+                    'message'   => 'Mã giảm giá chưa đến thời gian bắt đầu'
+                ];
+            }
+            if ($voucher->expired_date < $currentDateTime) {
+                removeCoupon();
+                return [
+                    'status'    => false,
+                    'message'   => 'Mã giảm giá đã hết hạn'
+                ];
+            }
+            if ($voucher->start_date <= $currentDateTime && $voucher->expired_date >= $currentDateTime) {
                 $subTotal = (float) getSubTotal($carts, false);
                 if ($subTotal >= (float) $voucherType->min_spend) {
                     return [
@@ -358,7 +366,7 @@ function checkCouponValidityForCheckout($carts)
                 removeCoupon();
                 return [
                     'status'    => false,
-                    'message'   => 'Mã giảm giá đã hết hạn'
+                    'message'   => 'Mã giảm giá đã hết hạn hoặc chưa bắt đầu'
                 ];
             }
         } else {
@@ -385,7 +393,6 @@ function getSubTotal($carts, $couponDiscount = true, $couponCode = '')
             $price += (float) $variation->price * $cart->quantity;
         }
 
-        # calculate coupon discount
         if ($couponDiscount) {
             $amount = getCouponDiscount($price, $couponCode);
         }
