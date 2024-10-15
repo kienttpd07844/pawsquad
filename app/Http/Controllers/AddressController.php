@@ -103,35 +103,51 @@ class AddressController extends Controller
         $address->is_default    = $request->is_default;
         $address->address       = $request->address;
         $address->save();
-        return redirect()->route('account')->with(noti('Thêm địa chỉ thành công', 'success'));
+        return redirect()->route('account')->with(noti('Thêm thông tin địa chỉ thành công', 'success'));
     }
 
     # Sửa địa chỉ
     public function edit(Request $request)
     {
-        $address  = Address::where('user_id', auth()->user()->id)->where('id', $request->addressId)->first();
+        $address = Address::where('user_id', auth()->user()->id)->where('id', $request->addressId)->first();
         if ($address) {
-            $province      = Province::get();
-            $district         = District::where('province_code', $province->id)->get();
-            $ward         = Ward::where('district_code', $district->id)->get();
+            $province = Province::all();
+            // Lấy danh sách quận/huyện dựa trên tỉnh
+            $district = District::where('province_code', $address->province_id)->get();
+            // Lấy danh sách xã/phường dựa trên quận/huyện
+            $ward = Ward::where('district_code', $address->district_id)->get();
+            // Lấy danh sách thôn/xóm dựa trên xã/phường
+            $village = Village::where('ward_code', $address->ward_id)->get();
             return getRender('clients.partials.addressEditForm', [
+                'name' => $address->name,
+                'phone' => $address->phone,
                 'address' => $address,
                 'provinces' => $province,
                 'districts' => $district,
-                'wards' => $ward
+                'wards' => $ward,
+                'villages' => $village,
             ]);
         }
+        return redirect()->back()->with(noti('Không tìm thấy thông tin địa chỉ', 'error'));
     }
+
 
     # cập nhật địa chỉ
     public function update(Request $request)
     {
+        $validationResult = $this->validateAddress($request);
+        if ($validationResult !== true) {
+            return redirect()->back()->with(noti($validationResult, 'error'));
+        }
         $userId   = auth()->user()->id;
         $address  = Address::where('user_id', $userId)->where('id', $request->id)->first();
 
+        $address->name       = $request->name;
+        $address->phone       = $request->phone;
         $address->province_id    = $request->province_id;
         $address->district_id      = $request->district_id;
         $address->ward_id       = $request->ward_id;
+        $address->village_id       = $request->village_id;
         if ($request->is_default == 1) {
             $prevDefault = Address::where('user_id', $userId)->where('is_default', 1)->first();
             if (!is_null($prevDefault)) {
@@ -142,16 +158,15 @@ class AddressController extends Controller
         $address->is_default    = $request->is_default;
         $address->address       = $request->address;
         $address->save();
-        return redirect()->route('account')->with(noti('Cập nhật địa chỉ thành công', 'success'));
+        return redirect()->route('account')->with(noti('Cập nhật thông tin địa chỉ thành công', 'success'));
     }
 
-    # delete address
+    # xoá địa chỉ
     public function delete($id)
     {
         $user = auth()->user();
         Address::where('user_id', $user->id)->where('id', $id)->delete();
-
-        return redirect()->route('account')->with(noti('Xoá địa chỉ thành công', 'success'));
+        return redirect()->route('account')->with(noti('Xoá thông tin địa chỉ thành công', 'success'));
     }
     public function getDistrict(Request $request)
     {

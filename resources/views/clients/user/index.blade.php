@@ -1465,7 +1465,7 @@
             border-radius: 5px;
         }
 
-        .addAddressModal input {
+        .addAddressModal input,.select2-search__field,.editAddressModal input{
             color: #868686 !important;
             background: white !important;
         }
