@@ -7,7 +7,7 @@
         {{ $address->address }}
     </address>
 @endif
-@if ($address->village->name)
+@if ($address->village->name != 'Khác')
     <strong>Thôn/Xóm: </strong>{{ $address->village->name }}
     <br>
 @endif

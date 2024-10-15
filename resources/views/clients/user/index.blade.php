@@ -698,12 +698,12 @@
         }
 
         /* .badge {
-                    padding: .39em .45em .25em;
-                    font-size: 75%;
-                    line-height: 1;
-                    font-weight: 500;
-                    border-radius: .1875rem;
-                } */
+                                                padding: .39em .45em .25em;
+                                                font-size: 75%;
+                                                line-height: 1;
+                                                font-weight: 500;
+                                                border-radius: .1875rem;
+                                            } */
 
         .text-bg-success {
             background-color: rgb(34, 192, 60) !important;
@@ -1415,6 +1415,13 @@
         }
     </style>
     <style>
+        .form-inner:has(.select2Address) .error-help-block {
+            position: absolute !important;
+            top: 60px !important;
+        }
+
+
+
         .tt-address-content .tt-address-info {
             width: 100%;
             cursor: pointer;
@@ -1465,7 +1472,9 @@
             border-radius: 5px;
         }
 
-        .addAddressModal input,.select2-search__field,.editAddressModal input{
+        .addAddressModal input,
+        .select2-search__field,
+        .editAddressModal input {
             color: #868686 !important;
             background: white !important;
         }
@@ -1620,7 +1629,7 @@
                                         </div>
                                     </div>
                                     <form method="post" action="{{ route('postEditAccount') }}" class="theme-form"
-                                        autocomplete="off">
+                                        autocomplete="off" id="profile_info">
                                         <div class="box-account box-info mt-2 mb-3">
                                             <div class="box-head">
                                                 <h4>Thông tin</h4>
@@ -1754,7 +1763,7 @@
                             <div class="tab-pane fade" id="address" role="tabpanel">
                                 <div class="row">
                                     <div class="col-12">
-                                        <div class="card dashboard-table mt-0">
+                                        <div class="card dashboard-table bg-white mt-0">
                                             <div class="card-body table-responsive-sm">
                                                 <div class="top-sec d-flex justify-content-between">
                                                     <h3>Danh sách địa chỉ</h3>
@@ -1762,28 +1771,37 @@
                                                         class="fw-semibold"><i class="bi bi-plus"></i>Thêm địa
                                                         chỉ</a>
                                                 </div>
-                                                <div class="row g-4">
+                                                <div class="row g-4 ">
                                                     @forelse ($addresses as $address)
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-6 d-flex py-5  ">
                                                             <div
-                                                                class="tt-address-content border p-3 rounded address-book-content pe-md-4 position-relative">
-                                                                <div class="address tt-address-info position-relative">
+                                                                class="collection-card shadow tt-address-content border p-3 rounded address-book-content pe-md-4 position-relative  flex-fill d-flex flex-column">
+                                                                @if ($address->is_default)
+                                                                    <div class="offer-card">
+                                                                        <span style="border-radius:5px 0px;">Mặc
+                                                                            định</span>
+                                                                    </div>
+                                                                @endif
+
+                                                                <div class="tt-edit-address position-absolute">
+                                                                    <a href="javascript:void(0);"
+                                                                        onclick="editAddress({{ $address->id }})"
+                                                                        class="pe-1">Sửa</a>
+
+                                                                    <a href="javascript:void(0);"
+                                                                        data-url="{{ route('address.delete', $address->id) }}"
+                                                                        onclick="deleteAddress(this)"
+                                                                        class="text-danger">Xoá</a>
+                                                                </div>
+                                                                <div
+                                                                    class="mt-2 address tt-address-info position-relative flex-grow-1">
+
                                                                     <!-- Địa chỉ -->
                                                                     @include('clients.partials.address', [
                                                                         'address' => $address,
                                                                     ])
                                                                     <!-- Địa chỉ -->
 
-                                                                    <div class="tt-edit-address position-absolute">
-                                                                        <a href="javascript:void(0);"
-                                                                            onclick="editAddress({{ $address->id }})"
-                                                                            class="pe-1">Sửa</a>
-
-                                                                        <a href="javascript:void(0);"
-                                                                            data-url="{{ route('address.delete', $address->id) }}"
-                                                                            onclick="deleteAddress(this)"
-                                                                            class="text-danger">Xoá</a>
-                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1905,10 +1923,9 @@
 @endsection
 
 @section('js')
-    {!! JsValidator::formRequest('App\Http\Requests\ProfileInfoFormRequest') !!}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    {!! JsValidator::formRequest('App\Http\Requests\AddressFormRequest', '#address_info') !!}
+    {!! JsValidator::formRequest('App\Http\Requests\ProfileInfoFormRequest', '#profile_info') !!}
+
     <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
@@ -1998,5 +2015,195 @@
 
 
         });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/i18n/vi.js"></script>
+    <script>
+        "use strict";
+
+        var parent = '.addAddressModal';
+
+        // chạy khi tài liệu đã sẵn sàng --> đối với các tệp phương tiện
+        $(document).ready(function() {
+            if ($("input[name='shipping_address_id']").is(':checked')) {
+                let city_id = $("input[name='shipping_address_id']:checked").data('city_id');
+                getLogistics(city_id);
+            }
+        });
+
+
+        // Địa chỉ mới
+        function addNewAddress() {
+            $('#addAddressModal').modal('show');
+            const parent = '.addAddressModal';
+            addressModalSelect2(parent);
+        }
+
+        //  sửa địa chỉ
+        function editAddress(addressId) {
+            $('#editAddressModal').modal('show');
+            $('.spinner').removeClass('d-none');
+            $('.edit-address').addClass('d-none');
+
+            parent = '.editAddressModal';
+            getAddress(addressId);
+        }
+        //  sửa địa chỉ
+        function getAddress(addressId) {
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                url: "{{ route('address.edit') }}",
+                type: 'POST',
+                data: {
+                    addressId: addressId
+                },
+                success: function(response) {
+                    $('.spinner').addClass('d-none');
+                    $('.edit-address').html(response);
+                    $('.edit-address').removeClass('d-none');
+                    addressModalSelect2(parent);
+                }
+            });
+        }
+
+        //  xoá địa chỉ
+        function deleteAddress(thisAnchorTag) {
+            $('#deleteAddressModal').modal('show');
+            $('.delete-address-link').prop('href', $(thisAnchorTag).data('url'));
+        }
+
+        function addressModalSelect2(parent = '.addAddressModal') {
+            // Hủy khởi tạo Nice Select nếu đã khởi tạo
+            if ($('.select2Address').hasClass('nice-select')) {
+                $('.select2Address').niceSelect('destroy');
+            }
+
+            $('.select2Address').select2({
+                dropdownParent: $(parent),
+                language: 'vi',
+                width: '100%'
+            });
+
+        }
+
+        $(document).ready(function() {
+            addressModalSelect2();
+        });
+
+        $(document).on('select2:select', 'select[name="province_id"]', function(e) {
+            var province_id = e.params.data.id;
+            if (province_id) {
+                resetFields(['district_id', 'ward_id', 'village_id']);
+                getDistrict(province_id);
+            }
+        });
+
+
+
+        // Hàm lấy dữ liệu Quận/Huyện theo Province ID
+        function getDistrict(province_id) {
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                url: "{{ route('address.getDistrict') }}",
+                type: 'POST',
+                data: {
+                    province_id: province_id
+                },
+                success: function(response) {
+                    var $districtSelect = $('select[name="district_id"]');
+                    $districtSelect.html(response);
+                    addressModalSelect2(parent)
+                },
+                error: function(xhr) {
+                    console.error('Error:', xhr); // Kiểm tra lỗi
+                }
+            });
+        }
+
+
+
+
+        //  lấy Phường/Xã khi chọn Huyện
+        $(document).on('select2:select', 'select[name="district_id"]', function(e) {
+            var district_id = e.params.data.id;
+            if (district_id) {
+                resetFields(['ward_id', 'village_id']);
+                getWard(district_id);
+            }
+        });
+
+
+
+        //  lấy Phường/Xã
+        function getWard(district_id) {
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                url: "{{ route('address.getWard') }}",
+                type: 'POST',
+                data: {
+                    district_id: district_id
+                },
+                success: function(response) {
+                    var $ward_id = $('select[name="ward_id"]');
+                    $ward_id.html(response);
+                    addressModalSelect2(parent)
+
+                }
+            });
+        }
+
+        //  lấy Thôn/Xóm chọn Xã
+        $(document).on('select2:select', 'select[name="ward_id"]', function(e) {
+            var ward_id = e.params.data.id;
+            if (ward_id) {
+                resetFields(['village_id']);
+                getVillage(ward_id);
+            }
+        });
+
+        //  lấy Thôn/Xóm
+        function getVillage(ward_id) {
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                url: "{{ route('address.getVillage') }}",
+                type: 'POST',
+                data: {
+                    ward_id: ward_id
+                },
+                success: function(response) {
+                    var $village_id = $('select[name="village_id"]');
+                    $village_id.html(response);
+                    addressModalSelect2(parent)
+                }
+            });
+        }
+
+        function resetFields(fields) {
+            fields.forEach(function(field) {
+                var placeholder = '';
+                switch (field) {
+                    case 'district_id':
+                        placeholder = 'Chọn Quận/Huyện';
+                        break;
+                    case 'ward_id':
+                        placeholder = 'Chọn Phường/Xã';
+                        break;
+                    case 'village_id':
+                        placeholder = 'Chọn Thôn/Xóm';
+                        break;
+                    default:
+                        placeholder = 'Chọn...';
+                }
+                $('select[name="' + field + '"]').html('<option value="">' + placeholder + '</option>');
+            });
+        }
     </script>
 @endsection

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AddressFormRequest;
 use App\Jobs\SaveAddressData;
 use App\Models\Address;
 use App\Models\District;
@@ -77,7 +78,7 @@ class AddressController extends Controller
 
         return true; // Tất cả đều hợp lệ
     }
-    public function store(Request $request)
+    public function store(AddressFormRequest $request)
     {
         $validationResult = $this->validateAddress($request);
         if ($validationResult !== true) {
@@ -133,7 +134,7 @@ class AddressController extends Controller
 
 
     # cập nhật địa chỉ
-    public function update(Request $request)
+    public function update(AddressFormRequest $request)
     {
         $validationResult = $this->validateAddress($request);
         if ($validationResult !== true) {
@@ -149,7 +150,7 @@ class AddressController extends Controller
         $address->ward_id       = $request->ward_id;
         $address->village_id       = $request->village_id;
         if ($request->is_default == 1) {
-            $prevDefault = Address::where('user_id', $userId)->where('is_default', 1)->first();
+            $prevDefault = Address::where('user_id', $userId)->where('id','!=', $request->id)->where('is_default', 1)->first();
             if (!is_null($prevDefault)) {
                 $prevDefault->is_default = 0;
                 $prevDefault->save();

@@ -18,7 +18,10 @@ class UserController extends Controller
 {
     public function index()
     {
-        $addresses = Address::with(['province','district','ward','village'])->where('user_id',auth()->user()->id)->get();
+        $addresses = Address::with(['province', 'district', 'ward', 'village'])
+        ->where('user_id', auth()->user()->id)
+        ->get()
+        ->sortByDesc('is_default');
         $provinces = Province::orderBy('name')->get();
         return view('clients.user.index',compact('addresses','provinces'));
     }
