@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AboutController;
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\Admin\Attribute_SetControllerAdmin;
 use App\Http\Controllers\Admin\AttributesControllerAdmin;
 use App\Http\Controllers\Admin\BrandsControllerAdmin;
@@ -75,8 +76,6 @@ Route::middleware(['checkaccount'])->group(function () {
     Route::get('/gio-hang/xoa-ma-giam-gia', [CartController::class, 'clearCoupon'])->name('carts.clearCoupon');
     Route::post('/gio-hang/thong-tin-ma-giam-gia', [CartController::class, 'infoCoupon'])->name('carts.infoCoupon');
 
-    Route::get('/thanh-toan', [CheckoutController::class, 'index'])->name('checkout');
-
     Route::get('/thuong-hieu', [BrandController::class, 'index'])->name('brand');
 
     Route::get('/tin-tuc', [BlogController::class, 'all'])->name('blog');
@@ -98,6 +97,17 @@ Route::middleware(['checkaccount'])->group(function () {
         Route::get('/email/xac-minh/{id}/{hash}', [UserController::class, 'checkVerify'])->name('verification.verify');
         Route::get('/tai-khoan/xac-minh', [UserController::class, 'verify'])->name('verify');
         Route::post('/tai-khoan/xac-minh', [UserController::class, 'postVerify'])->name('postVerify');
+
+        Route::get('/thanh-toan', [CheckoutController::class, 'index'])->name('checkout');
+
+        Route::get('/dia-chi/save-all', [AddressController::class, 'fetchAndSaveAddresses'])->name('fetchAndSaveAddress');
+        Route::post('/dia-chi/luu', [AddressController::class, 'store'])->name('address.store');
+        Route::post('/dia-chi/sua', [AddressController::class, 'edit'])->name('address.edit');
+        Route::post('/dia-chi/cap-nhat', [AddressController::class, 'update'])->name('address.update');
+        Route::get('/dia-chi/xoa/{id}', [AddressController::class, 'delete'])->name('address.delete');
+        Route::post('/dia-chi/huyen', [AddressController::class, 'getDistrict'])->name('address.getDistrict');
+        Route::post('/dia-chi/xa', [AddressController::class, 'getWard'])->name('address.getWard');
+        Route::post('/dia-chi/thon', [AddressController::class, 'getVillage'])->name('address.getVillage');
     });
     Route::get('emails/theme/{id?}', [EmailControllerAdmin::class, 'getTheme'])->name('admin.emails.getTheme')->where(['id' => '[0-9]+']);
     Route::middleware(['role:1,9,10'])->group(function () {

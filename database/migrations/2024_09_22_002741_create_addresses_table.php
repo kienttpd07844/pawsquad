@@ -20,6 +20,7 @@ return new class extends Migration
             $table->bigInteger('province_id');
             $table->bigInteger('district_id');
             $table->bigInteger('ward_id');
+            $table->bigInteger('village_id')->nullable();
             $table->integer('is_default')->default(0);
             $table->timestamps();
             $table->softDeletes();

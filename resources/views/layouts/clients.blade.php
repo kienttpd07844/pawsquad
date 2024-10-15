@@ -37,7 +37,7 @@
     <link rel="stylesheet" href="{{ asset('assets/clients/css/uiicss.css') }}">
 
     <link rel="stylesheet" href="{{ asset('assets/clients/css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/clients/css/custom.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/clients/css/custom.css') }}?v=0.1">
 
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.css"
@@ -49,6 +49,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simplebar/6.0.0/simplebar.min.css"
         integrity="sha512-iQBsppXZIltfj3yN99ljZ/JqWSXOMMArhR6paziJaU42nMPfTuDkXF+yE/PBqbF9guEczGppZctiZ32ZCYssXw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
         .toast {
             background-size: auto !important;
@@ -281,6 +282,7 @@
     </style>
 
     @yield('css')
+
 </head>
 
 <body class="home-pages-2">
@@ -343,6 +345,7 @@
     <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script>
         function notifyMe(level, message) {
@@ -405,6 +408,8 @@
         $(function() {
             $('[data-bs-toggle="tooltip"]').tooltip();
         });
+
+
 
         function showProductDetailsModal(productId) {
             $('#quickview_modal .product-info').html(null);

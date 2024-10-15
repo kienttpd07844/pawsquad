@@ -27,13 +27,13 @@ class LoginController extends Controller
             'ip_address' => $request->ip(),
         ]);
         if (isset($_COOKIE['guest_user_id'])) {
-            $carts  = Cart::where('guest_user_id', request()->cookie('guest_user_id'))->get();
+            $carts  = Cart::where('guest_user_id', (int) request()->cookie('guest_user_id'))->get();
             $userId = auth()->user()->id;
             if ($carts) {
                 foreach ($carts as $cart) {
-                    $existInUserCart = Cart::where('user_id', $userId)->where('product_id', $cart->product_id)->first();
+                    $existInUserCart = Cart::where('user_id', $userId)->where('product_variation_id', $cart->product_variation_id)->first();
                     if (!is_null($existInUserCart)) {
-                        $existInUserCart->qty += $cart->qty;
+                        $existInUserCart->quantity += $cart->quantity;
                         $existInUserCart->save();
                         $cart->delete();
                     } else {

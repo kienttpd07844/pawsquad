@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Helper;
 use App\Http\Requests\ProfileInfoFormRequest;
+use App\Models\Address;
+use App\Models\Province;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -16,7 +18,9 @@ class UserController extends Controller
 {
     public function index()
     {
-        return view('clients.user.index');
+        $addresses = Address::with(['province','district','ward','village'])->where('user_id',auth()->user()->id)->get();
+        $provinces = Province::orderBy('name')->get();
+        return view('clients.user.index',compact('addresses','provinces'));
     }
     public function postEdit(ProfileInfoFormRequest $request)
     {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\SignupFormRequest;
+use App\Models\Cart;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -49,6 +50,24 @@ class SignUpController extends Controller
         ]);
         if ($user) {
             Auth::login($user);
+            if (isset($_COOKIE['guest_user_id'])) {
+                $carts  = Cart::where('guest_user_id', (int) request()->cookie('guest_user_id'))->get();
+                $userId = auth()->user()->id;
+                if ($carts) {
+                    foreach ($carts as $cart) {
+                        $existInUserCart = Cart::where('user_id', $userId)->where('product_variation_id', $cart->product_variation_id)->first();
+                        if (!is_null($existInUserCart)) {
+                            $existInUserCart->quantity += $cart->quantity;
+                            $existInUserCart->save();
+                            $cart->delete();
+                        } else {
+                            $cart->user_id = $userId;
+                            $cart->guest_user_id = null;
+                            $cart->save();
+                        }
+                    }
+                }
+            }
             return redirect()->route('home')->with(noti('Đăng ký thành công', 'success'));
         } else {
             return redirect()->route('signup')->with(noti('Đăng ký thất bại', 'error'));

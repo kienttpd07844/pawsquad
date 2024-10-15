@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
         integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <style>
         .table.table-inbox>tbody>tr>td,
         .table.table-inbox>tbody>tr>th,
@@ -696,13 +697,13 @@
             margin-bottom: 0
         }
 
-        .badge {
-            padding: .39em .45em .25em;
-            font-size: 75%;
-            line-height: 1;
-            font-weight: 500;
-            border-radius: .1875rem;
-        }
+        /* .badge {
+                    padding: .39em .45em .25em;
+                    font-size: 75%;
+                    line-height: 1;
+                    font-weight: 500;
+                    border-radius: .1875rem;
+                } */
 
         .text-bg-success {
             background-color: rgb(34, 192, 60) !important;
@@ -1413,6 +1414,125 @@
             background: white !important;
         }
     </style>
+    <style>
+        .tt-address-content .tt-address-info {
+            width: 100%;
+            cursor: pointer;
+            border: 1px solid rgba(0, 0, 0, 0);
+        }
+
+        .tt-address-content .tt-edit-address {
+            right: 12px;
+            top: 5px;
+        }
+
+        .addAddressModal .modal-header,
+        .editAddressModal .modal-header,
+        .deleteAddressModal .modal-header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: white;
+            padding: 10px;
+            border: none !important;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            border: none !important;
+        }
+
+        .addAddressModal .modal-header h2,
+        .editAddressModal .modal-header h2,
+        .deleteAddressModal .modal-header h2 {
+            margin-left: 15px;
+        }
+
+        .select2Address {
+            display: block;
+            width: 100%;
+            transition: .3s ease;
+            width: 100%;
+            height: 45px;
+            font-size: .875rem;
+            font-weight: 400;
+            color: #868686;
+            font-family: var(--font-cabin);
+            padding: 10px 20px;
+            margin-right: 0;
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+
+        .addAddressModal input {
+            color: #868686 !important;
+            background: white !important;
+        }
+
+        .label-input-field {
+            position: relative;
+            margin-top: 8px;
+        }
+
+        .label-input-field label {
+            z-index: 1;
+        }
+
+        .label-input-field label {
+            position: absolute;
+            left: 14px;
+            top: -12px;
+            padding: 0 8px;
+            background-color: #fff;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .label-input-field input,
+        .label-input-field textarea,
+        .label-input-field select {
+            width: 100%;
+            padding: 16px 24px;
+            border-radius: 4px;
+            border: 1px solid #e4e4e4;
+            outline: 0;
+        }
+
+        .select2-container {
+            width: auto;
+            display: block;
+            padding: 14px 24px;
+            border-radius: 4px;
+            border: 1px solid #e4e4e4;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 60px;
+            right: 10px;
+        }
+
+        .select2-dropdown {
+            top: -4px;
+            border-color: #e4e4e4;
+        }
+
+        .select2-container--open .select2-dropdown {
+            left: -1px;
+        }
+
+        .select2-container .select2-selection--single .select2-selection__rendered {
+            padding: 0;
+        }
+
+        .select2-container--default .select2-selection--single {
+            border: none;
+        }
+
+        .select2-container--default .select2-search--dropdown .select2-search__field {
+            border-color: #e4e4e4;
+        }
+    </style>
 @endsection
 @section('content')
     @include('clients.partials.breadcrum', [
@@ -1499,8 +1619,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <form method="post" action="{{ route('postEditAccount') }}"
-                                        class="theme-form" autocomplete="off">
+                                    <form method="post" action="{{ route('postEditAccount') }}" class="theme-form"
+                                        autocomplete="off">
                                         <div class="box-account box-info mt-2 mb-3">
                                             <div class="box-head">
                                                 <h4>Thông tin</h4>
@@ -1515,13 +1635,15 @@
                                                 <div class="col-md-6 col-6">
                                                     <label for="name">Họ và tên</label>
                                                     <div class="form-inner">
-                                                        <input type="text" name="name" value="{{ old('name',auth()->user()->name) }}" >
+                                                        <input type="text" name="name"
+                                                            value="{{ old('name', auth()->user()->name) }}">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-6">
                                                     <label for="phone">Số điện thoại</label>
                                                     <div class="form-inner">
-                                                        <input type="text" name="phone" value="{{ old('phone',auth()->user()->phone) }}">
+                                                        <input type="text" name="phone"
+                                                            value="{{ old('phone', auth()->user()->phone) }}">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1634,14 +1756,48 @@
                                     <div class="col-12">
                                         <div class="card dashboard-table mt-0">
                                             <div class="card-body table-responsive-sm">
-                                                <div class="top-sec">
+                                                <div class="top-sec d-flex justify-content-between">
                                                     <h3>Danh sách địa chỉ</h3>
+                                                    <a href="javascript:void(0);" onclick="addNewAddress()"
+                                                        class="fw-semibold"><i class="bi bi-plus"></i>Thêm địa
+                                                        chỉ</a>
+                                                </div>
+                                                <div class="row g-4">
+                                                    @forelse ($addresses as $address)
+                                                        <div class="col-md-6">
+                                                            <div
+                                                                class="tt-address-content border p-3 rounded address-book-content pe-md-4 position-relative">
+                                                                <div class="address tt-address-info position-relative">
+                                                                    <!-- Địa chỉ -->
+                                                                    @include('clients.partials.address', [
+                                                                        'address' => $address,
+                                                                    ])
+                                                                    <!-- Địa chỉ -->
+
+                                                                    <div class="tt-edit-address position-absolute">
+                                                                        <a href="javascript:void(0);"
+                                                                            onclick="editAddress({{ $address->id }})"
+                                                                            class="pe-1">Sửa</a>
+
+                                                                        <a href="javascript:void(0);"
+                                                                            data-url="{{ route('address.delete', $address->id) }}"
+                                                                            onclick="deleteAddress(this)"
+                                                                            class="text-danger">Xoá</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @empty
+                                                        <p class="text-center">Chưa có địa chỉ nào được thêm vào danh sách.
+                                                        </p>
+                                                    @endforelse
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
 
                             <div class="tab-pane fade" id="security" role="tabpanel">
                                 <div class="row">
@@ -1742,100 +1898,105 @@
             </div>
         </div>
     </div>
+
+    <!--modal-->
+    @include('clients.partials.addressForm', ['provinces' => $provinces])
+    <!--modal-->
 @endsection
+
 @section('js')
-{!! JsValidator::formRequest('App\Http\Requests\ProfileInfoFormRequest') !!}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-    integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
+    {!! JsValidator::formRequest('App\Http\Requests\ProfileInfoFormRequest') !!}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.6/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var tableIds = ['responsiveDataTable', 'responsiveDataTable1', 'responsiveDataTable2'];
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.6/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
-        tableIds.forEach(function(tableId) {
-            var table = document.getElementById(tableId);
-            new DataTable(table, {
-                responsive: true,
-                pageLength: 5,
-                lengthMenu: [
-                    [5, 10, 15, 20, 25, 50, 100],
-                    [5, 10, 15, 20, 25, 50, 100]
-                ],
-                language: {
-                    "decimal": "",
-                    "emptyTable": "Không có dữ liệu trong bảng",
-                    "info": "Hiển thị từ _START_ đến _END_ trong tổng số _TOTAL_ mục",
-                    "infoEmpty": "Hiển thị từ 0 đến 0 trong tổng số 0 mục",
-                    "infoFiltered": "(được lọc từ tổng số _MAX_ mục)",
-                    "infoPostFix": "",
-                    "thousands": ",",
-                    "lengthMenu": "Hiển thị _MENU_ mục",
-                    "loadingRecords": "Đang tải...",
-                    "processing": "",
-                    "search": "Tìm kiếm:",
-                    "zeroRecords": "Không tìm thấy bản ghi phù hợp",
-                    "paginate": {
-                        "first": "Đầu",
-                        "last": "Cuối",
-                        "next": "Tiếp",
-                        "previous": "Trước"
-                    },
-                    "aria": {
-                        "orderable": "Sắp xếp theo cột này",
-                        "orderableReverse": "Sắp xếp ngược theo cột này"
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var tableIds = ['responsiveDataTable', 'responsiveDataTable1', 'responsiveDataTable2'];
+
+            tableIds.forEach(function(tableId) {
+                var table = document.getElementById(tableId);
+                new DataTable(table, {
+                    responsive: true,
+                    pageLength: 5,
+                    lengthMenu: [
+                        [5, 10, 15, 20, 25, 50, 100],
+                        [5, 10, 15, 20, 25, 50, 100]
+                    ],
+                    language: {
+                        "decimal": "",
+                        "emptyTable": "Không có dữ liệu trong bảng",
+                        "info": "Hiển thị từ _START_ đến _END_ trong tổng số _TOTAL_ mục",
+                        "infoEmpty": "Hiển thị từ 0 đến 0 trong tổng số 0 mục",
+                        "infoFiltered": "(được lọc từ tổng số _MAX_ mục)",
+                        "infoPostFix": "",
+                        "thousands": ",",
+                        "lengthMenu": "Hiển thị _MENU_ mục",
+                        "loadingRecords": "Đang tải...",
+                        "processing": "",
+                        "search": "Tìm kiếm:",
+                        "zeroRecords": "Không tìm thấy bản ghi phù hợp",
+                        "paginate": {
+                            "first": "Đầu",
+                            "last": "Cuối",
+                            "next": "Tiếp",
+                            "previous": "Trước"
+                        },
+                        "aria": {
+                            "orderable": "Sắp xếp theo cột này",
+                            "orderableReverse": "Sắp xếp ngược theo cột này"
+                        }
                     }
-                }
-            });
-        });
-
-        var setSearchPlaceholders = function() {
-            var inputs = document.querySelectorAll(".dataTables_filter input[type='search']");
-            inputs.forEach(function(input) {
-                input.setAttribute("placeholder", "Tìm kiếm");
-                input.addEventListener("input", function() {
-                    input.setAttribute("placeholder", input.value.trim() === "" ?
-                        "Tìm kiếm" : "");
                 });
             });
-        };
 
-        setTimeout(setSearchPlaceholders, 500);
+            var setSearchPlaceholders = function() {
+                var inputs = document.querySelectorAll(".dataTables_filter input[type='search']");
+                inputs.forEach(function(input) {
+                    input.setAttribute("placeholder", "Tìm kiếm");
+                    input.addEventListener("input", function() {
+                        input.setAttribute("placeholder", input.value.trim() === "" ?
+                            "Tìm kiếm" : "");
+                    });
+                });
+            };
+
+            setTimeout(setSearchPlaceholders, 500);
 
 
-        var hash = window.location.hash;
-        if (hash) {
-            var tabTriggerEl = document.querySelector('button[data-bs-target="' + hash + '"]');
-            if (tabTriggerEl) { // Kiểm tra nếu phần tử tồn tại
-                var tab = new bootstrap.Tab(tabTriggerEl);
-                tab.show();
-            }
-        }
-        var tabLinks = document.querySelectorAll('button[data-bs-toggle="tab"]');
-        tabLinks.forEach(function(tabLink) {
-            tabLink.addEventListener('shown.bs.tab', function(event) {
-                var target = event.target;
-                if (target) { // Kiểm tra nếu phần tử tồn tại
-                    var hash = target.getAttribute('data-bs-target');
-                    if (hash) {
-                        window.location.hash = hash;
-                    }
+            var hash = window.location.hash;
+            if (hash) {
+                var tabTriggerEl = document.querySelector('button[data-bs-target="' + hash + '"]');
+                if (tabTriggerEl) { // Kiểm tra nếu phần tử tồn tại
+                    var tab = new bootstrap.Tab(tabTriggerEl);
+                    tab.show();
                 }
+            }
+            var tabLinks = document.querySelectorAll('button[data-bs-toggle="tab"]');
+            tabLinks.forEach(function(tabLink) {
+                tabLink.addEventListener('shown.bs.tab', function(event) {
+                    var target = event.target;
+                    if (target) { // Kiểm tra nếu phần tử tồn tại
+                        var hash = target.getAttribute('data-bs-target');
+                        if (hash) {
+                            window.location.hash = hash;
+                        }
+                    }
+                });
             });
+
+
         });
-
-
-    });
-</script>
-
+    </script>
 @endsection
