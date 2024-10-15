@@ -104,7 +104,7 @@ class AddressController extends Controller
         $address->is_default    = $request->is_default;
         $address->address       = $request->address;
         $address->save();
-        return redirect()->route('account')->with(noti('Thêm thông tin địa chỉ thành công', 'success'));
+        return redirect()->to(route('account') . '#dia-chi')->with(noti('Thêm thông tin địa chỉ thành công', 'success'));
     }
 
     # Sửa địa chỉ
@@ -159,7 +159,7 @@ class AddressController extends Controller
         $address->is_default    = $request->is_default;
         $address->address       = $request->address;
         $address->save();
-        return redirect()->route('account')->with(noti('Cập nhật thông tin địa chỉ thành công', 'success'));
+        return redirect()->to(route('account') . '#dia-chi')->with(noti('Cập nhật thông tin địa chỉ thành công', 'success'));
     }
 
     # xoá địa chỉ
@@ -167,7 +167,7 @@ class AddressController extends Controller
     {
         $user = auth()->user();
         Address::where('user_id', $user->id)->where('id', $id)->delete();
-        return redirect()->route('account')->with(noti('Xoá thông tin địa chỉ thành công', 'success'));
+        return redirect()->to(route('account') . '#dia-chi')->with(noti('Xoá thông tin địa chỉ thành công', 'success'));
     }
     public function getDistrict(Request $request)
     {

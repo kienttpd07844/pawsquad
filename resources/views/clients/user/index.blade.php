@@ -698,12 +698,12 @@
         }
 
         /* .badge {
-                                                padding: .39em .45em .25em;
-                                                font-size: 75%;
-                                                line-height: 1;
-                                                font-weight: 500;
-                                                border-radius: .1875rem;
-                                            } */
+                                                                padding: .39em .45em .25em;
+                                                                font-size: 75%;
+                                                                line-height: 1;
+                                                                font-weight: 500;
+                                                                border-radius: .1875rem;
+                                                            } */
 
         .text-bg-success {
             background-color: rgb(34, 192, 60) !important;
@@ -1571,13 +1571,13 @@
                             </div>
                             <div class="faq-tab">
                                 <ul class="nav nav-tabs" id="top-tab" role="tablist">
-                                    <li class="nav-item"><a data-bs-toggle="tab" data-bs-target="#info" role="tab"
+                                    <li class="nav-item"><a data-bs-toggle="tab" data-bs-target="#thong-tin" role="tab"
                                             class="nav-link active">Thông tin tài khoản</a></li>
-                                    <li class="nav-item"><a data-bs-toggle="tab" role="tab" data-bs-target="#orders"
+                                    <li class="nav-item"><a data-bs-toggle="tab" role="tab" data-bs-target="#don-hang"
                                             class="nav-link">Lịch sử mua hàng</a></li>
-                                    <li class="nav-item"><a data-bs-toggle="tab" role="tab" data-bs-target="#address"
+                                    <li class="nav-item"><a data-bs-toggle="tab" role="tab" data-bs-target="#dia-chi"
                                             class="nav-link">Danh sách địa chỉ</a></li>
-                                    <li class="nav-item"><a data-bs-toggle="tab" role="tab" data-bs-target="#security"
+                                    <li class="nav-item"><a data-bs-toggle="tab" role="tab" data-bs-target="#bao-mat"
                                             class="nav-link">Bảo mật</a> </li>
                                     <li class="nav-item"><a href="{{ route('logout') }}" class="nav-link">Đăng xuất</a>
                                     </li>
@@ -1587,7 +1587,7 @@
                     </div>
                     <div class="col-lg-9">
                         <div class="faq-content tab-content" id="top-tabContent">
-                            <div class="tab-pane fade show active contact-wrap" id="info" role="tabpanel">
+                            <div class="tab-pane fade show active contact-wrap" id="thong-tin" role="tabpanel">
                                 <div class="counter-section">
                                     <div class="welcome-msg">
                                         <h4>Xin chào, {{ auth()->user()->name }}</h4>
@@ -1704,7 +1704,7 @@
                                     </form>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="orders" role="tabpanel">
+                            <div class="tab-pane fade" id="don-hang" role="tabpanel">
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="card dashboard-table mt-0">
@@ -1760,7 +1760,7 @@
                                 </div>
                             </div>
 
-                            <div class="tab-pane fade" id="address" role="tabpanel">
+                            <div class="tab-pane fade" id="dia-chi" role="tabpanel">
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="card dashboard-table bg-white mt-0">
@@ -1816,8 +1816,7 @@
                                 </div>
                             </div>
 
-
-                            <div class="tab-pane fade" id="security" role="tabpanel">
+                            <div class="tab-pane fade" id="bao-mat" role="tabpanel">
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="card mt-0">
@@ -1992,26 +1991,36 @@
             setTimeout(setSearchPlaceholders, 500);
 
 
-            var hash = window.location.hash;
+            const hash = window.location.hash;
             if (hash) {
-                var tabTriggerEl = document.querySelector('button[data-bs-target="' + hash + '"]');
-                if (tabTriggerEl) { // Kiểm tra nếu phần tử tồn tại
-                    var tab = new bootstrap.Tab(tabTriggerEl);
-                    tab.show();
-                }
+                openTab(hash);
             }
-            var tabLinks = document.querySelectorAll('button[data-bs-toggle="tab"]');
-            tabLinks.forEach(function(tabLink) {
-                tabLink.addEventListener('shown.bs.tab', function(event) {
-                    var target = event.target;
-                    if (target) { // Kiểm tra nếu phần tử tồn tại
-                        var hash = target.getAttribute('data-bs-target');
-                        if (hash) {
-                            window.location.hash = hash;
-                        }
-                    }
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function() {
+                    const targetHash = this.getAttribute('data-bs-target');
+                    openTab(targetHash);
+                    history.pushState(null, null, targetHash);
                 });
             });
+            //khi hash đổi
+            window.addEventListener('popstate', function() {
+                const newHash = window.location.hash;
+                openTab(newHash);
+            });
+
+            function openTab(targetHash) {
+                document.querySelectorAll('.tab-pane, .nav-link').forEach(el => {
+                    el.classList.remove('show', 'active');
+                });
+                const activeTab = document.querySelector(targetHash);
+                if (activeTab) {
+                    activeTab.classList.add('show', 'active');
+                }
+                const activeLink = document.querySelector(`.nav-link[data-bs-target="${targetHash}"]`);
+                if (activeLink) {
+                    activeLink.classList.add('active');
+                }
+            }
 
 
         });

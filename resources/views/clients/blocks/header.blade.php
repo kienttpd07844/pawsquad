@@ -195,8 +195,8 @@
                         <form class="nav__search-form w-10  dropdown-main">
                             <ul>
                                 <li><a href="{{ route('account') }}">Tài khoản </a></li>
-                                <li><a href="{{ route('signup') }}">Đơn hàng đã mua</a></li>
-                                <li><a href="{{ route('signup') }}">Danh sách địa chỉ</a></li>
+                                <li><a href="{{ route('account') }}#don-hang">Đơn hàng đã mua</a></li>
+                                <li><a href="{{ route('account') }}#dia-chi">Danh sách địa chỉ</a></li>
                                 @if (auth()->user()->role == 9 || auth()->user()->role == 10)
                                     <li class="text-danger"><a href="{{ route('admin.home') }}">Quản lý</a></li>
                                 @endif

@@ -35,9 +35,9 @@ class UserController extends Controller
         }
         $user->save();
         if ($user) {
-            return redirect()->route('account')->with(noti('Sửa thông tin thành công', 'success'));
+            return redirect()->to(route('account') . '#thong-tin')->with(noti('Sửa thông tin thành công', 'success'));
         } else {
-            return redirect()->route('account')->with(noti('Sửa thông tin thất bại', 'error'));
+            return redirect()->to(route('account') . '#thong-tin')->with(noti('Sửa thông tin thất bại', 'error'));
         }
     }
 
