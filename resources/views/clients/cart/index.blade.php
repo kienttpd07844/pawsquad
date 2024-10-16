@@ -139,8 +139,8 @@
             stroke: currentColor;
         }
 
-        .voucher-button:checked{
-            accent-color: #ee4d2d!important;
+        .voucher-button:checked {
+            accent-color: #ee4d2d !important;
             border-width: 0;
         }
 
@@ -353,8 +353,6 @@
                     }
                 });
             });
-
-
         });
     </script>
     <script>
@@ -363,6 +361,15 @@
         function updateCouponInput(voucherValue) {
             document.querySelector('input[name="code"].coupon-input').value = voucherValue;
         }
-
+        $('input[name="code"].coupon-input').on('change', function() {
+            var inputValue = $(this).val();
+            $('.voucher-button').each(function() {
+                if (inputValue == $(this).val()) {
+                    $(this).prop('checked', true).attr('aria-checked', 'true');
+                } else {
+                    $(this).prop('checked', false).attr('aria-checked', 'false');
+                }
+            });
+        });
     </script>
 @endsection
