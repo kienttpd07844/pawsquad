@@ -164,8 +164,8 @@ class CartController extends Controller
                 removeCoupon();
                 return $this->couponApplyFailed('Hãy mua sắm ít nhất ' . format_cash($voucherType->min_spend));
             }
-             # Kiểm tra nếu phiếu giảm giá chưa đến thời gian bắt đầu
-             if ($voucher->start_date > $currentDateTime) {
+            # Kiểm tra nếu phiếu giảm giá chưa đến thời gian bắt đầu
+            if ($voucher->start_date > $currentDateTime) {
                 removeCoupon();
                 return $this->couponApplyFailed('Mã giảm giá chưa đến thời gian bắt đầu');
             }
@@ -212,7 +212,7 @@ class CartController extends Controller
         }
         $formattedAmount = NULL;
         if ($couponCode) {
-            $voucherType = VoucherType::where('name',$couponCode)->first();
+            $voucherType = VoucherType::where('name', $couponCode)->first();
             $formattedAmount = '';
             if ($voucherType->discount_type === 'flat') {
                 $formattedAmount = format_cash($voucherType->discount);
@@ -231,15 +231,30 @@ class CartController extends Controller
             'couponCode'        => isset($voucherType) ? $voucherType->name : null,
             'couponDiscount'    => format_cash(getCouponDiscount(getSubTotal($carts, false), $couponCode)),
             'couponData'        => $formattedAmount,
-            'coupon'            => getRender('clients.partials.coupon',['carts' => $carts]),
+            'coupon'            => getRender('clients.partials.coupon', ['carts' => $carts]),
         ];
     }
-    public function infoCoupon(Request $request){
-        $currentTime = now()->toDateTimeString();
-        // Ghi log với thời gian
-        Log::info("[$currentTime] " . $request->name);
-
+    public function infoCoupon(Request $request)
+    {
         return $this->applyCoupon($request);
     }
+    public function getCoupon(Request $request)
+    {
+        $currentTime = now()->toDateTimeString();
 
+        $coupons = Voucher::where('index', 1)
+            ->where('expired_date', '>', $currentTime)
+            ->get();
+        if (Auth::check()) {
+            $coupons = $coupons->sortByDesc(function ($coupon) use ($request) {
+                $used = $coupon->usages()->where('user_id', $request->user()->id)->exists();
+                return [$coupon->voucherType->discount, $used ? 1 : 0]; // 1 nếu đã sử dụng, 0 nếu chưa
+            });
+        }
+
+        return [
+            'success' => true,
+            'coupon' => getRender('clients.partials.voucher_listing', ['coupons' => $coupons]),
+        ];
+    }
 }

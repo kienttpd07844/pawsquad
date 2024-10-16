@@ -74,9 +74,20 @@ function format_date($data)
 {
     return \Carbon\Carbon::parse($data)->format('d/m/Y H:i:s');
 }
-function format_cash($price)
+function format_cash($price, $shorten = false)
 {
-    return str_replace(",", ".", number_format($price)) . 'đ';
+    if ($shorten) {
+        if ($price >= 1_000_000) {
+            return number_format($price / 1_000_000, 0) . 'M'; // triệu
+        } elseif ($price >= 1_000) {
+            return number_format($price / 1_000, 0) . 'K'; // ngàn
+        } elseif ($price >= 0) {
+            return number_format($price, 0, ',', '.') . 'đ'; // đồng
+        }
+    }
+
+    // Định dạng đầy đủ
+    return number_format($price, 0, ',', '.') . 'đ'; // Đơn vị VND
 }
 function generateSlug($string, $type, $id = null)
 {

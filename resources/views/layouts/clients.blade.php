@@ -382,7 +382,6 @@
         @endif
     </script>
     @yield('js')
-
     <script>
         $(document).ready(function() {
             $.datetimepicker.setLocale('vi');

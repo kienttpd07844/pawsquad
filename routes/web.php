@@ -75,6 +75,7 @@ Route::middleware(['checkaccount'])->group(function () {
     Route::post('/gio-hang/ap-dung-ma-giam-gia', [CartController::class, 'applyCoupon'])->name('carts.applyCoupon');
     Route::get('/gio-hang/xoa-ma-giam-gia', [CartController::class, 'clearCoupon'])->name('carts.clearCoupon');
     Route::post('/gio-hang/thong-tin-ma-giam-gia', [CartController::class, 'infoCoupon'])->name('carts.infoCoupon');
+    Route::get('/gio-hang/danh-sach-ma-giam-gia', [CartController::class, 'getCoupon'])->name('carts.getCoupon');
 
     Route::get('/thuong-hieu', [BrandController::class, 'index'])->name('brand');
 
