@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\Helper;
 use App\Http\Requests\ProfileInfoFormRequest;
 use App\Models\Address;
+use App\Models\Order;
 use App\Models\Province;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -23,7 +24,8 @@ class UserController extends Controller
         ->get()
         ->sortByDesc('is_default');
         $provinces = Province::orderBy('name')->get();
-        return view('clients.user.index',compact('addresses','provinces'));
+        $orders = Order::with(['user','orderItems'])->orderByDesc('id')->where('user_id',auth()->user()->id)->get();
+        return view('clients.user.index',compact('addresses','provinces','orders'));
     }
     public function postEdit(ProfileInfoFormRequest $request)
     {

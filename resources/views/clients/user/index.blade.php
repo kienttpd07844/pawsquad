@@ -586,7 +586,8 @@
 
         .dataTables_wrapper .dataTables_paginate .paginate_button.previous:before {
             font-family: 'Font Awesome 6 Free' !important;
-            content: '\f104';
+            content: '<';
+            font-size:12px!important;
             text-align: center;
             text-align: center;
             justify-content: center;
@@ -615,7 +616,8 @@
 
         .dataTables_wrapper .dataTables_paginate .paginate_button.next:before {
             font-family: 'Font Awesome 6 Free' !important;
-            content: '\f105';
+            content: '>';
+            font-size:12px!important;
             text-align: center;
             text-align: center;
             justify-content: center;
@@ -698,12 +700,12 @@
         }
 
         /* .badge {
-                                                                padding: .39em .45em .25em;
-                                                                font-size: 75%;
-                                                                line-height: 1;
-                                                                font-weight: 500;
-                                                                border-radius: .1875rem;
-                                                            } */
+                                                                        padding: .39em .45em .25em;
+                                                                        font-size: 75%;
+                                                                        line-height: 1;
+                                                                        font-weight: 500;
+                                                                        border-radius: .1875rem;
+                                                                    } */
 
         .text-bg-success {
             background-color: rgb(34, 192, 60) !important;
@@ -1726,30 +1728,24 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <tr>
-                                                                    <td>INV1</td>
-                                                                    <td>120.000đ</td>
-                                                                    <td>Thành công</td>
-                                                                    <td>30/09/2024 13:20</td>
-                                                                    <td>
-                                                                        <a href="" class="me-2"><i
-                                                                                class="fa-solid fa-eye"></i></a>
-                                                                        <a href="" class="me-2"><i
-                                                                                class="fa-solid fa-download"></i></a>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>INV2</td>
-                                                                    <td>150.000đ</td>
-                                                                    <td>Thành công</td>
-                                                                    <td>31/09/2024 13:20</td>
-                                                                    <td>
-                                                                        <a href="" class="me-2"><i
-                                                                                class="fa-solid fa-eye"></i></a>
-                                                                        <a href="" class="me-2"><i
-                                                                                class="fa-solid fa-download"></i></a>
-                                                                    </td>
-                                                                </tr>
+                                                                @if ($orders && $orders->isNotEmpty())
+                                                                    @foreach ($orders as $order)
+                                                                        <tr>
+                                                                            <td>INV{{ $order->id }}</td>
+                                                                            <td>{{ format_cash($order->total_amount) }}</td>
+                                                                            <td>{{ getStatusOrder($order->order_status) }}
+                                                                            </td>
+                                                                            <td>{{ \Carbon\Carbon::parse($order->order_date)->format('d-m-Y H:i') }}
+                                                                            </td>
+                                                                            <td>
+                                                                                <a href="{{ route('checkout.invoice',['code'=>$order->id]) }}" class="me-2"><i
+                                                                                        class="fa-solid fa-eye" style="color:#F46F30"></i></a>
+                                                                                <a href="{{ route('checkout.downloadOrder',['code'=>$order->id]) }}" class="me-2"><i
+                                                                                        class="fa-solid fa-download" style="color:#F46F30"></i></a>
+                                                                            </td>
+                                                                        </tr>
+                                                                    @endforeach
+                                                                @endif
                                                             </tbody>
                                                         </table>
                                                     </div>

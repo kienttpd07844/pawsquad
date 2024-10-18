@@ -159,7 +159,7 @@
 
                                 <tr>
                                     <td><strong>Ngày khởi tạo</strong></td>
-                                    <td>{{ \Carbon\Carbon::parse($order->created_at)->format('d-m-Y H:i') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($order->order_date)->format('d-m-Y H:i') }}</td>
                                 </tr>
                             </table>
                         </div>
