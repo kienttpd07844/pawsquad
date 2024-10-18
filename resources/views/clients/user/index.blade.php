@@ -2032,15 +2032,6 @@
 
         var parent = '.addAddressModal';
 
-        // chạy khi tài liệu đã sẵn sàng --> đối với các tệp phương tiện
-        $(document).ready(function() {
-            if ($("input[name='shipping_address_id']").is(':checked')) {
-                let city_id = $("input[name='shipping_address_id']:checked").data('city_id');
-                getLogistics(city_id);
-            }
-        });
-
-
         // Địa chỉ mới
         function addNewAddress() {
             $('#addAddressModal').modal('show');

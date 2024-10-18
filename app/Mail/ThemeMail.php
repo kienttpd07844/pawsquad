@@ -55,6 +55,12 @@ class ThemeMail extends Mailable
             '{CONTACT_EMAIL}' => $this->data['email'] ?? NULL,
             '{CONTACT_PHONE}' => $this->data['phone'] ?? NULL,
             '{URL_VERIFY}' => $this->data['veirfyLink'] ?? NULL,
+            '{URL_INVOICE}' => $this->data['url_invoice'] ?? NULL,
+            '{ID_INVOICE}' => $this->data['id_invoice'] ?? NULL,
+            '{CREATE_AT_INVOICE}' => $this->data['created_at_invoice'] ?? NULL,
+            '{PAYMENT_METHOD_INVOICE}' => $this->data['payment_method_invoice'] ?? NULL,
+            '{ORDER_STATUS}' => $this->data['order_status_invoice'] ?? NULL,
+            '{PRICE_INVOICE}' => $this->data['price_invoice'] ?? NULL,
         ];
         return str_replace(array_keys($replaceTags), array_values($replaceTags), $content);
     }

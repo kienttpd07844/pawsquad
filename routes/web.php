@@ -21,6 +21,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
@@ -100,7 +101,10 @@ Route::middleware(['checkaccount'])->group(function () {
         Route::post('/tai-khoan/xac-minh', [UserController::class, 'postVerify'])->name('postVerify');
 
         Route::get('/thanh-toan', [CheckoutController::class, 'index'])->name('checkout');
-
+        Route::post('/thanh-toan', [CheckoutController::class, 'complete'])->name('checkout.complete');
+        Route::post('/thanh-toan/vnpay', [CheckoutController::class, 'payWithVNPAY'])->name('checkout.payWithVNPAY');
+        Route::get('/thanh-toan/vnpay/kiem-tra', [CheckoutController::class, 'checkPayVNPAY'])->name('checkout.checkPayVNPAY');
+        
         Route::get('/dia-chi/save-all', [AddressController::class, 'fetchAndSaveAddresses'])->name('fetchAndSaveAddress');
         Route::post('/dia-chi/luu', [AddressController::class, 'store'])->name('address.store');
         Route::post('/dia-chi/sua', [AddressController::class, 'edit'])->name('address.edit');

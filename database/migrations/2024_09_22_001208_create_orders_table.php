@@ -19,7 +19,7 @@ return new class extends Migration
             $table->bigInteger('coupon_id');
             $table->string('order_status');
             $table->string('shipment_status');
-            $table->bigInteger('rating_id');
+            $table->bigInteger('rating_id')->nullable();
             $table->string('payment_method');
             $table->bigInteger('address_id');
             $table->bigInteger('payment_id')->nullable();

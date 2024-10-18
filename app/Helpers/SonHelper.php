@@ -283,21 +283,18 @@ function removeCoupon()
 
 function setCoupon($coupon)
 {
-    $theTime = now()->addDays(7)->timestamp;
-    return Cookie::queue('coupon_code', $coupon->name, $theTime);
+    return Cookie::queue('coupon_code', $coupon->name, 60 * 24, '/');
 }
 
 function setCouponTypeDiscount($amount, $type)
 {
-    $theTime = now()->addDays(7)->timestamp;
-
     $formattedAmount = '';
     if ($type === 'flat') {
         $formattedAmount = format_cash($amount);
     } else {
         $formattedAmount = $amount . '%';
     }
-    return Cookie::queue('coupon_data', $formattedAmount, $theTime);
+    return Cookie::queue('coupon_data', $formattedAmount, 60 * 24, '/');
 }
 
 function getCoupon($type = "default")
@@ -436,4 +433,38 @@ function getCouponDiscount($subTotal, $code = '')
     }
 
     return $amount;
+}
+function formatAddress($address, $format = 'line') {
+    $village = isset($address->village) ? $address->village->name : '';
+    $ward = isset($address->ward->name) ? $address->ward->name : '';
+    $district = isset($address->district->name) ? $address->district->name : '';
+    $province = isset($address->province->name) ? $address->province->name : '';
+    $addressLine = isset($address->address) ? $address->address : '';
+
+    if ($format == 'line') {
+        return "{$addressLine} - {$village}, {$ward}, {$district}, {$province}";
+    }
+    if ($format === 'block') {
+        $blockAddress = '';
+
+        if ($addressLine) {
+            $blockAddress .= "<address class='fs-sm mb-0'>{$addressLine}</address><br>";
+        }
+        if ($village) {
+            $blockAddress .= "<strong>Thôn/Xóm: </strong>{$village}<br>";
+        }
+        if ($ward) {
+            $blockAddress .= "<strong>Xã/Phường: </strong>{$ward}<br>";
+        }
+        if ($district) {
+            $blockAddress .= "<strong>Quận/Huyện: </strong>{$district}<br>";
+        }
+        if ($province) {
+            $blockAddress .= "<strong>Tỉnh/Thành phố: </strong>{$province}<br>";
+        }
+
+        return $blockAddress;
+    }
+
+    return '';
 }
