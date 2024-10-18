@@ -134,10 +134,6 @@
     </style>
 @endsection
 @section('content')
-    @include('clients.partials.breadcrum', [
-        'breadcrumbs' => [['name' => 'Hoá đơn', 'url' => '']],
-        'title' => 'Hoá đơn',
-    ])
     <!--hoá đơn-->
     @if (!is_null($order))
         <section class="invoice-section pt-6 pb-120 mt-5">
@@ -169,7 +165,7 @@
                                         alt="logo" class="img-fluid" width="200"></a>
                             </div>
                             <div class="text-lg-end">
-                                <a href="" class="primary-btn6 btn-xs mt-2 fs-6 p-2" style="font-size: 13px !important;">Xuất HĐ</a>
+                                <a href="{{ route('checkout.downloadOrder',['code'=>$order->id]) }}" class="primary-btn6 btn-xs mt-2 fs-6 p-2" style="font-size: 13px !important;">Xuất HĐ</a>
                             </div>
                         </div>
                     </div>
@@ -177,7 +173,7 @@
                     <div class="row justify-content-between g-5">
                         <div class="col-xl-7 col-lg-6">
                             <div class="welcome-message">
-                                <h5 class="mb-2 fw-bold">{{ auth()->user()->name }}</h5>
+                                <h5 class="mb-2 fw-bold">{{ limitText($order->user->name,20) }}</h5>
                                 <p class="mb-0">
                                     Dưới đây là chi tiết đơn hàng của bạn. Chúng tôi cảm ơn bạn đã mua hàng.</p>
 

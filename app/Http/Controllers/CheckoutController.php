@@ -20,6 +20,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
+use niklasravnsborg\LaravelPdf\Facades\Pdf;
+use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
 
 class CheckoutController extends Controller
 {
@@ -410,7 +413,7 @@ class CheckoutController extends Controller
                         'user_id' => auth()->user()->id,
                         'note' => 'Đơn hàng đã nhận và đang đóng gói',
                     ]);
-                    $dataMail =[
+                    $dataMail = [
                         'name' => auth()->user()->name ?? NULL,
                         'email' => auth()->user()->email ?? NULL,
                         'url_invoice' => '',
@@ -421,7 +424,7 @@ class CheckoutController extends Controller
                         'price_invoice' => format_cash($order->total_amount)
                     ];
                     Mail::to(auth()->user()->email)
-                    ->send((new ThemeMail($dataMail, 'invoice'))->subject('Hoá đơn #'.$order->id.' tại ' . env('APP_NAME')));
+                        ->send((new ThemeMail($dataMail, 'invoice'))->subject('Hoá đơn #' . $order->id . ' tại ' . env('APP_NAME')));
                     $notification = array('message' => 'Xử lý thành công.', 'alert-type' => 'success');
                     // return redirect()->route('checkout.invoice', $order->id)->with($notification);
                 } else {
@@ -498,15 +501,59 @@ class CheckoutController extends Controller
         return response()->json($returnData)->getData();
     }
 
-    public function invoice($code){
-        $order = Order::with(['address','orderItems'])->where('user_id', auth()->user()->id)
+    public function invoice($code)
+    {
+        $order = Order::with(['address', 'orderItems','user'])->where('user_id', auth()->user()->id)
             ->where('id', $code)->first();
         if (!$order) {
-            return redirect()->route('home')->with(noti('Không tìm thấy hoá đơn','error'));
+            return redirect()->route('home')->with(noti('Không tìm thấy hoá đơn', 'error'));
         }
         return view('clients.checkout.invoice', ['order' => $order]);
     }
-    public function changeInvoice($code){
+    public function downloadOrder(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'code' => 'nullable|string',
+        ]);
 
+        if ($validator->fails()) {
+            $notification = array('message' => $validator->errors(), 'alert-type' => 'error');
+            return redirect()->back()->with($notification);
+        }
+
+        try {
+            if ($request->code != null) {
+                $searchCode = preg_replace('/[^0-9]/', '', $request->code);
+                $order = Order::with(['address', 'orderItems'])->where('id', $searchCode)
+                    ->where('user_id', auth()->user()->id)
+                    ->first();
+
+                if (!$order) {
+                    return redirect()->route('home')->with(noti('Không tìm thấy hoá đơn', 'error'));
+                }
+
+                $font_family = "'Roboto','sans-serif'";
+                $pdf = Pdf::loadView('clients.checkout.downloadInvoice', [
+                    'order' => $order,
+                    'font_family' => $font_family,
+                    'direction' => 'ltr',
+                    'default_text_align' => 'left',
+                    'reverse_text_align' => 'right'
+                ]);
+                // Trả về dữ liệu PDF dưới dạng phản hồi nhị phân
+                return response($pdf->output(), 200)
+                    ->header('Content-Type', 'application/pdf')
+                    ->header('Content-Disposition', 'attachment; filename="INV' . $order->id . '.pdf"');
+            }
+        } catch (\Exception $e) {
+            \Log::error('Error generating PDF: ' . $e->getMessage());
+            return redirect()->back()->with([
+                'message' => 'Đã xảy ra lỗi: ' . $e->getMessage(),
+                'alert-type' => 'error'
+            ]);
+        }
     }
+
+
+    public function changeInvoice($code) {}
 }
