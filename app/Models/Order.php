@@ -30,8 +30,7 @@ class Order extends Model
     }
     public function orderItems()
     {
-        return $this->hasMany(OrderDetail::class, 'order_id')
-            ->with(['product', 'product_variation']);
+        return $this->hasMany(OrderDetail::class, 'order_id');
     }
     public function scopeIsDelivered($query)
     {

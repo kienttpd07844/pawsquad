@@ -104,7 +104,9 @@ Route::middleware(['checkaccount'])->group(function () {
         Route::post('/thanh-toan', [CheckoutController::class, 'complete'])->name('checkout.complete');
         Route::post('/thanh-toan/vnpay', [CheckoutController::class, 'payWithVNPAY'])->name('checkout.payWithVNPAY');
         Route::get('/thanh-toan/vnpay/kiem-tra', [CheckoutController::class, 'checkPayVNPAY'])->name('checkout.checkPayVNPAY');
-        
+        Route::get('/hoa-don/{code}', [CheckoutController::class, 'invoice'])->name('checkout.invoice');
+        Route::post('/hoa-don/{code}', [CheckoutController::class, 'changeInvoice'])->name('checkout.changeInvoice');
+
         Route::get('/dia-chi/save-all', [AddressController::class, 'fetchAndSaveAddresses'])->name('fetchAndSaveAddress');
         Route::post('/dia-chi/luu', [AddressController::class, 'store'])->name('address.store');
         Route::post('/dia-chi/sua', [AddressController::class, 'edit'])->name('address.edit');

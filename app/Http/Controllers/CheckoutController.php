@@ -497,4 +497,16 @@ class CheckoutController extends Controller
         }
         return response()->json($returnData)->getData();
     }
+
+    public function invoice($code){
+        $order = Order::with(['address','orderItems'])->where('user_id', auth()->user()->id)
+            ->where('id', $code)->first();
+        if (!$order) {
+            return redirect()->route('home')->with(noti('Không tìm thấy hoá đơn','error'));
+        }
+        return view('clients.checkout.invoice', ['order' => $order]);
+    }
+    public function changeInvoice($code){
+
+    }
 }
