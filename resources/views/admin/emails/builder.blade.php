@@ -64,6 +64,24 @@
         },{
             type: 'label',
             tag: 'URL_VERIFY'
+        },{
+            type: 'label',
+            tag: 'URL_INVOICE'
+        },{
+            type: 'label',
+            tag: 'ID_INVOICE'
+        },{
+            type: 'label',
+            tag: 'CREATE_AT_INVOICE'
+        },{
+            type: 'label',
+            tag: 'PAYMENT_METHOD_INVOICE'
+        },{
+            type: 'label',
+            tag: 'ORDER_STATUS'
+        },{
+            type: 'label',
+            tag: 'PRICE_INVOICE'
         }];
 
         var builder = new Editor({

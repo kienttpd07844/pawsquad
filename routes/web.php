@@ -55,8 +55,8 @@ Route::middleware(['checkaccount'])->group(function () {
     Route::get('/quen-mat-khau', [ForgotPasswordController::class, 'index'])->name('forgotpassword');
     Route::post('/quen-mat-khau', [ForgotPasswordController::class, 'postForgotPassword'])->name('postForgotPassword');
 
-    Route::get('/resetpassword', [ResetPasswordController::class, 'index'])->name('password.reset');
-    Route::post('/resetpassword', [ResetPasswordController::class, 'postReset'])->name('postResetPassword');
+    Route::get('/thay-doi-mat-khau', [ResetPasswordController::class, 'index'])->name('password.reset');
+    Route::post('/thay-doi-mat-khau', [ResetPasswordController::class, 'postReset'])->name('postResetPassword');
 
     Route::get('/gioi-thieu', [AboutController::class, 'index'])->name('about');
 
