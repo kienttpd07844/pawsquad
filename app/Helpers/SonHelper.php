@@ -6,6 +6,7 @@ use App\Models\AttributeSet;
 use App\Models\Blog;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\Variations;
 use App\Models\VariationValues;
@@ -434,7 +435,8 @@ function getCouponDiscount($subTotal, $code = '')
 
     return $amount;
 }
-function formatAddress($address, $format = 'line') {
+function formatAddress($address, $format = 'line')
+{
     $village = isset($address->village) ? $address->village->name : '';
     $ward = isset($address->ward->name) ? $address->ward->name : '';
     $district = isset($address->district->name) ? $address->district->name : '';
@@ -467,4 +469,38 @@ function formatAddress($address, $format = 'line') {
     }
 
     return '';
+}
+function getOrder($type, $user_id = NULL)
+{
+    // Kiểm tra trạng thái đơn hàng
+    switch ($type) {
+        case 'PAID':
+            $orders = Order::where('order_status', 'PAID')
+            ->where('shipment_status', 'DELIVERED');
+            break;
+
+        case 'CANCELED':
+            $orders = Order::where('order_status', 'CANCELED');
+            break;
+
+        case 'PENDING':
+            $orders = Order::where('order_status', 'PENDING')
+            ->orWhere(function($query) {
+                $query->where('order_status', 'PAID')
+                      ->where('shipment_status', '!=', 'DELIVERED');
+            });
+            break;
+        case 'ALL':
+            $orders = Order::all();
+            break;
+
+        default:
+            return null;
+    }
+
+    if ($user_id !== NULL) {
+        $orders = $orders->where('user_id', $user_id);
+    }
+
+    return $orders->count();
 }

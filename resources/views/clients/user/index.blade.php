@@ -1601,7 +1601,7 @@
                                                     style="font-size: 30px;
                                                 width: 50px;"></i>
                                                 <div>
-                                                    <h3>8</h3>
+                                                    <h3>{{ getOrder('ALL',auth()->user()->id) }}</h3>
                                                     <h5 class="fs-6 fw-normal">Tổng hoá đơn</h5>
                                                 </div>
                                             </div>
@@ -1612,7 +1612,7 @@
                                                     style="font-size: 30px;
                                                 width: 50px;"></i>
                                                 <div>
-                                                    <h3>2
+                                                    <h3>{{ getOrder('PENDING',auth()->user()->id) }}
                                                     </h3>
                                                     <h5 class="fs-6 fw-normal">Đang chờ</h5>
                                                 </div>
@@ -1624,7 +1624,7 @@
                                                     style="font-size: 30px;
                                                 width: 50px;"></i>
                                                 <div>
-                                                    <h3>6</h3>
+                                                    <h3>{{ getOrder('PAID',auth()->user()->id) }}</h3>
                                                     <h5 class="fs-6 fw-normal">Thành công</h5>
                                                 </div>
                                             </div>
@@ -1769,7 +1769,7 @@
                                                 </div>
                                                 <div class="row g-4 ">
                                                     @forelse ($addresses as $address)
-                                                        <div class="col-md-6 d-flex py-5  ">
+                                                        <div class="col-md-6 d-flex py-2  ">
                                                             <div
                                                                 class="collection-card shadow tt-address-content border p-3 rounded address-book-content pe-md-4 position-relative  flex-fill d-flex flex-column">
                                                                 @if ($address->is_default)
