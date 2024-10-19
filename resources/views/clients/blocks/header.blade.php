@@ -174,7 +174,7 @@
                                             <div class="col-6">
                                                 <a class="primary-btn6 btn-md mt-4 w-100"
                                                     style="height:40px;border-radius:5px;padding: 10px 28px;background:#F46F30"
-                                                    href="shop-details.html">Thanh
+                                                    href="{{ route('checkout') }}">Thanh
                                                     toán</a>
                                             </div>
                                         </div>

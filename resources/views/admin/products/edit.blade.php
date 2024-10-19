@@ -323,7 +323,7 @@
                                                 <label for="stock" class="form-label">Số lượng</label>
                                                 <input type="number" id="stock" placeholder="Số lượng"
                                                     name="stock" class="form-control" {{ !$data->has_variation ? 'required' : '' }}
-                                                    value="{{ old('stock',$data->stock_qty) }}">
+                                                    value="{{ old('stock',$stock_qty) }}">
                                             </div>
                                         </div>
                                         <div class="col-lg-3">

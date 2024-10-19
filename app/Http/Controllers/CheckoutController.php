@@ -123,8 +123,8 @@ class CheckoutController extends Controller
                         $variationOptions = implode(' | ', $options); // Nối các thuộc tính bằng dấu gạch đứng
                     }
 
-                    // Kiểm tra số lượng trong kho
-                    if ($product->has_variation) {
+                    // // Kiểm tra số lượng trong kho
+                    // if ($product->has_variation) {
                         // Sản phẩm có biến thể
                         if ($variation->product_variation_stock->stock_qty < $cart->quantity) {
                             $productName = $product->name;
@@ -133,16 +133,16 @@ class CheckoutController extends Controller
                             $noti = ['message' => $message, 'alert-type' => 'error'];
                             return redirect()->route('cart')->with($noti);
                         }
-                    } else {
-                        // Sản phẩm không có biến thể
-                        if ($product->stock_qty < $cart->quantity) {
-                            $productName = $product->name;
-                            $availableStock = $product->stock_qty;
-                            $message = 'Sản phẩm "' . $productName . '" hiện chỉ còn ' . $availableStock . ' sản phẩm trong kho. Vui lòng điều chỉnh lại số lượng phù hợp.';
-                            $noti = ['message' => $message, 'alert-type' => 'error'];
-                            return redirect()->route('cart')->with($noti);
-                        }
-                    }
+                    // } else {
+                    //     // Sản phẩm không có biến thể
+                    //     if ($product->stock_qty < $cart->quantity) {
+                    //         $productName = $product->name;
+                    //         $availableStock = $product->stock_qty;
+                    //         $message = 'Sản phẩm "' . $productName . '" hiện chỉ còn ' . $availableStock . ' sản phẩm trong kho. Vui lòng điều chỉnh lại số lượng phù hợp.';
+                    //         $noti = ['message' => $message, 'alert-type' => 'error'];
+                    //         return redirect()->route('cart')->with($noti);
+                    //     }
+                    // }
                 }
 
                 # kiểm tra mã giảm giá
@@ -198,8 +198,8 @@ class CheckoutController extends Controller
                     $orderItem->product_variation_id = $variation->id;
                     $orderItem->save();
 
-                    // Trừ số lượng
-                    if ($product->has_variation) {
+                    // // Trừ số lượng
+                    // if ($product->has_variation) {
                         // Sản phẩm có biến thể
                         $productVariationStock = ProductVariationStock::where('id', $variation->id)->first();
 
@@ -207,11 +207,11 @@ class CheckoutController extends Controller
                             $productVariationStock->stock_qty = max(0, $productVariationStock->stock_qty - $orderItem->quantity); // Đặt giá trị bằng 0 nếu trừ ra âm
                             $productVariationStock->save();
                         }
-                    } else {
-                        // Sản phẩm không có biến thể
-                        $product->stock_qty = max(0, $product->stock_qty - $orderItem->quantity); // Đặt giá trị bằng 0 nếu trừ ra âm
-                        $product->save();
-                    }
+                    // } else {
+                    //     // Sản phẩm không có biến thể
+                    //     $product->stock_qty = max(0, $product->stock_qty - $orderItem->quantity); // Đặt giá trị bằng 0 nếu trừ ra âm
+                    //     $product->save();
+                    // }
                     // Xoá cart
                     $cart->delete();
                 }

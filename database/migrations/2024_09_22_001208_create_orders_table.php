@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('total_amount')->default(0);
             $table->bigInteger('user_id');
             $table->timestamp('order_date');
-            $table->bigInteger('coupon_id');
+            $table->bigInteger('coupon_id')->nullable();
             $table->string('order_status');
             $table->string('shipment_status');
             $table->bigInteger('rating_id')->nullable();
