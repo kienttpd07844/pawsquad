@@ -36,6 +36,9 @@ class ProductController extends Controller
             $products = Product::with('category')->orderBy('created_at', 'desc')->paginate($perPage);
         } else {
             $products = Product::with('category')
+                ->when($request->search, function ($query) use ($request) {
+                    return $query->whereRaw('MATCH(name) AGAINST(? IN NATURAL LANGUAGE MODE)', [$request->search]);
+                })
                 ->when($request->category, function ($query) use ($request) {
                     return $query->whereHas('category', function ($query) use ($request) {
                         $query->where('slug', $request->category);
@@ -108,7 +111,7 @@ class ProductController extends Controller
             ->isActive()
             ->take(8)
             ->get();
-        return view('clients.product.detail', compact('product', 'mergedList', 'details','relatedProducts'));
+        return view('clients.product.detail', compact('product', 'mergedList', 'details', 'relatedProducts'));
     }
     private function isValidJson($string)
     {
@@ -120,7 +123,7 @@ class ProductController extends Controller
         $product = Product::findOrFail($request->id);
         $mergedList = mergeImageWithList($product->image, $product->image_list);
 
-        return view('clients.partials.product-view-box', ['product' => $product,'mergedList'=>$mergedList]);
+        return view('clients.partials.product-view-box', ['product' => $product, 'mergedList' => $mergedList]);
     }
     public function getVariationInfo(Request $request)
     {
