@@ -110,8 +110,9 @@
                                                         @if ($parent->children->isNotEmpty())
                                                             @foreach ($parent->children as $child)
                                                                 <label class="containerss">{{ $child->name }}
-                                                                    <input type="checkbox" class="category-filter" name="category"
-                                                                        value="{{ $child->slug }}" data-category="{{ $child->slug }}">
+                                                                    <input type="checkbox" class="category-filter"
+                                                                        name="category" value="{{ $child->slug }}"
+                                                                        data-category="{{ $child->slug }}">
                                                                     <span class="checkmark"></span>
                                                                 </label>
                                                             @endforeach
@@ -263,7 +264,27 @@
                 if (perPageInput) {
                     formData.per_page = perPageInput.value;
                 }
+                const searchInput = document.querySelector('input[name="searchName"]');
+                if (searchInput) {
+                    formData.search = searchInput.value;
+                }
                 return formData;
+            }
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchQuery = urlParams.get('search');
+
+            if (searchQuery) {
+                const searchInput = document.createElement('input');
+                searchInput.type = 'hidden';
+                searchInput.name = 'searchName';
+                searchInput.value = searchQuery;
+                const filterForm = document.querySelector('#filterForm');
+                if (filterForm) {
+                    filterForm.appendChild(searchInput);
+                }
+                const formData = collectFormData();
+                console.log(formData)
+                performAjaxRequest(formData);
             }
 
             function performAjaxRequest(formData = {}, page = 1) {

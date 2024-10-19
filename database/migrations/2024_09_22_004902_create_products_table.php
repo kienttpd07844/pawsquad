@@ -35,6 +35,7 @@ return new class extends Migration
             $table->integer('views')->default(0);
             $table->timestamps();
             $table->softDeletes();
+            $table->fullText('name');
         });
     }
 
