@@ -27,6 +27,8 @@ class EmailControllerAdmin extends Controller
                                 CASE
                                     WHEN email_type = 'forgotpassword' THEN 'Quên mật khẩu'
                                     WHEN email_type = 'verify' THEN 'Xác minh'
+                                    WHEN email_type = 'invoice' THEN 'Hóa đơn'
+                                    WHEN email_type = 'invoice_success' THEN 'Thanh toán hóa đơn thành công'
                                     ELSE 'Khác'
                                 END LIKE ?
                             ", ["%{$search}%"]);
@@ -39,6 +41,10 @@ class EmailControllerAdmin extends Controller
                             return 'Quên mật khẩu';
                         case 'verify':
                             return 'Xác minh';
+                        case 'invoice':
+                            return 'Hóa đơn';
+                        case 'invoice_success':
+                            return 'Thanh toán hóa đơn thành công';
                         default:
                             return 'Khác';
                     }
