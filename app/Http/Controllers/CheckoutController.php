@@ -125,14 +125,14 @@ class CheckoutController extends Controller
 
                     // // Kiểm tra số lượng trong kho
                     // if ($product->has_variation) {
-                        // Sản phẩm có biến thể
-                        if ($variation->product_variation_stock->stock_qty < $cart->quantity) {
-                            $productName = $product->name;
-                            $availableStock = $variation->product_variation_stock->stock_qty;
-                            $message = 'Sản phẩm "' . $productName . '" (' . $variationOptions . ') hiện chỉ còn ' . $availableStock . ' sản phẩm trong kho. Vui lòng điều chỉnh lại số lượng phù hợp.';
-                            $noti = ['message' => $message, 'alert-type' => 'error'];
-                            return redirect()->route('cart')->with($noti);
-                        }
+                    // Sản phẩm có biến thể
+                    if ($variation->product_variation_stock->stock_qty < $cart->quantity) {
+                        $productName = $product->name;
+                        $availableStock = $variation->product_variation_stock->stock_qty;
+                        $message = 'Sản phẩm "' . $productName . '" (' . $variationOptions . ') hiện chỉ còn ' . $availableStock . ' sản phẩm trong kho. Vui lòng điều chỉnh lại số lượng phù hợp.';
+                        $noti = ['message' => $message, 'alert-type' => 'error'];
+                        return redirect()->route('cart')->with($noti);
+                    }
                     // } else {
                     //     // Sản phẩm không có biến thể
                     //     if ($product->stock_qty < $cart->quantity) {
@@ -200,13 +200,13 @@ class CheckoutController extends Controller
 
                     // // Trừ số lượng
                     // if ($product->has_variation) {
-                        // Sản phẩm có biến thể
-                        $productVariationStock = ProductVariationStock::where('id', $variation->id)->first();
+                    // Sản phẩm có biến thể
+                    $productVariationStock = ProductVariationStock::where('id', $variation->id)->first();
 
-                        if ($productVariationStock) {
-                            $productVariationStock->stock_qty = max(0, $productVariationStock->stock_qty - $orderItem->quantity); // Đặt giá trị bằng 0 nếu trừ ra âm
-                            $productVariationStock->save();
-                        }
+                    if ($productVariationStock) {
+                        $productVariationStock->stock_qty = max(0, $productVariationStock->stock_qty - $orderItem->quantity); // Đặt giá trị bằng 0 nếu trừ ra âm
+                        $productVariationStock->save();
+                    }
                     // } else {
                     //     // Sản phẩm không có biến thể
                     //     $product->stock_qty = max(0, $product->stock_qty - $orderItem->quantity); // Đặt giá trị bằng 0 nếu trừ ra âm
@@ -274,7 +274,31 @@ class CheckoutController extends Controller
                     ];
                     $orderUpdate = Order::where('id', $order->id)->update($data);
                 }
-
+                $dataMail = [
+                    'name' => auth()->user()->name ?? NULL,
+                    'email' => auth()->user()->email ?? NULL,
+                    'url_invoice' => route('checkout.invoice',['code'=>$order->id]),
+                    'id_invoice' => $order->id,
+                    'created_at_invoice' => Carbon::parse($order->created_at)->format('d-m-Y H:i'),
+                    'payment_method_invoice' => $order->payment_method,
+                    'order_status_invoice' => getStatusOrder($order->order_status),
+                    'price_invoice' => format_cash($order->total_amount)
+                ];
+                $font_family = "'Roboto','sans-serif'";
+                $pdf = Pdf::loadView('clients.checkout.downloadInvoice', [
+                    'order' => $order,
+                    'font_family' => $font_family,
+                    'direction' => 'ltr',
+                    'default_text_align' => 'left',
+                    'reverse_text_align' => 'right'
+                ]);
+                Mail::to(auth()->user()->email)
+                    ->send((new ThemeMail($dataMail, 'invoice'))
+                            ->subject('Hoá đơn #' . $order->id . ' tại ' . env('APP_NAME'))
+                            ->attachData($pdf->output(), 'hoa-don-' . $order->id . '.pdf', [
+                                'mime' => 'application/pdf',
+                            ])
+                    );
                 $notification = array('message' => 'Xử lý thành công.', 'alert-type' => 'success');
                 return redirect()->route('checkout.invoice', $order->id)->with($notification);
             }
@@ -416,17 +440,30 @@ class CheckoutController extends Controller
                     $dataMail = [
                         'name' => auth()->user()->name ?? NULL,
                         'email' => auth()->user()->email ?? NULL,
-                        'url_invoice' => '',
+                        'url_invoice' => route('checkout.invoice',['code'=>$order->id]),
                         'id_invoice' => $order->id,
                         'created_at_invoice' => Carbon::parse($order->created_at)->format('d-m-Y H:i'),
                         'payment_method_invoice' => $order->payment_method,
                         'order_status_invoice' => getStatusOrder($order->order_status),
                         'price_invoice' => format_cash($order->total_amount)
                     ];
+                    $font_family = "'Roboto','sans-serif'";
+                    $pdf = Pdf::loadView('clients.checkout.downloadInvoice', [
+                        'order' => $order,
+                        'font_family' => $font_family,
+                        'direction' => 'ltr',
+                        'default_text_align' => 'left',
+                        'reverse_text_align' => 'right'
+                    ]);
                     Mail::to(auth()->user()->email)
-                        ->send((new ThemeMail($dataMail, 'invoice'))->subject('Hoá đơn #' . $order->id . ' tại ' . env('APP_NAME')));
+                        ->send((new ThemeMail($dataMail, 'invoice_success'))
+                                ->subject('Xác nhận thanh toán hoá đơn #' . $order->id . ' tại ' . env('APP_NAME'))
+                                ->attachData($pdf->output(), 'hoa-don-' . $order->id . '.pdf', [
+                                    'mime' => 'application/pdf',
+                                ])
+                        );
                     $notification = array('message' => 'Xử lý thành công.', 'alert-type' => 'success');
-                    // return redirect()->route('checkout.invoice', $order->id)->with($notification);
+                    return redirect()->route('checkout.invoice', ['code'=>$order->id])->with($notification);
                 } else {
                     $notification = array('message' => 'Lỗi quá trình xử lý.', 'alert-type' => 'error');
                     return redirect()->back()->with($notification);
@@ -503,7 +540,7 @@ class CheckoutController extends Controller
 
     public function invoice($code)
     {
-        $order = Order::with(['address', 'orderItems','user'])->where('user_id', auth()->user()->id)
+        $order = Order::with(['address', 'orderItems', 'user'])->where('user_id', auth()->user()->id)
             ->where('id', $code)->first();
         if (!$order) {
             return redirect()->route('home')->with(noti('Không tìm thấy hoá đơn', 'error'));
